@@ -1,12 +1,9 @@
 import { getToken } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
 import { NextResponse } from "next/server"
-import { getCurrentUser } from "./lib/session"
 
 export default withAuth(
   async function middleware(req) {
-    const user = getCurrentUser();
-    console.log(user)
     const token = await getToken({ req })
     const isAuth = !!token
     const isAuthPage =
@@ -18,7 +15,7 @@ export default withAuth(
         return NextResponse.redirect(new URL("/dashboard", req.url))
       }
 
-      return null;
+      return null
     }
 
     if (!isAuth) {
