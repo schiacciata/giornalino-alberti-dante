@@ -51,6 +51,7 @@ export async function POST(req: Request) {
         title: body.title,
         content: body.content,
         authorId: user.id,
+        likes: 0,
       },
       select: {
         id: true,
