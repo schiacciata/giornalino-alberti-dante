@@ -1,15 +1,16 @@
 import { ImageResponse } from "@vercel/og"
 
 import { ogImageSchema } from "@/lib/validations/og"
+import { absoluteUrl } from "@/lib/utils"
 
 export const runtime = "edge"
 
 const interRegular = fetch(
-  new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)
+  new URL(absoluteUrl("/assets/fonts/CalSans-SemiBold.ttf"), import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const interBold = fetch(
-  new URL("../../../assets/fonts/CalSans-SemiBold.ttf", import.meta.url)
+  new URL(absoluteUrl("/assets/fonts/CalSans-SemiBold.ttf"), import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 export async function GET(req: Request) {
