@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import '@/styles/globals.css'
 import '@/styles/scrollbar.css'
 
@@ -49,7 +49,6 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/manifest.webmanifest',
-  themeColor: siteConfig.themeColor,
   twitter: {
     card: 'summary',
     description: siteConfig.description,
@@ -59,6 +58,12 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/favicon.ico',
   },
+}
+
+export function generateViewport(): Viewport {
+  return {
+    themeColor: siteConfig.themeColor,
+  }
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
