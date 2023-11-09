@@ -13,7 +13,7 @@ export default async function IndexPage() {
     select: {
       id: true,
       title: true,
-      published: true,
+      //published: true,
       createdAt: true,
     },
     orderBy: {
