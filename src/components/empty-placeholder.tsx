@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
+import { LucideProps } from "lucide-react"
 
 interface EmptyPlaceholderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -26,7 +27,7 @@ export function EmptyPlaceholder({
 }
 
 interface EmptyPlaceholderIconProps
-  extends Partial<React.SVGProps<SVGSVGElement>> {
+  extends LucideProps {
   name: keyof typeof Icons
 }
 
