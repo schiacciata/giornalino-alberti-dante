@@ -1,18 +1,18 @@
 'use server'
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { postCreateSchema } from "@/lib/validations/post"
+import { postCreateSchema, postCreateFormData } from "@/lib/validations/post"
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/session'
 
-export const createPost = async (formData: FormData) => {
+export const createPost = async (formData: postCreateFormData) => {
     try {
         const user = await getCurrentUser();
-        if (!user) return { message: 'Not authenticated' };
+        if (!user) return { error: 'Not authenticated' };
 
         const body = postCreateSchema.parse({
-            title: formData.get('title') || "Untitled Post",
-            content: formData.get('content'),
+            title: formData.title,
+            content: formData.content,
         });
     
         const post = await db.post.create({
@@ -30,9 +30,7 @@ export const createPost = async (formData: FormData) => {
         revalidatePath('/');
         revalidatePath('/dashboard/posts');
         redirect(`/editor/${post.id}`);
-
-        return { success: true, message: 'Post create successfully' };
     } catch (e) {
-        return { message: 'There was an error.' };
+        return { error: 'There was an error.' };
     }
 }
