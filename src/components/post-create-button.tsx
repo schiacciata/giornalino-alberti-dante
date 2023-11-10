@@ -23,7 +23,7 @@ export function PostCreateButton({
   const { toast } = useToast()
   
   async function onCreate(formData: FormData) {
-    const res = await create(formData);
+    const res = await createPost(formData);
     toast({
       variant: res.success ? 'default' :"destructive",
       title: res.success ? 'Success!' : "Uh oh! Something went wrong.",
