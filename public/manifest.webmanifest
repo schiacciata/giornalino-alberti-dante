@@ -1,0 +1,50 @@
+{
+    "$schema": "https://json.schemastore.org/web-manifest",
+    "short_name": "Giornalino Alberti Dante",
+    "name": "Giornalino Alberti Dante",
+    "description": "Next.js, TypeScript, shadcn/ui, next-auth, zod, next-international",
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "display": "standalone",
+    "scope": "/",
+    "id": ".",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "lang": "it",
+    "dir": "auto",
+    "orientation": "any",
+    "shortcuts": [
+        {
+            "name": "Blog",
+            "description": "Leggi gli ultimi post",
+            "url": "/blog"
+        }
+    ],
+    "protocol_handlers": [
+        {
+          "protocol": "web+giornalino",
+          "url": "/%s"
+        }
+    ]
+}

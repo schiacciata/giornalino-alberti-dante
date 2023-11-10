@@ -36,7 +36,7 @@ export default {
     },
     dashboard: {
         createNew: 'Crea nuovo',
-        changeUser: 'o cambia utente',
+        changeUser: 'o cambia',
         settings: 'Impostazioni',
 
     }
