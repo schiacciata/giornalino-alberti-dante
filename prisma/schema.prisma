@@ -53,7 +53,7 @@ model Post {
   published Boolean  @default(false)
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
-  likes     Int
+  likes     Int?
   authorId  String   @db.ObjectId
   author    User     @relation(fields: [authorId], references: [id])
 }
