@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/lib/session'
 
 export const createPost = async (formData: FormData) => {
     try {
-        const user = getCurrentUser();
+        const user = await getCurrentUser();
         if (!user) return { message: 'Not authenticated' };
 
         const body = postCreateSchema.parse({
