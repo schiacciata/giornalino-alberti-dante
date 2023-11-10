@@ -6,7 +6,7 @@ import { db } from "@/lib/db"
 
 export const createPost = async (formData: FormData) => {
     try {
-        const parsed = postCreateSchema.parse({
+        const body = postCreateSchema.parse({
             title: formData.get('title') || "Untitled Post",
             content: formData.get('content'),
         });
