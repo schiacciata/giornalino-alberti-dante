@@ -2,7 +2,7 @@
 "use client"
 
 import * as React from "react"
-import { experimental_useFormStatus as useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
 import { useRouter } from "next/navigation"
 
 import { cn } from "@/lib/utils"
