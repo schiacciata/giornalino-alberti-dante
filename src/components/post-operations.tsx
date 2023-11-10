@@ -41,6 +41,25 @@ async function deletePost(postId: string) {
   return true
 }
 
+async function publishPost(postId: string) {
+  const response = await fetch(`/api/posts/${postId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      published: true,
+    })
+  })
+
+  if (!response?.ok) {
+    toast({
+      title: "Something went wrong.",
+      description: "Your post was not published. Please try again.",
+      variant: "destructive",
+    })
+  }
+
+  return true
+}
+
 interface PostOperationsProps {
   post: Pick<Post, "id" | "title" | 'published'>
 }
@@ -138,7 +157,7 @@ export function PostOperations({ post }: PostOperationsProps) {
                 event.preventDefault()
                 setIsPublishLoading(true)
 
-                const published = await deletePost(post.id)
+                const published = await publishPost(post.id)
 
                 if (published) {
                   setIsPublishLoading(false)

@@ -12,6 +12,7 @@ export const postPatchSchema = z.object({
 
   // TODO: Type this properly from editorjs block types?
   content: z.any().optional(),
+  published: z.boolean().optional(),
 })
 
 export type postUpdateFormData = z.infer<typeof postPatchSchema>;
