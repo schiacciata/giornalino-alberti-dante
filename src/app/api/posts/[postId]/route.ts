@@ -1,7 +1,6 @@
-import { getServerSession } from "next-auth"
 import * as z from "zod"
 
-import { authOptions } from "@/lib/auth"
+import { getCurrentUser, isAdmin } from "@/lib/session"
 import { db } from "@/lib/db"
 import { postPatchSchema } from "@/lib/validations/post"
 
@@ -81,13 +80,17 @@ export async function PATCH(
 }
 
 async function verifyCurrentUserHasAccessToPost(postId: string) {
-  const session = await getServerSession(authOptions)
-  const count = await db.post.count({
+  const user = await getCurrentUser();
+  if (!user) return false;
+  
+  return (isAdmin(user));
+
+  /*const count = await db.post.count({
     where: {
       id: postId,
-      authorId: session?.user.id,
+      authorId: user.id,
     },
   })
 
-  return count > 0
+  return count > 0*/
 }
