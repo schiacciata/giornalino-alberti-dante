@@ -9,11 +9,14 @@ export default async function IndexPage() {
   
   const posts = await db.post.findMany({
     take: config.homeMaxPosts,
+    where: {
+      published: true,
+    },
     select: {
       id: true,
       title: true,
-      published: true,
-      createdAt: true,
+      updatedAt: true,
+      likes: true,
     },
     orderBy: {
       updatedAt: "desc",

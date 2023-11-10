@@ -40,6 +40,7 @@ import {
     Trash,
     Image,
     ChevronRight,
+    Globe,
 } from "lucide-react"
 
 export const Icons = {
@@ -97,6 +98,7 @@ export const Icons = {
     arrowRight: ArrowRight,
     help: HelpCircle,
     pizza: Pizza,
+    globe: Globe,
 }
 
 export type TIcon = keyof typeof Icons;

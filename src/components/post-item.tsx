@@ -17,7 +17,10 @@ export function PostItem({ post }: PostItemProps) {
           href={`/editor/${post.id}`}
           className="font-semibold hover:underline"
         >
-          {post.title}
+          <div>
+            <p>{post.title}</p>
+            <p className={post.published ? 'text-green-500' : 'text-orange-500 italic'}>{post.published ? 'Published' : 'Not published'}</p>
+          </div>
         </Link>
         <div>
           <p className="text-sm text-muted-foreground">
@@ -25,7 +28,7 @@ export function PostItem({ post }: PostItemProps) {
           </p>
         </div>
       </div>
-      <PostOperations post={{ id: post.id, title: post.title }} />
+      <PostOperations post={{ id: post.id, title: post.title, published: post.published }} />
     </div>
   )
 }

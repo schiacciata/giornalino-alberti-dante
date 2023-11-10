@@ -6,7 +6,7 @@ import { buttonVariants } from './ui/button'
 import { Icon } from './icons'
 
 interface PostCardProps {
-    post: Pick<Post, "id" | "title" | "published" | "createdAt">
+    post: Pick<Post, "id" | "title" | "updatedAt" | "likes">
 }
 
 export const PostCard: FC<PostCardProps> = ({ post }) => {
@@ -21,7 +21,7 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
         </Link>
         <div>
           <p className="text-sm text-muted-foreground">
-            {formatDate(post.createdAt?.toDateString())}
+            {formatDate(post.updatedAt?.toDateString())}{/* ∘ <b>{post.likes || 0} <Icon icon='heart' className='inline-flex'/></b>*/}
           </p>
         </div>
       </div>

@@ -1,7 +1,4 @@
-import { notFound } from "next/navigation"
-
 import config from "@/config/dashboard"
-import { getCurrentUser } from "@/lib/session"
 import { SiteHeader } from "@/components/site-header"
 import { Footer } from "@/components/footer"
 import { DashboardNav } from "@/components/sidebar"
@@ -13,12 +10,6 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
-  const user = await getCurrentUser()
-
-  if (!user) {
-    return notFound()
-  }
-
   return (
     <>
       <SiteHeader navbarSections={config.sidebarNav} onlyMobile={true} />

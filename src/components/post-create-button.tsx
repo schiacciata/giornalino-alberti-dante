@@ -9,7 +9,7 @@ import { ButtonProps, buttonVariants } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
-import { createPost } from '@/actions/post'
+import { newPost } from '@/actions/post'
 
 interface PostCreateButtonProps extends ButtonProps {}
 
@@ -20,8 +20,10 @@ export function PostCreateButton({
 }: PostCreateButtonProps) {
   const { pending } = useFormStatus();
   
-  async function onCreate(formData: any) {
-    const res = await createPost(formData);
+  async function onCreate(formData: FormData) {
+    const res = await newPost({
+      title: "Untitled Post",
+    });
     
     toast({
       variant: "destructive",
@@ -32,7 +34,6 @@ export function PostCreateButton({
 
   return (
     <form action={onCreate}>
-      <input hidden={true} type="text" id="title" readOnly value="Untitled Post" />
       <button
         type='submit'
         className={cn(
