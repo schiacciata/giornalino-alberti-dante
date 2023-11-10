@@ -29,7 +29,7 @@ export const createPost = async (formData: FormData) => {
     
         revalidatePath('/');
         revalidatePath('/dashboard/posts');
-        redirect(`/editor/${id}`);
+        redirect(`/editor/${post.id}`);
 
         return { success: true, message: 'Post create successfully' };
     } catch (e) {
