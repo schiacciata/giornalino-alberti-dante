@@ -1,11 +1,14 @@
 import { Header } from "@/components/header"
 import { PostItem } from "@/components/post-item"
 import { Shell } from "@/components/shell"
+import { getScopedI18n } from "@/lib/i18n/server";
 
-export default function BlogLoading() {
+export default async function BlogLoading() {
+  const scopedT = await getScopedI18n('blog');
+
   return (
     <Shell>
-      <Header heading="Blog" text="Leggi tutti i post"/>
+      <Header heading="Blog" text={scopedT('headingDescription')}/>
       <div className="divide-border-200 divide-y rounded-md border">
         <PostItem.Skeleton />
         <PostItem.Skeleton />

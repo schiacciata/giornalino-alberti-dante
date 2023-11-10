@@ -1,5 +1,8 @@
-interface RootLayoutProps {
-    children: React.ReactNode
+interface RootLayoutProps  {
+    params: {
+        locale: string
+    }
+    children: ReactElement
 }
 
 export {

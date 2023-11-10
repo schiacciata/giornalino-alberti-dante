@@ -2,17 +2,19 @@ import Link from "next/link"
 
 import { buttonVariants } from "@/components/ui/button"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
+import { getScopedI18n } from "@/lib/i18n/server"
 
-export default function NotFound() {
+export default async function NotFound() {
+  const scopedT = await getScopedI18n('notFound');
   return (
     <EmptyPlaceholder className="mx-auto max-w-[800px]">
       <EmptyPlaceholder.Icon name="warning" />
-      <EmptyPlaceholder.Title>Uh oh! Not Found</EmptyPlaceholder.Title>
+      <EmptyPlaceholder.Title>{scopedT('title')}</EmptyPlaceholder.Title>
       <EmptyPlaceholder.Description>
-        This post cound not be found. Please try again.
+        {scopedT('description')}
       </EmptyPlaceholder.Description>
-      <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
-        Go to Dashboard
+      <Link href="/" className={buttonVariants({ variant: "ghost" })}>
+        {scopedT('action')}
       </Link>
     </EmptyPlaceholder>
   )

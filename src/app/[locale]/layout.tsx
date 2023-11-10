@@ -67,14 +67,14 @@ export function generateViewport(): Viewport {
   }
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ params, children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
         className="min-h-screen bg-background font-sans antialiased"
       >
-        <Providers>
+        <Providers params={params}>
           <div className="relative flex min-h-screen flex-col">
             <div className="flex-1">
               {children}

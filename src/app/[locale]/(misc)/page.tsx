@@ -4,8 +4,11 @@ import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/lib/db"
 import Link from "next/link";
 import config from "@/config/site"
+import { getI18n, getScopedI18n } from "@/lib/i18n/server";
 
 export default async function IndexPage() {
+  const t = await getI18n();
+  const scopedT = await getScopedI18n('homepage');
   
   const posts = await db.post.findMany({
     take: config.homeMaxPosts,
@@ -27,10 +30,10 @@ export default async function IndexPage() {
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
       <div className="flex max-w-[980px] flex-col items-start gap-2">
         <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Benvenuto!
+          {t('welcome')}!
         </h1>
         <p className="max-w-[700px] text-lg text-muted-foreground">
-          Latest {config.homeMaxPosts} post:
+          {scopedT('headingDescription', { postsNumber: config.homeMaxPosts })}
         </p>
       </div>
       <div className="divide-y divide-border rounded-md border">
@@ -40,7 +43,7 @@ export default async function IndexPage() {
       </div>
 
       <Link href={'/blog'} className={buttonVariants({ variant: 'link' })}>
-        Read more
+        {scopedT('readMore')}
         <Icon icon={"chevronRight"}/>
       </Link>
     </section>

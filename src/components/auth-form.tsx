@@ -110,7 +110,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         {isGoogleLoading ? (
           <Icon icon="spinner" />
         ) : (
-          <Icon icon="google" />
+          <Icon icon="google" className="fill-primary" />
         )}{" "}
         Google
       </button>

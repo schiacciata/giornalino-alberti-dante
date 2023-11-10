@@ -4,6 +4,7 @@ import { Header } from "@/components/header";
 import { Shell } from "@/components/shell";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils";
+import { getScopedI18n } from "@/lib/i18n/server";
 
 type AuthorPostPageProps = {
     params: {
@@ -12,6 +13,8 @@ type AuthorPostPageProps = {
 }
 
 export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
+    const scopedT = await getScopedI18n('author');
+
     const author = await db.user.findUnique({
         where: {
             id: params.authorId,
@@ -42,7 +45,7 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
 
     return (
         <Shell>
-            <Header heading={`Post di ${author.name}`} text={`Registrato il ${formatDate(author.createdAt.toDateString())}`} />
+            <Header heading={scopedT('heading', { name: author.name })} text={scopedT('headingDescription', { date: formatDate(author.createdAt.toDateString()) })} />
             <div className="divide-border-200 divide-y rounded-md border">
                 {posts.map((post) => (
                     <PostCard key={post.id} post={post} />

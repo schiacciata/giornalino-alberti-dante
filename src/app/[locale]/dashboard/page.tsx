@@ -1,28 +1,33 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
 import Link from "next/link"
 import { getCurrentUser, isAdmin } from "@/lib/session"
+import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 
 export const metadata = {
   title: "Dashboard",
 }
 
 export default async function DashboardPage() {
+  const t = await getI18n();
+  const scopedT = await getScopedI18n('dashboard');
   const user = await getCurrentUser();
 
-  if (!user || !isAdmin(user)) {
+  if (!user) {
     return notFound()
   }
+
+  if (!isAdmin(user)) return redirect('/')
 
   return (
     <Shell>
       <Header heading="Dashboard" text={`Welcome, ${user.name}`}/>
       <p className="max-w-[700px] text-lg text-muted-foreground italic">
-        Create new <Link className="underline font-bold" href={'/dashboard/posts'}>
-          posts
-        </Link> or change user <Link className="underline font-bold" href={'/dashboard/settings'}>
-          settings
+        {scopedT('createNew')} <Link className="underline font-bold" href={'/dashboard/posts'}>
+          post
+        </Link> {scopedT('changeUser')} <Link className="underline font-bold" href={'/dashboard/settings'}>
+          {scopedT('settings')}
         </Link>
       </p>
     </Shell>
