@@ -3,12 +3,12 @@ import { PostCard } from "@/components/post-card";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/lib/db"
 import Link from "next/link";
-import { homeMaxPosts } from "@/config/site"
+import config from "@/config/site"
 
 export default async function IndexPage() {
   
   const posts = await db.post.findMany({
-    take: homeMaxPosts,
+    take: config.homeMaxPosts,
     select: {
       id: true,
       title: true,
@@ -27,7 +27,7 @@ export default async function IndexPage() {
           Benvenuto!
         </h1>
         <p className="max-w-[700px] text-lg text-muted-foreground">
-          Latest {homeMaxPosts} post:
+          Latest {config.homeMaxPosts} post:
         </p>
       </div>
       <div className="divide-y divide-border rounded-md border">
