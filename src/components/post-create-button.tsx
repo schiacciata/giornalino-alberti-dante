@@ -1,7 +1,7 @@
-// @ts-ignore
 "use client"
 
 import * as React from "react"
+// @ts-ignore
 import { useFormStatus } from 'react-dom';
 import { useRouter } from "next/navigation"
 
