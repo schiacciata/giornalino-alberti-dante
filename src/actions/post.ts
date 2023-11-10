@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { postCreateSchema } from "@/lib/validations/post"
 import { db } from "@/lib/db"
 
-export const createPost = (formData: FormData) => {
+export const createPost = async (formData: FormData) => {
     try {
         const parsed = postCreateSchema.parse({
             title: formData.get('title') || "Untitled Post",
