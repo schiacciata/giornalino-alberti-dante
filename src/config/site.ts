@@ -3,6 +3,7 @@ import links from "./links";
 export default {
     title: 'Blog',
     description: '📚',
+    homeMaxPosts: 5,
     authors: [
         {
             name: 'PADO',
