@@ -8,7 +8,7 @@ export default {
     },
     read: 'Leggi',
     blog: {
-        headingDescription: 'Leggi tutti i post mai pubblicati',
+        headingDescription: 'Leggi tutti i post pubblicati',
     },
     post: {
         headingDescription: 'Scritto da:',
@@ -20,7 +20,7 @@ export default {
     },
     author: {
         heading: 'Post di {name}',
-        headingDescription: 'Unisciti il {date}',
+        headingDescription: 'Iscritto il {date}',
     },
     login: {
         welcomeBack: 'Bentornato',
