@@ -3,11 +3,10 @@
 import * as React from "react"
 // @ts-ignore
 import { useFormStatus } from 'react-dom';
-import { useRouter } from "next/navigation"
 
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
+import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
 import { createPost } from '@/actions/post'
@@ -20,19 +19,20 @@ export function PostCreateButton({
   ...props
 }: PostCreateButtonProps) {
   const { pending } = useFormStatus();
-  const { toast } = useToast()
   
-  async function onCreate(formData: FormData) {
+  async function onCreate(formData: any) {
     const res = await createPost(formData);
+    
     toast({
-      variant: res.success ? 'default' :"destructive",
-      title: res.success ? 'Success!' : "Uh oh! Something went wrong.",
-      description: res.message,
+      variant: "destructive",
+      title: "Uh oh! Something went wrong.",
+      description: res.error,
     });
   }
 
   return (
     <form action={onCreate}>
+      <input hidden={true} type="text" id="title" readOnly value="Untitled Post" />
       <button
         type='submit'
         className={cn(
