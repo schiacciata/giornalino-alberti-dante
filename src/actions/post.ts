@@ -3,9 +3,13 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { postCreateSchema } from "@/lib/validations/post"
 import { db } from "@/lib/db"
+import { getCurrentUser } from '@/lib/session'
 
 export const createPost = async (formData: FormData) => {
     try {
+        const user = getCurrentUser();
+        if (!user) return { message: 'Not authenticated' };
+
         const body = postCreateSchema.parse({
             title: formData.get('title') || "Untitled Post",
             content: formData.get('content'),
