@@ -5,6 +5,7 @@ import '@/styles/scrollbar.css'
 import siteConfig from "@/config/site"
 import { Providers } from "@/lib/providers"
 import { RootLayoutProps } from '@/types/layout'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: {
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
           </div>
         </Providers>
+        <Toaster />
       </body>
     </html>
   )
