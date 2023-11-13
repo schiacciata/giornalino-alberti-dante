@@ -1,5 +1,5 @@
 import './src/env.mjs'
-import * as pwa from 'next-pwa';
+import pwa from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
