@@ -1,5 +1,5 @@
 import './src/env.mjs'
-import * as withPWA from 'next-pwa';
+import * as pwa from 'next-pwa';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -16,4 +16,10 @@ const nextConfig = {
     }
 }
 
-export default withPWA()(nextConfig);
+const withPWA = pwa({
+  dest: 'public',
+  register: true,
+  sw: 'sw.js',
+});
+
+export default withPWA(nextConfig);
