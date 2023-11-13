@@ -20,6 +20,7 @@ const withPWA = pwa({
   dest: 'public',
   register: true,
   sw: 'sw.js',
+  customWorkerDir: 'src/worker'
 });
 
 export default withPWA(nextConfig);

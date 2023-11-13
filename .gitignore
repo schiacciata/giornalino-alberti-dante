@@ -38,3 +38,7 @@ next-env.d.ts
 
 # contentlayer
 .contentlayer
+
+public/workbox-*.js*
+public/sw.js*
+public/worker-*.js*
