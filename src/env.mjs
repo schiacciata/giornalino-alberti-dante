@@ -9,9 +9,13 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),
     DATABASE_URL: z.string().min(1),
+    NEXT_PUBLIC_VAPID_PUBKEY: z.string().min(1),
+    VAPID_MAILTO: z.string().min(1),
+    VAPID_PRIVKEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
+    NEXT_PUBLIC_VAPID_PUBKEY: z.string().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
@@ -21,5 +25,8 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    NEXT_PUBLIC_VAPID_PUBKEY: process.env.NEXT_PUBLIC_VAPID_PUBKEY,
+    VAPID_MAILTO: process.env.VAPID_MAILTO,
+    VAPID_PRIVKEY: process.env.VAPID_PRIVKEY,
   },
 });

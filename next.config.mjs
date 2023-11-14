@@ -18,7 +18,7 @@ const nextConfig = {
 
 const withPWA = pwa({
   dest: 'public',
-  register: true,
+  register: false,
   sw: 'sw.js',
   customWorkerDir: 'src/worker'
 });
