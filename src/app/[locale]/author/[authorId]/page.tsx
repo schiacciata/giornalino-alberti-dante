@@ -36,7 +36,7 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
             id: true,
             title: true,
             updatedAt: true,
-            likes: true,
+            likesUserIDs: true,
         },
         orderBy: {
             updatedAt: "desc",

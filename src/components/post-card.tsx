@@ -9,7 +9,7 @@ import { Icon } from './icons'
 import { useI18n } from '@/lib/i18n/client'
 
 interface PostCardProps {
-    post: Pick<Post, "id" | "title" | "updatedAt" | "likes">
+    post: Pick<Post, "id" | "title" | "updatedAt" | "likesUserIDs">
 }
 
 export const PostCard: FC<PostCardProps> = ({ post }) => {
@@ -26,7 +26,7 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
         </Link>
         <div>
           <p className="text-sm text-muted-foreground">
-            {formatDate(post.updatedAt?.toDateString())}{/* ∘ <b>{post.likes || 0} <Icon icon='heart' className='inline-flex'/></b>*/}
+            {formatDate(post.updatedAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
           </p>
         </div>
       </div>

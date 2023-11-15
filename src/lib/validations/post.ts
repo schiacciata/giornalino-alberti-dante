@@ -16,3 +16,10 @@ export const postPatchSchema = z.object({
 })
 
 export type postUpdateFormData = z.infer<typeof postPatchSchema>;
+
+export const postLikeSchema = z.object({
+  id: z.string().min(1),
+  liked: z.coerce.boolean(),
+})
+
+export type postLikeFormData = z.infer<typeof postLikeSchema>;

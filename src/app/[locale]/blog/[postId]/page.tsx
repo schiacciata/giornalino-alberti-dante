@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Parser } from '@alkhipce/editorjs-react';
 import { PostAuthorSection } from "@/components/post-author-section";
 import { getScopedI18n } from "@/lib/i18n/server";
+import { LikePostButton } from "@/components/like-post-button";
 
 type BlogPostPageProps = {
     params: {
@@ -29,10 +30,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <Shell className="gap-1">
       <Header heading={post.title} text={scopedT('headingDescription')}>
-        {/*<LikePostButton post={{ likes: post.likes }}/>*/}
+        <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }}/>
       </Header>
 
-      <PostAuthorSection author={{ image: author.image, name: author.name, id: author.id }} post={{ updatedAt: post.updatedAt }}/>
+      <PostAuthorSection
+        author={{ image: author.image, name: author.name, id: author.id }}
+        post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
+      />
       <Parser data={post.content as any}/>
     </Shell>
   )

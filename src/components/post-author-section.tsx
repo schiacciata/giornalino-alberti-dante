@@ -6,10 +6,11 @@ import { UserAvatar } from "./user-avatar"
 import { formatDate } from "@/lib/utils"
 import Link from "next/link"
 import { buttonVariants } from "./ui/button"
+import { Icon } from "./icons"
 
 interface PostAuthorSectionProps {
     author: Pick<User, 'image' | 'name' | 'id'>
-    post: Pick<Post, 'updatedAt'>
+    post: Pick<Post, 'updatedAt' | 'likesUserIDs'>
 }
 
 export function PostAuthorSection({ author, post }: PostAuthorSectionProps) {
@@ -23,7 +24,9 @@ export function PostAuthorSection({ author, post }: PostAuthorSectionProps) {
                     className="h-8 w-8" />  
                 <p className="font-bold px-4 text-lg">{author.name}</p>
             </Link>
-            <p className="py-4 text-muted-foreground italic">{formatDate(post.updatedAt.toDateString())}</p>
+            <p className="py-4 text-muted-foreground italic">
+                {formatDate(post.updatedAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
+            </p>
         </div>
       </>
   )

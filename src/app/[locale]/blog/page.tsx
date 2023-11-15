@@ -15,7 +15,7 @@ export default async function IndexPage() {
       id: true,
       title: true,
       updatedAt: true,
-      likes: true,
+      likesUserIDs: true,
     },
     orderBy: {
       updatedAt: "desc",
