@@ -20,7 +20,7 @@ export default withAuth(
       return I18nMiddleware(req);
     }
 
-    if (!token) {
+    if (!token && !isAdminPage) {
       let from = req.nextUrl.pathname;
       if (req.nextUrl.search) {
         from += req.nextUrl.search;
@@ -29,7 +29,11 @@ export default withAuth(
       return redirect(`/login?from=${encodeURIComponent(from)}`, req);
     }
 
-    if (isAdminPage && !isAdmin(token)) return redirect(`/`, req);
+    if (isAdminPage) {
+      if (!token) return redirect(`/login`, req);
+      if (!isAdmin(token)) return redirect(`/`, req);
+    };
+    
     return I18nMiddleware(req);
   },
   {
