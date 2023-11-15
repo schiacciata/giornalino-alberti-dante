@@ -47,7 +47,6 @@ model Page {
 model Post {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   title     String   @db.String
-  content   Json?
   image     String?
   pages     Page[]
   published Boolean  @default(false)

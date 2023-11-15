@@ -2,10 +2,10 @@ import { db } from "@/lib/db"
 import { Header } from "@/components/header";
 import { Shell } from "@/components/shell";
 import { notFound } from "next/navigation";
-import { Parser } from '@alkhipce/editorjs-react';
 import { PostAuthorSection } from "@/components/post-author-section";
 import { getScopedI18n } from "@/lib/i18n/server";
 import { LikePostButton } from "@/components/like-post-button";
+import { PostContent } from "@/components/post-content";
 
 type BlogPostPageProps = {
     params: {
@@ -20,12 +20,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       id: params.postId,
     },
     include: {
-        author: true,
+      author: true,
+      pages: true,
     }
   });
 
-  if (!post || !post.content) return notFound();
+  if (!post) return notFound();
+
   const { author } = post;
+  const pages = post.pages.map(p => {
+    return {
+      content: p.content,
+    };
+  })
 
   return (
     <Shell className="gap-1">
@@ -37,7 +44,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         author={{ image: author.image, name: author.name, id: author.id }}
         post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
       />
-      <Parser data={post.content as any}/>
+      <PostContent pages={pages}/>
     </Shell>
   )
 }

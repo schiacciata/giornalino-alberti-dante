@@ -18,7 +18,7 @@ import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
 interface EditorProps {
-  post: Pick<Post, "id" | "title" | "content" | "published">
+  post: Pick<Post, "id" | "title" | "published">
 }
 
 type FormData = z.infer<typeof postPatchSchema>

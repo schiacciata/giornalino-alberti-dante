@@ -19,7 +19,6 @@ export const newPost = async (formData: postCreateFormData) => {
             const post = await db.post.create({
                 data: {
                   title: body.title,
-                  content: body.content,
                   authorId: user.id,
                 },
                 select: {
