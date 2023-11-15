@@ -2,8 +2,6 @@ import { Resend } from 'resend';
 import { SendVerificationRequestParams } from 'next-auth/providers/email';
 import { db } from './db';
 import siteConfig from '@/config/site';
-import LoginEmail from '@/emails/login';
-import VerifyEmail from '@/emails/verification';
 import { env } from '@/env.mjs';
 
 export const resend = new Resend(env.RESEND_API_KEY);
@@ -19,20 +17,21 @@ export const sendVerificationRequest = async (params: SendVerificationRequestPar
         },
         })
     
-    const Email = user?.emailVerified
+    /*const Email = user?.emailVerified
         ? LoginEmail
-        : VerifyEmail
+        : VerifyEmail*/
 
     await resend.emails.send({
         from: params.provider.from,
         to: params.identifier,
         subject: `${siteConfig.title} | Login`,
-        react: Email({
+        /*react: Email({
             actionUrl: params.url,
             siteName: siteConfig.title
-        }),
+        }),*/
         headers: {
             "X-Entity-Ref-ID": new Date().getTime().toString(),
-        }
+        },
+        text: 'hey'
     });
 }
