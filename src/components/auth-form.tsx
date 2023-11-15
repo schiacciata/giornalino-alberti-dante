@@ -71,7 +71,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading || isGoogleLoading}
+              disabled={true}
               {...register("email")}
             />
             {errors?.email && (
@@ -80,7 +80,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </p>
             )}
           </div>
-          <button className={cn(buttonVariants())} disabled={isLoading}>
+          <button className={cn(buttonVariants())} disabled={true}>
             {isLoading && (
               <Icon icon="spinner" />
             )}
@@ -113,6 +113,22 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           <Icon icon="google" className="fill-primary" />
         )}{" "}
         Google
+      </button>
+      <button
+        type="button"
+        className={cn(buttonVariants({ variant: "outline" }))}
+        onClick={() => {
+          setIsGoogleLoading(true)
+          signIn("spotify")
+        }}
+        disabled={isLoading || isGoogleLoading}
+      >
+        {isGoogleLoading ? (
+          <Icon icon="spinner" />
+        ) : (
+          <Icon icon="spotify" className="color-primary" />
+        )}{" "}
+        Spotify
       </button>
     </div>
   )

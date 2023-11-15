@@ -24,7 +24,10 @@ export default withAuth(
 
     if (isAuthPage) {
       if (isAuth) {
-        return NextResponse.redirect(new URL("/dashboard", req.url), I18nMiddleware(req))
+        return NextResponse.redirect(new URL("/dashboard", req.url), {
+          ...I18nMiddleware(req),
+          status: 307,
+        })
       }
 
       return I18nMiddleware(req);
@@ -37,9 +40,10 @@ export default withAuth(
       }
 
       return NextResponse.redirect(
-        new URL(`/login?from=${encodeURIComponent(from)}`, req.url),
-        I18nMiddleware(req)
-      );
+        new URL(`/login?from=${encodeURIComponent(from)}`, req.url), {
+          ...I18nMiddleware(req),
+          status: 307,
+        })
     }
 
     return I18nMiddleware(req);
