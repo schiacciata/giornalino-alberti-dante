@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next"
 import { z } from "zod"
 
-import { authOptions } from "@/lib/auth"
+import { authOptions } from "@/lib/auth/options"
 import { db } from "@/lib/db"
 import { userNameSchema } from "@/lib/validations/user"
 

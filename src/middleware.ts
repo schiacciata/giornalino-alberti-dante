@@ -1,51 +1,35 @@
 import { getToken } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
-import { NextResponse } from "next/server"
-import { createI18nMiddleware } from 'next-international/middleware'
-import { defaultLocale, locales } from "./lib/i18n"
-
-const I18nMiddleware = createI18nMiddleware({
-  locales,
-  defaultLocale,
-  urlMappingStrategy: 'rewrite'
-})
+import { isAdmin } from "./lib/auth/roles"
+import { I18nMiddleware, redirect } from "./lib/i18n/middleware"
 
 export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req });
-    const isAuth = !!token;
-    const isAuthPage =
-      req.nextUrl.pathname.startsWith("/login") ||
-      req.nextUrl.pathname.startsWith("/register")
+    const isLoginPage = ['/login', '/register']
+      .some(p => req.nextUrl.pathname.startsWith(p));
       
-    const isAdminPage =
-      req.nextUrl.pathname.startsWith("/dashboard") ||
-      req.nextUrl.pathname.startsWith("/editor")
+    const isAdminPage = ["/dashboard", "/editor"]
+      .some(p => req.nextUrl.pathname.startsWith(p));
 
-    if (isAuthPage) {
-      if (isAuth) {
-        return NextResponse.redirect(new URL("/dashboard", req.url), {
-          ...I18nMiddleware(req),
-          status: 307,
-        })
+    if (isLoginPage) {
+      if (!!token) {
+        return redirect('/', req);
       }
 
       return I18nMiddleware(req);
     }
 
-    if (!isAuth && isAdminPage) {
+    if (!token) {
       let from = req.nextUrl.pathname;
       if (req.nextUrl.search) {
         from += req.nextUrl.search;
       }
 
-      return NextResponse.redirect(
-        new URL(`/login?from=${encodeURIComponent(from)}`, req.url), {
-          ...I18nMiddleware(req),
-          status: 307,
-        })
+      return redirect(`/login?from=${encodeURIComponent(from)}`, req);
     }
 
+    if (isAdminPage && !isAdmin(token)) return redirect(`/`, req);
     return I18nMiddleware(req);
   },
   {

@@ -2,8 +2,9 @@ import { notFound, redirect } from "next/navigation"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
 import Link from "next/link"
-import { getCurrentUser, isAdmin } from "@/lib/session"
+import { getCurrentUser } from "@/lib/auth/user"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
+import { isAdmin } from "@/lib/auth/roles"
 
 export const metadata = {
   title: "Dashboard",

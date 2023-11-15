@@ -71,7 +71,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={true}
               {...register("email")}
             />
             {errors?.email && (
@@ -80,7 +79,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
               </p>
             )}
           </div>
-          <button className={cn(buttonVariants())} disabled={true}>
+          <button className={cn(buttonVariants())}>
             {isLoading && (
               <Icon icon="spinner" />
             )}

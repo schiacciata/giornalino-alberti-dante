@@ -1,7 +1,7 @@
 'use server'
 
 import { db } from "@/lib/db"
-import { getCurrentUser } from '@/lib/session'
+import { getCurrentUser } from '@/lib/auth/user'
 import { userNameSchema, userUpdateFormData } from '@/lib/validations/user';
 
 export const updateUser = async (formData: userUpdateFormData) => {

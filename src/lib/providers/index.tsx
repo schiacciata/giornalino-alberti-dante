@@ -3,8 +3,8 @@
 import { RootLayoutProps } from '@/types/layout'
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from "next-themes"
-import { I18nProviderClient } from './i18n/client'
-import { ServiceWorkerProvider } from './sw'
+import { I18nProviderClient } from '@/lib/i18n/client'
+import { ServiceWorkerProvider } from '@/lib/providers/sw'
 
 export function Providers({
   children,

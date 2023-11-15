@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { postCreateSchema, postCreateFormData, postLikeSchema, postLikeFormData } from "@/lib/validations/post"
 import { db } from "@/lib/db"
-import { getCurrentUser } from '@/lib/session'
+import { getCurrentUser } from '@/lib/auth/user'
 
 export const newPost = async (formData: postCreateFormData) => {
     const createPost = async (formData: postCreateFormData) => {

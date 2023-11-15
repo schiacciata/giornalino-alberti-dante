@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation"
 
-import { authOptions } from "@/lib/auth"
+import { authOptions } from "@/lib/auth/options"
 import { db } from "@/lib/db"
-import { getCurrentUser } from "@/lib/session"
+import { getCurrentUser } from "@/lib/auth/user"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
 import { Header } from "@/components/header"
 import { PostCreateButton } from "@/components/post-create-button"

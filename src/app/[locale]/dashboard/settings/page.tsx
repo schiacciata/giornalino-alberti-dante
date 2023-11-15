@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 
-import { authOptions } from "@/lib/auth"
-import { getCurrentUser } from "@/lib/session"
+import { authOptions } from "@/lib/auth/options"
+import { getCurrentUser } from "@/lib/auth/user"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
 import { UserNameForm } from "@/components/user-name-form"

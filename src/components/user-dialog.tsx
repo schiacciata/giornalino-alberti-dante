@@ -3,6 +3,7 @@ import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { UserAvatar } from "./user-avatar"
 import { DropdownMenuContent, DropdownMenuSeparator, DropdownMenuItem, DropdownMenu, DropdownMenuTrigger } from "./ui/dropdown-menu"
+import { isEditor } from "@/lib/auth/roles"
 
 type UserDialogProps = {
     user: User,
@@ -29,13 +30,18 @@ export function UserDialog({ user }: UserDialogProps) {
           </div>
         </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard">Dashboard</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard/settings">Settings</Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+        {isEditor(user) ?
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard/settings">Settings</Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+          : null
+        }
         <DropdownMenuItem
           className="cursor-pointer hover:bg-red-500"
           onSelect={(event) => {

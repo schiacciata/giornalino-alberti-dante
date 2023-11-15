@@ -1,8 +1,9 @@
 import * as z from "zod"
 
-import { getCurrentUser, isAdmin } from "@/lib/session"
+import { getCurrentUser } from "@/lib/auth/user"
 import { db } from "@/lib/db"
 import { postPatchSchema } from "@/lib/validations/post"
+import { isAdmin } from "@/lib/auth/roles"
 
 const routeContextSchema = z.object({
   params: z.object({

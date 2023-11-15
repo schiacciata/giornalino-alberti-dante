@@ -1,8 +1,8 @@
 import * as z from "zod"
 
-import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { getCurrentUser, isAdmin } from "@/lib/session"
+import { getCurrentUser } from "@/lib/auth/user"
+import { isAdmin } from "@/lib/auth/roles"
 
 const postCreateSchema = z.object({
   title: z.string(),
