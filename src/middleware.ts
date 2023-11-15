@@ -20,19 +20,18 @@ export default withAuth(
       return I18nMiddleware(req);
     }
 
-    if (!token && !isAdminPage) {
-      let from = req.nextUrl.pathname;
-      if (req.nextUrl.search) {
-        from += req.nextUrl.search;
-      }
-
-      return redirect(`/login?from=${encodeURIComponent(from)}`, req);
-    }
-
     if (isAdminPage) {
-      if (!token) return redirect(`/login`, req);
+      if (!token) {
+        let from = req.nextUrl.pathname;
+        if (req.nextUrl.search) {
+          from += req.nextUrl.search;
+        }
+  
+        return redirect(`/login?from=${encodeURIComponent(from)}`, req);
+      }
+     
       if (!isAdmin(token)) return redirect(`/`, req);
-    };
+    }
     
     return I18nMiddleware(req);
   },
