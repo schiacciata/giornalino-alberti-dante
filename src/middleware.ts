@@ -1,6 +1,6 @@
 import { getToken } from "next-auth/jwt"
 import { withAuth } from "next-auth/middleware"
-import { isAdmin } from "./lib/auth/roles"
+import { isAdmin, isEditor } from "./lib/auth/roles"
 import { I18nMiddleware, redirect } from "./lib/i18n/middleware"
 
 export default withAuth(
@@ -9,8 +9,11 @@ export default withAuth(
     const isLoginPage = ['/login', '/register']
       .some(p => req.nextUrl.pathname.startsWith(p));
       
-    const isAdminPage = ["/dashboard", "/editor"]
+    const isEditorPage = ["/dashboard", "/editor"]
       .some(p => req.nextUrl.pathname.startsWith(p));
+      
+    /*const isAdminPage = ["/dashboard", "/editor"]
+      .some(p => req.nextUrl.pathname.startsWith(p));*/
 
     if (isLoginPage) {
       if (!!token) {
@@ -20,7 +23,7 @@ export default withAuth(
       return I18nMiddleware(req);
     }
 
-    if (isAdminPage) {
+    if (isEditorPage) {
       if (!token) {
         let from = req.nextUrl.pathname;
         if (req.nextUrl.search) {
@@ -30,7 +33,7 @@ export default withAuth(
         return redirect(`/login?from=${encodeURIComponent(from)}`, req);
       }
      
-      if (!isAdmin(token)) return redirect(`/`, req);
+      if (!isEditor(token)) return redirect(`/`, req);
     }
     
     return I18nMiddleware(req);

@@ -1,7 +1,7 @@
 'use server'
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { postCreateSchema, postCreateFormData, postLikeSchema, postLikeFormData } from "@/lib/validations/post"
+import { postCreateSchema, postCreateFormData, postLikeSchema, postLikeFormData, postPatchSchema } from "@/lib/validations/post"
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
 
@@ -39,7 +39,7 @@ export const newPost = async (formData: postCreateFormData) => {
     const post = await createPost(formData);
     if ("error" in post) return post;
 
-    return redirect(`/editor/${post.id}`);
+    return redirect(`/dashboard/posts/${post.id}`);
 }
 
 export const likePost = async (formData: postLikeFormData) => {
@@ -74,4 +74,42 @@ export const likePost = async (formData: postLikeFormData) => {
     if ("error" in post && post.error) return post;
 
     return { message: `Successfully ${post.liked ? 'liked' : 'disliked'} post` };
+}
+
+
+export const editPost = async (formData: FormData) => {
+    const update = async (formData: FormData) => {
+        try {
+            const user = await getCurrentUser();
+            if (!user) return { error: 'Not authenticated' };
+
+            const data = Object.fromEntries(formData);
+            const body = postPatchSchema.parse(data);
+            if (!body.id) return { error: 'No id' }
+        
+            const post = await db.post.update({
+                data: {
+                  title: body.title,
+                },
+                where: {
+                    id: body.id
+                }
+            })
+        
+            revalidatePath('/');
+            revalidatePath('/dashboard/posts');
+            revalidatePath('/blog');
+            revalidatePath(`/blog/${post.id}`);
+
+            return post;
+        } catch (e) {
+            console.log(e)
+            return { error: 'There was an error.' };
+        }
+    };
+    
+    const post = await update(formData);
+    if ("error" in post) return post;
+
+    return redirect(`/dashboard/posts/${post.id}`);
 }

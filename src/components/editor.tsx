@@ -5,27 +5,28 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import EditorJS from "@editorjs/editorjs"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Post } from "@prisma/client"
+import { Page, Post } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import TextareaAutosize from "react-textarea-autosize"
 import * as z from "zod"
 
 import "@/styles/editor.css"
 import { cn } from "@/lib/utils"
-import { postPatchSchema } from "@/lib/validations/post"
+import { pagePatchSchema } from "@/lib/validations/page"
 import { buttonVariants } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
 interface EditorProps {
-  post: Pick<Post, "id" | "title" | "published">
+  page: Pick<Page, "id" | "number">
+  post: Pick<Post, "title">
 }
 
-type FormData = z.infer<typeof postPatchSchema>
+type FormData = z.infer<typeof pagePatchSchema>
 
-export function Editor({ post }: EditorProps) {
+export function Editor({ page, post }: EditorProps) {
   const { register, handleSubmit } = useForm<FormData>({
-    resolver: zodResolver(postPatchSchema),
+    resolver: zodResolver(pagePatchSchema),
   })
   const ref = React.useRef<EditorJS>()
   const router = useRouter()
@@ -42,7 +43,7 @@ export function Editor({ post }: EditorProps) {
     const LinkTool = (await import("@editorjs/link")).default
     const InlineCode = (await import("@editorjs/inline-code")).default
 
-    const body = postPatchSchema.parse(post)
+    const body = pagePatchSchema.parse(page)
 
     if (!ref.current) {
       const editor = new EditorJS({
@@ -50,7 +51,7 @@ export function Editor({ post }: EditorProps) {
         onReady() {
           ref.current = editor
         },
-        placeholder: "Type here to write your post...",
+        placeholder: "Type here to write your page...",
         inlineToolbar: true,
         data: body.content,
         tools: {
@@ -64,7 +65,7 @@ export function Editor({ post }: EditorProps) {
         },
       })
     }
-  }, [post])
+  }, [page])
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
@@ -88,13 +89,13 @@ export function Editor({ post }: EditorProps) {
 
     const blocks = await ref.current?.save()
 
-    const response = await fetch(`/api/posts/${post.id}`, {
+    const response = await fetch(`/api/pages/${page.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: data.title,
+        number: data.number,
         content: blocks,
       }),
     })
@@ -104,7 +105,7 @@ export function Editor({ post }: EditorProps) {
     if (!response?.ok) {
       return toast({
         title: "Something went wrong.",
-        description: "Your post was not saved. Please try again.",
+        description: "Your page was not saved. Please try again.",
         variant: "destructive",
       })
     }
@@ -112,7 +113,7 @@ export function Editor({ post }: EditorProps) {
     router.refresh()
 
     return toast({
-      description: "Your post has been saved.",
+      description: "Your page has been saved.",
     })
   }
 
@@ -135,7 +136,7 @@ export function Editor({ post }: EditorProps) {
               </>
             </Link>
             <p className="text-sm text-muted-foreground">
-              {post.published ? "Published" : "Draft"}
+              {post.title}
             </p>
           </div>
           <button type="submit" className={cn(buttonVariants())}>
@@ -149,10 +150,10 @@ export function Editor({ post }: EditorProps) {
           <TextareaAutosize
             autoFocus
             id="title"
-            defaultValue={post.title}
-            placeholder="Post title"
+            defaultValue={page.number}
+            placeholder="Page title"
             className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
-            {...register("title")}
+            {...register("number")}
           />
           <div id="editor" className="min-h-[500px]" />
           <p className="text-sm text-gray-500">

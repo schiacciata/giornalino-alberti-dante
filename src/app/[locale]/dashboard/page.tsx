@@ -4,7 +4,6 @@ import { Shell } from "@/components/shell"
 import Link from "next/link"
 import { getCurrentUser } from "@/lib/auth/user"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
-import { isAdmin } from "@/lib/auth/roles"
 
 export const metadata = {
   title: "Dashboard",
@@ -18,8 +17,6 @@ export default async function DashboardPage() {
   if (!user) {
     return notFound()
   }
-
-  if (!isAdmin(user)) return redirect('/')
 
   return (
     <Shell>

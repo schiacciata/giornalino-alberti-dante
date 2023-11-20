@@ -2,11 +2,12 @@ import * as z from "zod"
 
 import { getCurrentUser } from "@/lib/auth/user"
 import { db } from "@/lib/db"
-import { postPatchSchema } from "@/lib/validations/post"
-import { isEditor } from "@/lib/auth/roles"
+import { pagePatchSchema } from "@/lib/validations/page"
+import { isAdmin } from "@/lib/auth/roles"
 
 const routeContextSchema = z.object({
   params: z.object({
+    pageId: z.string(),
     postId: z.string(),
   }),
 })
@@ -19,15 +20,15 @@ export async function DELETE(
     // Validate the route params.
     const { params } = routeContextSchema.parse(context)
 
-    // Check if the user has access to this post.
-    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
+    // Check if the user has access to this page.
+    if (!(await verifyCurrentUserHasAccessToPage(params.pageId))) {
       return new Response(null, { status: 403 })
     }
 
-    // Delete the post.
-    await db.post.delete({
+    // Delete the page.
+    await db.page.delete({
       where: {
-        id: params.postId as string,
+        id: params.pageId as string,
       },
     })
 
@@ -49,24 +50,23 @@ export async function PATCH(
     // Validate route params.
     const { params } = routeContextSchema.parse(context)
 
-    // Check if the user has access to this post.
-    if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
+    // Check if the user has access to this page.
+    if (!(await verifyCurrentUserHasAccessToPage(params.pageId))) {
       return new Response(null, { status: 403 })
     }
 
     // Get the request body and validate it.
     const json = await req.json()
-    const body = postPatchSchema.parse(json)
+    const body = pagePatchSchema.parse(json)
 
-    // Update the post.
+    // Update the page.
     // TODO: Implement sanitization for content.
-    await db.post.update({
+    await db.page.update({
       where: {
-        id: params.postId,
+        id: params.pageId,
       },
       data: {
-        title: body.title,
-        published: body.published,
+        number: body.number,
       },
     })
 
@@ -80,15 +80,15 @@ export async function PATCH(
   }
 }
 
-async function verifyCurrentUserHasAccessToPost(postId: string) {
+async function verifyCurrentUserHasAccessToPage(pageId: string) {
   const user = await getCurrentUser();
   if (!user) return false;
   
-  return (isEditor(user));
+  return (isAdmin(user));
 
-  /*const count = await db.post.count({
+  /*const count = await db.page.count({
     where: {
-      id: postId,
+      id: pageId,
       authorId: user.id,
     },
   })

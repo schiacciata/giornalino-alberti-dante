@@ -3,40 +3,53 @@ import * as z from "zod"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { isEditor } from "@/lib/auth/roles"
+import { pageCreateSchema } from "@/lib/validations/page";
 
-const postCreateSchema = z.object({
-  title: z.string(),
-  content: z.string().optional(),
+const routeContextSchema = z.object({
+  params: z.object({
+    postId: z.string(),
+  }),
 })
 
-export async function GET() {
+export async function GET(
+  req: Request,
+  context: z.infer<typeof routeContextSchema>
+) {
   try {
+    // Validate the route params.
+    const { params } = routeContextSchema.parse(context)
     const user = await getCurrentUser();
 
     if (!user || !isEditor(user)) {
       return new Response("Unauthorized", { status: 403 })
     }
 
-    const posts = await db.post.findMany({
+    const pages = await db.page.findMany({
       select: {
         id: true,
-        title: true,
-        published: true,
+        number: true,
+        updatedAt: true,
         createdAt: true,
       },
       where: {
-        authorId: user.id,
+        postId: params.postId
       },
     })
 
-    return new Response(JSON.stringify(posts))
+    return new Response(JSON.stringify(pages))
   } catch (error) {
     return new Response(null, { status: 500 })
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(
+  req: Request,
+  context: z.infer<typeof routeContextSchema>
+) {
   try {
+    // Validate the route params.
+    const { params } = routeContextSchema.parse(context)
+
     const user = await getCurrentUser();
 
     if (!user || !isEditor(user)) {
@@ -44,19 +57,19 @@ export async function POST(req: Request) {
     }
 
     const json = await req.json()
-    const body = postCreateSchema.parse(json)
+    const body = pageCreateSchema.parse(json)
 
-    const post = await db.post.create({
+    const page = await db.page.create({
       data: {
-        title: body.title,
-        authorId: user.id,
+        number: body.number,
+        postId: params.postId
       },
       select: {
         id: true,
       },
     })
 
-    return new Response(JSON.stringify(post))
+    return new Response(JSON.stringify(page))
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 })

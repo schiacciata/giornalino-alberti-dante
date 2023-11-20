@@ -1,22 +1,26 @@
 import { notFound, redirect } from "next/navigation"
-import { Post, User } from "@prisma/client"
+import { Page, User } from "@prisma/client"
 
 import { authOptions } from "@/lib/auth/options"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { Editor } from "@/components/editor"
 
-async function getPostForUser(postId: Post["id"], userId: User["id"]) {
-  return await db.post.findFirst({
+async function getPageForUser(pageId: Page["id"]) {
+  return await db.page.findFirst({
     where: {
-      id: postId,
-      //authorId: userId,
+      id: pageId,
     },
+    select: {
+      id: true,
+      post: true,
+      number: true,
+    }
   })
 }
 
 interface EditorPageProps {
-  params: { postId: string }
+  params: { pageId: string }
 }
 
 export default async function EditorPage({ params }: EditorPageProps) {
@@ -26,18 +30,20 @@ export default async function EditorPage({ params }: EditorPageProps) {
     redirect(authOptions?.pages?.signIn || "/login")
   }
 
-  const post = await getPostForUser(params.postId, user.id)
+  const page = await getPageForUser(params.pageId)
 
-  if (!post) {
+  if (!page) {
     notFound()
   }
 
   return (
     <Editor
+      page={{
+        id: page.id,
+        number: page.number,
+      }}
       post={{
-        id: post.id,
-        title: post.title,
-        published: post.published,
+        title: page.post.title,
       }}
     />
   )
