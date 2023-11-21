@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth/user"
 import { db } from "@/lib/db"
 import { postPatchSchema } from "@/lib/validations/post"
 import { isEditor } from "@/lib/auth/roles"
+import { notifications } from "@/lib/notifications"
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -69,6 +70,13 @@ export async function PATCH(
         published: body.published,
       },
     })
+
+    if (body.published) {
+      notifications.sendEveryoneNotification({
+        title: 'Un nuovo post è stato pubblicato',
+        tag: 'POST_PUBLISHED'
+      })
+    }
 
     return new Response(null, { status: 200 })
   } catch (error) {
