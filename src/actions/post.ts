@@ -65,6 +65,13 @@ export const likePost = async (formData: postLikeFormData) => {
                 }
             })
 
+            if (body.liked) {
+                notifications.sendUserNotification(post.authorId, {
+                    title: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post!`,
+                    tag: 'POST_LIKED'
+                })
+            }
+
             return { liked: post.likesUserIDs.some(userId => userId === user.id) };
         } catch (e) {
             return { error: 'There was an error.' };
