@@ -119,6 +119,7 @@ export const editPost = async (formData: FormData) => {
 
             return post;
         } catch (e) {
+            console.log(e)
             return { error: 'There was an error.' };
         }
     };
