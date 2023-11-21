@@ -56,7 +56,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
   
     return (
       <Shell>
-        <Header heading={`Pagine di "${post.title}"`} text="Create and manage posts.">
+        <Header heading={`Pagine di "${post.title}" ${post.published ? '🌐' : '🔐'}`} text="Create and manage posts.">
             <PostEditDialog post={{ id: post.id, title: post.title, published: post.published }} />
             <PageCreateButton postId={post.id} />
         </Header>

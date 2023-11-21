@@ -13,7 +13,7 @@ export const postPatchSchema = z.object({
 
   // TODO: Type this properly from editorjs block types?
   content: z.any().optional(),
-  published: z.coerce.boolean().optional(),
+  published: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
 })
 
 export type postUpdateFormData = z.infer<typeof postPatchSchema>;
