@@ -41,7 +41,7 @@ model Page {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   postId    String   @db.ObjectId
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Post {
@@ -55,7 +55,7 @@ model Post {
   likesUserIDs String[] @db.ObjectId
   likes        User[]   @relation("LikedPosts", fields: [likesUserIDs], references: [id])
   authorId     String   @db.ObjectId
-  author       User     @relation(fields: [authorId], references: [id])
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

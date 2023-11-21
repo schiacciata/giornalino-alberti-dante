@@ -14,11 +14,11 @@ export default async function IndexPage() {
     select: {
       id: true,
       title: true,
-      updatedAt: true,
+      createdAt: true,
       likesUserIDs: true,
     },
     orderBy: {
-      updatedAt: "desc",
+      createdAt: "desc",
     },
   });
 
