@@ -1,4 +1,4 @@
-import { AuthUser } from "@/types/next-auth";
+import { User } from "next-auth";
 
-export const isAdmin = (user: AuthUser) => user.role === "ADMIN";
-export const isEditor = (user: AuthUser) => isAdmin(user) || user.role === "EDITOR";
+export const isAdmin = (user: User) => user.role === "ADMIN";
+export const isEditor = (user: User) => isAdmin(user) || user.role === "EDITOR";

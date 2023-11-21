@@ -4,8 +4,22 @@ import { env } from '@/env.mjs'
 import { createContext, useContext, useEffect, useState, useCallback, ReactElement } from 'react'
 import { Workbox } from 'workbox-window'
 
+type SubscriptionVariables = {
+  endpoint: string;
+  p256dh: ArrayBuffer | null;
+  auth: ArrayBuffer | null;
+}
+
+export type SWContext = {
+  registration?: ServiceWorkerRegistration
+  support: Record<string, boolean>
+  permission: NotificationPermission
+  requestNotificationPermission: () => Promise<void>
+  togglePushSubscription: () => Promise<void>
+}
+
 const applicationServerKey = env.NEXT_PUBLIC_VAPID_PUBKEY
-const ServiceWorkerContext = createContext<any>(null)
+const ServiceWorkerContext = createContext<SWContext | null>(null)
 
 type ServiceWorkerProviderProps = {
   children: ReactElement;
@@ -16,11 +30,19 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
   const [support, setSupport] = useState<Record<string, boolean>>({ serviceWorker: false, pushManager: false })
   const [permission, setPermission] = useState<NotificationPermission>("denied");
 
+  const savePushSubscription = async (vars: SubscriptionVariables) => {
+    console.log('savePushSubscription')
+    return (await fetch('/api/subscriptions', {
+      method: 'POST',
+      body: JSON.stringify(vars),
+    })).ok;
+  }
+
   const requestNotificationPermission = useCallback(async () => {
     const permission = await window.Notification.requestPermission();
     setPermission(permission);
 
-    if (permission === 'granted') return subscribeToPushNotifications()
+    if (permission === 'granted') return await subscribeToPushNotifications()
   }, [])
 
   const subscribeToPushNotifications = async () => {
@@ -28,12 +50,10 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
     // Brave users must enable a flag in brave://settings/privacy first
     if (!registration) return;
 
-    const pushSubscription = await registration.pushManager.subscribe(subscribeOptions)
-    const { endpoint } = pushSubscription
-    console.info('subscribed to push notifications', { endpoint })
+    let pushSubscription: any = await registration.pushManager.subscribe(subscribeOptions)
     
     // convert keys from ArrayBuffer to string
-    //pushSubscription = JSON.parse(JSON.stringify(pushSubscription))
+    pushSubscription = JSON.parse(JSON.stringify(pushSubscription))
     // Send subscription to service worker to save it so we can use it later during `pushsubscriptionchange`
     // see https://medium.com/@madridserginho/how-to-handle-webpush-api-pushsubscriptionchange-event-in-modern-browsers-6e47840d756f
     /*navigator.serviceWorker.controller.postMessage({
@@ -42,14 +62,14 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
     })
     logger.info('sent STORE_SUBSCRIPTION to service worker', { endpoint })*/
     // send subscription to server
-    const variables = {
-      endpoint,
-      p256dh: pushSubscription.getKey('p256dh'),
-      auth: pushSubscription.getKey('auth'),
+    console.log(pushSubscription)
+    const variables: SubscriptionVariables = {
+      endpoint: pushSubscription.endpoint,
+      p256dh: pushSubscription.keys.p256dh,
+      auth: pushSubscription.keys.auth,
     }
 
-    /*await savePushSubscription({ variables })
-    logger.info('sent push subscription to server', { endpoint })*/
+    await savePushSubscription(variables)
   }
 
   const unsubscribeFromPushNotifications = async (subscription: PushSubscription) => {
@@ -96,13 +116,13 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
     // wait until successful registration
     if (!registration) return
     // setup channel between app and service worker
-    const channel = new MessageChannel()
+    /*const channel = new MessageChannel()
     navigator?.serviceWorker?.controller?.postMessage({ action: 'ACTION_PORT' }, [channel.port2])
     channel.port1.onmessage = (event) => {
       if (event.data.action === 'RESUBSCRIBE') {
         return subscribeToPushNotifications()
       }
-    }
+    }*/
     // since (a lot of) browsers don't support the pushsubscriptionchange event,
     // we sync with server manually by checking on every page reload if the push subscription changed.
     // see https://medium.com/@madridserginho/how-to-handle-webpush-api-pushsubscriptionchange-event-in-modern-browsers-6e47840d756f

@@ -3,8 +3,17 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    NEXTAUTH_URL: z.string().url().optional(),
-    NEXTAUTH_SECRET: z.string().min(1),
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+    NEXTAUTH_SECRET:
+      process.env.NODE_ENV === "production"
+        ? z.string()
+        : z.string().optional(),
+    NEXTAUTH_URL: z.preprocess(
+      (str) => process.env.VERCEL_URL ?? str,
+      process.env.VERCEL ? z.string() : z.string().url()
+    ),
     NODE_ENV: z.string().min(1),
     GOOGLE_CLIENT_ID: z.string().min(1),
     GOOGLE_CLIENT_SECRET: z.string().min(1),

@@ -1,6 +1,7 @@
 import { env } from '@/env.mjs';
 import webPush from 'web-push'
 import { db } from './db';
+import { PushSubscription } from '@prisma/client';
 
 class Notifications {
   webpush: typeof webPush;
@@ -13,21 +14,19 @@ class Notifications {
     )
   }
 
-  private createPayload(notification: Partial<Notification>) {
+  private createPayload(title: string, options?: NotificationOptions): string {
     // https://web.dev/push-notifications-display-a-notification/#visual-options
-    const { title, body, ...options } = notification;
     return JSON.stringify({
-      title,
+      title, 
       options: {
-        body,
         timestamp: Date.now(),
         icon: '/images/icon-192x192.png',
-        ...options
+        ...options,
       }
     })
   }
 
-  public sendNotification(subscription: any, payload: string) {
+  public sendNotification(subscription: PushSubscription, payload: string) {
     const { id, endpoint, p256dh, auth } = subscription;
     return webPush.sendNotification({ endpoint, keys: { p256dh, auth } }, payload)
       .catch(async (err) => {
@@ -37,8 +36,8 @@ class Notifications {
           console.log('[webPush] auth error: ', err)
         } else if (err.statusCode === 404 || err.statusCode === 410) {
           console.log('[webPush] subscription has expired or is no longer valid: ', err)
-          //const deletedSubscripton = await db.pushSubscription.delete({ where: { id } })
-          //console.log(`[webPush] deleted subscription ${id} of user ${deletedSubscripton.userId} due to push error`)
+          const deletedSubscripton = await db.pushSubscription.delete({ where: { id } })
+          console.log(`[webPush] deleted subscription ${id} of user ${deletedSubscripton.userId} due to push error`)
         } else if (err.statusCode === 413) {
           console.log('[webPush] payload too large: ', err)
         } else if (err.statusCode === 429) {
@@ -49,15 +48,15 @@ class Notifications {
       })
   }
 
-  async sendUserNotification(userId: string, notification: Partial<Notification>) {
+  async sendUserNotification(userId: string, notification: Partial<Notification> & { title: string }) {
     try {
-      const payload = this.createPayload(notification)
-      /*const subscriptions = await db.pushSubscription.findMany({
+      const payload = this.createPayload(notification.title, notification)
+      const subscriptions = await db.pushSubscription.findMany({
         where: { userId }
       })
       await Promise.allSettled(
         subscriptions.map(subscription => this.sendNotification(subscription, payload))
-      )*/
+      )
     } catch (err) {
       console.log('[webPush] error sending user notification: ', err)
     }

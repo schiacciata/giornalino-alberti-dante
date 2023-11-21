@@ -45,17 +45,17 @@ model Page {
 }
 
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String   @db.String
-  image     String?
-  pages     Page[]
-  published Boolean  @default(false)
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
-  likesUserIDs String[]   @db.ObjectId
-  likes     User[]   @relation("LikedPosts", fields: [likesUserIDs], references: [id])
-  authorId  String   @db.ObjectId
-  author    User     @relation(fields: [authorId], references: [id])
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String   @db.String
+  image        String?
+  pages        Page[]
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map(name: "created_at")
+  updatedAt    DateTime @updatedAt @map(name: "updated_at")
+  likesUserIDs String[] @db.ObjectId
+  likes        User[]   @relation("LikedPosts", fields: [likesUserIDs], references: [id])
+  authorId     String   @db.ObjectId
+  author       User     @relation(fields: [authorId], references: [id])
 }
 
 enum Role {
@@ -65,19 +65,20 @@ enum Role {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?   @db.String
-  email         String?   @unique @db.String
-  emailVerified DateTime?
-  image         String?   @db.String
-  accounts      Account[]
-  sessions      Session[]
-  posts         Post[]
-  role          Role      @default(USER)
-  likedPostsIDs String[]   @db.ObjectId
-  likedPosts    Post[]    @relation("LikedPosts", fields: [likedPostsIDs], references: [id])
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  id                String             @id @default(auto()) @map("_id") @db.ObjectId
+  name              String?            @db.String
+  email             String?            @unique @db.String
+  emailVerified     DateTime?
+  image             String?            @db.String
+  accounts          Account[]
+  sessions          Session[]
+  posts             Post[]
+  role              Role               @default(USER)
+  likedPostsIDs     String[]           @db.ObjectId
+  likedPosts        Post[]             @relation("LikedPosts", fields: [likedPostsIDs], references: [id])
+  PushSubscriptions PushSubscription[]
+  createdAt         DateTime           @default(now()) @map(name: "created_at")
+  updatedAt         DateTime           @updatedAt @map(name: "updated_at")
 }
 
 model VerificationToken {
@@ -87,4 +88,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PushSubscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "PushSubscription.userId_index")
 }
