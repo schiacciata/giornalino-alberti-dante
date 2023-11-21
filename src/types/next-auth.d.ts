@@ -1,7 +1,8 @@
 import { Role } from "@prisma/client";
 import { JWT } from "next-auth/jwt"
+import { DefaultUser } from "next-auth"
 
-export interface AuthUser {
+export interface AuthUser extends DefaultUser {
   id: string;
   role?: Role;
 }

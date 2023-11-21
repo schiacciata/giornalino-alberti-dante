@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
 import Link from "next/link"
