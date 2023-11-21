@@ -91,8 +91,8 @@ export function PostOperations({ post }: PostOperationsProps) {
               </DropdownMenuItem>
             </>
           )}
-            <DropdownMenuItem>
-              <Link href={`/dashboard/posts/${post.id}`} className={buttonVariants({ variant: 'secondary' })}>
+            <DropdownMenuItem asChild>
+              <Link href={`/dashboard/posts/${post.id}`}>
                 Edit
               </Link>
             </DropdownMenuItem>
