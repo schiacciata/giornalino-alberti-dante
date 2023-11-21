@@ -37,7 +37,7 @@ model Session {
 model Page {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   number    Int
-  content   Json?    @db.Json
+  content   Json?
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   postId    String   @db.ObjectId

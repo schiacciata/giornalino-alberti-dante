@@ -42,6 +42,7 @@ import {
     ChevronRight,
     Globe,
     Music,
+    PenBox,
 } from "lucide-react"
 
 export const Icons = {
@@ -101,6 +102,7 @@ export const Icons = {
     pizza: Pizza,
     globe: Globe,
     spotify: Music,
+    edit: PenBox,
 }
 
 export type TIcon = keyof typeof Icons;

@@ -3,7 +3,7 @@ import * as z from "zod"
 import { getCurrentUser } from "@/lib/auth/user"
 import { db } from "@/lib/db"
 import { pagePatchSchema } from "@/lib/validations/page"
-import { isAdmin } from "@/lib/auth/roles"
+import { isEditor } from "@/lib/auth/roles"
 
 const routeContextSchema = z.object({
   params: z.object({
@@ -67,6 +67,7 @@ export async function PATCH(
       },
       data: {
         number: body.number,
+        content: body.content,
       },
     })
 
@@ -75,6 +76,7 @@ export async function PATCH(
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 })
     }
+    console.log(error)
 
     return new Response(null, { status: 500 })
   }
@@ -84,7 +86,7 @@ async function verifyCurrentUserHasAccessToPage(pageId: string) {
   const user = await getCurrentUser();
   if (!user) return false;
   
-  return (isAdmin(user));
+  return (isEditor(user));
 
   /*const count = await db.page.count({
     where: {

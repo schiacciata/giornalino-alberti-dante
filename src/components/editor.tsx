@@ -18,8 +18,8 @@ import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
 interface EditorProps {
-  page: Pick<Page, "id" | "number">
-  post: Pick<Post, "title">
+  page: Pick<Page, "id" | "number" | "content">
+  post: Pick<Post, "title" | "id">
 }
 
 type FormData = z.infer<typeof pagePatchSchema>
@@ -89,7 +89,7 @@ export function Editor({ page, post }: EditorProps) {
 
     const blocks = await ref.current?.save()
 
-    const response = await fetch(`/api/pages/${page.id}`, {
+    const response = await fetch(`/api/posts/${post.id}/pages/${page.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export function Editor({ page, post }: EditorProps) {
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center space-x-10">
             <Link
-              href="/dashboard"
+              href={`/dashboard/posts/${post.id}`}
               className={cn(buttonVariants({ variant: "ghost" }))}
             >
               <>
@@ -150,11 +150,12 @@ export function Editor({ page, post }: EditorProps) {
           <TextareaAutosize
             autoFocus
             id="title"
-            defaultValue={page.number}
+            defaultValue={`Editing page ${page.number}`}
             placeholder="Page title"
+            disabled
             className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
-            {...register("number")}
           />
+          <input type="hidden" disabled value={page.number} {...register("number")} />
           <div id="editor" className="min-h-[500px]" />
           <p className="text-sm text-gray-500">
             Use{" "}

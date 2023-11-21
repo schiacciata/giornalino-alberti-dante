@@ -9,7 +9,7 @@ interface PageItemProps {
   page: Pick<Page, "id" | "number" | "updatedAt" | "content">
 }
 
-const MAX_CHARS = 35;
+//const MAX_CHARS = 35;
 
 export function PageItem({ page }: PageItemProps) {
   return (
@@ -21,7 +21,9 @@ export function PageItem({ page }: PageItemProps) {
         >
           <div>
             <p>Page {page.number}</p>
-            <p className={'text-sm text-muted-foreground italic'}>{page.content ? page.content.toString().slice(0, MAX_CHARS) : null}</p>
+            {/*<p className={'text-sm text-muted-foreground italic'}>
+              {page.content ? page.content.toString().slice(0, MAX_CHARS) : null}
+            </p>*/}
           </div>
         </Link>
         <div>

@@ -9,7 +9,10 @@ import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { PageCreateForm } from "./page-create-form";
+import { toast } from "./ui/use-toast";
+import { newPage } from "@/actions/page";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
 interface PageCreateButtonProps extends ButtonProps {
     postId: string;
@@ -22,6 +25,18 @@ export function PageCreateButton({
     ...props
 }: PageCreateButtonProps) {
     const { pending } = useFormStatus();
+
+    const onSubmit = async (formData: FormData) => {
+        const res = await newPage(formData);
+
+        if ('error' in res) {
+            return toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: res.error,
+            });
+        }
+    }
 
     return (
         <Dialog>
@@ -45,14 +60,38 @@ export function PageCreateButton({
                     New page
                 </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Crea pagina</DialogTitle>
                 </DialogHeader>
-                <PageCreateForm post={{id: postId}}/>
-                <DialogFooter>
-                    <Button type="submit">Crea</Button>
-                </DialogFooter>
+                <form action={onSubmit} className="space-y-8">
+                    <div className="grid gap-2">
+                        <div className="flex flex-col gap-2">
+                            <Label htmlFor="number" className="text-right">
+                                Numero
+                            </Label>
+                            <Input
+                                id="number"
+                                name="number"
+                                required
+                                placeholder="123"
+                                type="number"
+                                className="col-span-3"
+                            />
+                            <input
+                                id="postId"
+                                name="postId"
+                                value={postId}
+                                className="col-span-3"
+                                hidden
+                                readOnly
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit">Crea</Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     )

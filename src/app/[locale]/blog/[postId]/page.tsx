@@ -21,18 +21,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     include: {
       author: true,
-      pages: true,
-    }
+      pages: {
+        select: {
+          content: true,
+          number: true,
+        },
+        take: 20,
+      },
+    },
   });
 
   if (!post) return notFound();
 
   const { author } = post;
-  const pages = post.pages.map(p => {
-    return {
-      content: p.content,
-    };
-  })
+  const pages = post.pages
+    .sort((a, b) => (a.number) - b.number)
+    .map(p => {
+      return {
+        content: p.content,
+        number: p.number,
+      };
+    })
 
   return (
     <Shell className="gap-1">

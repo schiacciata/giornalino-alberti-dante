@@ -2,7 +2,7 @@ import * as z from "zod"
 
 export const pageCreateSchema = z.object({
     postId: z.string().min(1),
-    number: z.number().positive(),
+    number: z.coerce.number().positive(),
     content: z.any().optional(),
 })
 

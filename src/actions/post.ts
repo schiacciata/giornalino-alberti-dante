@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { postCreateSchema, postCreateFormData, postLikeSchema, postLikeFormData, postPatchSchema } from "@/lib/validations/post"
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
+import { notifications } from '@/lib/notifications';
 
 export const newPost = async (formData: postCreateFormData) => {
     const createPost = async (formData: postCreateFormData) => {
@@ -85,16 +86,24 @@ export const editPost = async (formData: FormData) => {
 
             const data = Object.fromEntries(formData);
             const body = postPatchSchema.parse(data);
-            if (!body.id) return { error: 'No id' }
+            if (!body.id) return { error: 'No post id' }
         
             const post = await db.post.update({
                 data: {
                   title: body.title,
+                  published: body.published,
                 },
                 where: {
                     id: body.id
                 }
-            })
+            });
+
+            if (body.published) {
+                notifications.sendEveryoneNotification({
+                    title: 'Un nuovo post è stato pubblicato',
+                    tag: 'POST_PUBLISHED'
+                });
+            }
         
             revalidatePath('/');
             revalidatePath('/dashboard/posts');
@@ -103,7 +112,6 @@ export const editPost = async (formData: FormData) => {
 
             return post;
         } catch (e) {
-            console.log(e)
             return { error: 'There was an error.' };
         }
     };
@@ -111,5 +119,5 @@ export const editPost = async (formData: FormData) => {
     const post = await update(formData);
     if ("error" in post) return post;
 
-    return redirect(`/dashboard/posts/${post.id}`);
+    return { message: 'Updated post' };
 }

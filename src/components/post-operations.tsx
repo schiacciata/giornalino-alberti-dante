@@ -25,10 +25,7 @@ import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 import { Button, buttonVariants } from "./ui/button"
-import { Label } from "./ui/label"
-import { Input } from "./ui/input"
 import Link from "next/link"
-import { PostEditForm } from "./post-edit-form"
 
 async function deletePost(postId: string) {
   const response = await fetch(`/api/posts/${postId}`, {
@@ -77,120 +74,111 @@ export function PostOperations({ post }: PostOperationsProps) {
   const [isPublishLoading, setIsPublishLoading] = React.useState<boolean>(false)
 
   return (
-      <Dialog>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-md border transition-colors hover:bg-muted">
-            <Icons.ellipsis className="h-4 w-4" />
-            <span className="sr-only">Open</span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {post.published ? null : (
-              <>
-                <DropdownMenuItem
-                  className="flex cursor-pointer items-center font-bold focus:text-green-500"
-                  onSelect={() => setShowPublishAlert(true)}
-                >
-                  Publish
-                </DropdownMenuItem>
-              </>
-            )}
-            <DialogTrigger asChild>
-              <DropdownMenuItem>
-                Edit
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-md border transition-colors hover:bg-muted">
+          <Icons.ellipsis className="h-4 w-4" />
+          <span className="sr-only">Open</span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {post.published ? null : (
+            <>
+              <DropdownMenuItem
+                className="flex cursor-pointer items-center font-bold focus:text-green-500"
+                onSelect={() => setShowPublishAlert(true)}
+              >
+                Publish
               </DropdownMenuItem>
-            </DialogTrigger>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="flex cursor-pointer items-center text-destructive focus:text-destructive"
-              onSelect={() => setShowDeleteAlert(true)}
-            >
-              Delete
+            </>
+          )}
+            <DropdownMenuItem>
+              <Link href={`/dashboard/posts/${post.id}`} className={buttonVariants({ variant: 'secondary' })}>
+                Edit
+              </Link>
             </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Are you sure you want to delete this post?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={async (event) => {
-                  event.preventDefault()
-                  setIsDeleteLoading(true)
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="flex cursor-pointer items-center text-destructive focus:text-destructive"
+            onSelect={() => setShowDeleteAlert(true)}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to delete this post?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async (event) => {
+                event.preventDefault()
+                setIsDeleteLoading(true)
 
-                  const deleted = await deletePost(post.id)
+                const deleted = await deletePost(post.id)
 
-                  if (deleted) {
-                    setIsDeleteLoading(false)
-                    setShowDeleteAlert(false)
-                    router.refresh()
-                  }
-                }}
-                className="bg-red-600 focus:ring-red-600"
-              >
-                {isDeleteLoading ? (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Icons.trash className="mr-2 h-4 w-4" />
-                )}
-                <span>Delete</span>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <AlertDialog open={showPublishAlert} onOpenChange={setShowPublishAlert}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Are you sure you want to publish this post?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={async (event) => {
-                  event.preventDefault()
-                  setIsPublishLoading(true)
+                if (deleted) {
+                  setIsDeleteLoading(false)
+                  setShowDeleteAlert(false)
+                  router.refresh()
+                }
+              }}
+              className="bg-red-600 focus:ring-red-600"
+            >
+              {isDeleteLoading ? (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Icons.trash className="mr-2 h-4 w-4" />
+              )}
+              <span>Delete</span>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={showPublishAlert} onOpenChange={setShowPublishAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Are you sure you want to publish this post?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async (event) => {
+                event.preventDefault()
+                setIsPublishLoading(true)
 
-                  const published = await publishPost(post.id)
+                const published = await publishPost(post.id)
 
-                  if (published) {
-                    setIsPublishLoading(false)
-                    setShowPublishAlert(false)
-                    router.refresh()
-                  }
-                }}
-                className="bg-green-600 focus:ring-green-600"
-              >
-                {isPublishLoading ? (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Icons.globe className="mr-2 h-4 w-4" />
-                )}
-                <span>Publish</span>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit post</DialogTitle>
-          </DialogHeader>
-          <PostEditForm post={{ id: post.id, title: post.title }}/>
-          <DialogFooter>
-            <Link href={`/dashboard/posts/${post.id}`} className={buttonVariants({ variant: 'secondary' })}>Edit pages</Link>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+                if (published) {
+                  setIsPublishLoading(false)
+                  setShowPublishAlert(false)
+                  router.refresh()
+                }
+              }}
+              className="bg-green-600 focus:ring-green-600"
+            >
+              {isPublishLoading ? (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Icons.globe className="mr-2 h-4 w-4" />
+              )}
+              <span>Publish</span>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

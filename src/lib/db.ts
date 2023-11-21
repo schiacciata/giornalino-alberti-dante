@@ -1,3 +1,4 @@
+import config from "@/config"
 import { PrismaClient } from "@prisma/client"
 
 declare global {
@@ -7,7 +8,9 @@ declare global {
 
 let prisma: PrismaClient
 if (process.env.NODE_ENV === "production") {
-  prisma = new PrismaClient()
+  prisma = new PrismaClient({
+    log: config.debug ? ['error',  'query'] : []
+  })
 } else {
   if (!global.cachedPrisma) {
     global.cachedPrisma = new PrismaClient()

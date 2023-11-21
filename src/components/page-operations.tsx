@@ -41,25 +41,6 @@ async function deletePage(pageId: string) {
   return true
 }
 
-async function publishPage(pageId: string) {
-  const response = await fetch(`/api/pages/${pageId}`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      published: true,
-    })
-  })
-
-  if (!response?.ok) {
-    toast({
-      title: "Something went wrong.",
-      description: "Your page was not published. Please try again.",
-      variant: "destructive",
-    })
-  }
-
-  return true
-}
-
 interface PageOperationsProps {
   page: Pick<Page, "id">
 }
@@ -67,9 +48,7 @@ interface PageOperationsProps {
 export function PageOperations({ page }: PageOperationsProps) {
   const router = useRouter()
   const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false)
-  const [showPublishAlert, setShowPublishAlert] = React.useState<boolean>(false)
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false)
-  const [isPublishLoading, setIsPublishLoading] = React.useState<boolean>(false)
 
   return (
     <>
@@ -126,43 +105,6 @@ export function PageOperations({ page }: PageOperationsProps) {
                 <Icons.trash className="mr-2 h-4 w-4" />
               )}
               <span>Delete</span>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      <AlertDialog open={showPublishAlert} onOpenChange={setShowPublishAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure you want to publish this page?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={async (event) => {
-                event.preventDefault()
-                setIsPublishLoading(true)
-
-                const published = await publishPage(page.id)
-
-                if (published) {
-                  setIsPublishLoading(false)
-                  setShowPublishAlert(false)
-                  router.refresh()
-                }
-              }}
-              className="bg-green-600 focus:ring-green-600"
-            >
-              {isPublishLoading ? (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Icons.globe className="mr-2 h-4 w-4" />
-              )}
-              <span>Publish</span>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

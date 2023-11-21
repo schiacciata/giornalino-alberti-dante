@@ -5,10 +5,10 @@ import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
 import { Header } from "@/components/header"
-import { PostCreateButton } from "@/components/post-create-button"
 import { Shell } from "@/components/shell"
 import { PageCreateButton } from "@/components/page-create-button"
 import { PageItem } from "@/components/page-item"
+import { PostEditDialog } from "@/components/post-edit-dialog"
 
 export const metadata = {
   title: "Pages",
@@ -34,6 +34,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
         select: {
             id: true,
             title: true,
+            published: true,
         }
     });
     if (!post) return notFound();
@@ -55,7 +56,8 @@ export default async function PostsPage({ params }: PostsPageProps) {
   
     return (
       <Shell>
-        <Header heading={`Pagine di ${post.title}`} text="Create and manage posts.">
+        <Header heading={`Pagine di "${post.title}"`} text="Create and manage posts.">
+            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published }} />
             <PageCreateButton postId={post.id} />
         </Header>
         <div>

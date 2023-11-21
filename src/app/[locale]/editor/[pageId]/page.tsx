@@ -15,6 +15,7 @@ async function getPageForUser(pageId: Page["id"]) {
       id: true,
       post: true,
       number: true,
+      content: true,
     }
   })
 }
@@ -41,9 +42,11 @@ export default async function EditorPage({ params }: EditorPageProps) {
       page={{
         id: page.id,
         number: page.number,
+        content: page.content,
       }}
       post={{
         title: page.post.title,
+        id: page.post.id,
       }}
     />
   )

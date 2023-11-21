@@ -13,11 +13,10 @@ import { NavbarItem } from "./navbar-item"
 interface MainNavProps {
   sections: NavbarSection[];
   children?: React.ReactNode;
-  isAdmin?: boolean;
   onlyMobile: boolean;
 }
 
-export function Navbar({ sections, children, isAdmin, onlyMobile }: MainNavProps) {
+export function Navbar({ sections, children, onlyMobile }: MainNavProps) {
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
   return (
