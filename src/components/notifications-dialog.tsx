@@ -12,11 +12,11 @@ import {
 import { SWContext } from "@/lib/providers/sw"
 
 type NotificationsDialogProps = {
-    serviceWorker: SWContext
+    sw: SWContext
 }
 
-export function NotificationsDialog({ serviceWorker }: NotificationsDialogProps) {
-    const isDenied = serviceWorker.permission === "denied";
+export function NotificationsDialog({ sw }: NotificationsDialogProps) {
+    const isDenied = sw.permission === "denied";
 
     return (
         <AlertDialogContent>
@@ -26,12 +26,12 @@ export function NotificationsDialog({ serviceWorker }: NotificationsDialogProps)
                     {isDenied ? 'Notification for this website are disabled, reenable them in your browser settings' : 'We will notify you whenever a new post is published'}
                 </AlertDialogDescription>
             </AlertDialogHeader>
-            {isDenied ? null : (
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={async () => await serviceWorker.requestNotificationPermission()}>Enable</AlertDialogAction>
-                </AlertDialogFooter>
-            )}
+            <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                {isDenied ? null : (
+                        <AlertDialogAction onClick={async () => await sw.requestNotificationPermission()}>Enable</AlertDialogAction>
+                )}
+            </AlertDialogFooter>
         </AlertDialogContent>
     )
 }

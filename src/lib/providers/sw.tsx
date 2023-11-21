@@ -1,8 +1,10 @@
 'use client'
 
 import { env } from '@/env.mjs'
-import { createContext, useContext, useEffect, useState, useCallback, ReactElement } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, ReactElement, useMemo } from 'react'
 import { Workbox } from 'workbox-window'
+
+export const wb = new Workbox('/sw.js', { scope: '/' });
 
 type SubscriptionVariables = {
   endpoint: string;
@@ -30,20 +32,44 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
   const [support, setSupport] = useState<Record<string, boolean>>({ serviceWorker: false, pushManager: false })
   const [permission, setPermission] = useState<NotificationPermission>("denied");
 
+  useEffect(() => {
+    const supportsSW = 'serviceWorker' in navigator;
+    const supportsNotifications = 'Notification' in window;
+    
+    if (!supportsSW) {
+      console.error('device does not support service worker')
+      return
+    }
+
+    wb.register()
+      .then(registration => {
+        console.info('service worker registration successful')
+        setRegistration(registration)
+      })
+
+    setSupport({
+      serviceWorker: supportsSW,
+      notification: supportsNotifications,
+      pushManager: 'PushManager' in window
+    })
+    setPermission(supportsNotifications ? window.Notification.permission : 'denied' )
+  }, []);
+
   const savePushSubscription = async (vars: SubscriptionVariables) => {
-    console.log('savePushSubscription')
     return (await fetch('/api/subscriptions', {
       method: 'POST',
       body: JSON.stringify(vars),
     })).ok;
   }
 
-  const requestNotificationPermission = useCallback(async () => {
+  const requestNotificationPermission = async () => {
+    if (!registration) return;
+
     const permission = await window.Notification.requestPermission();
     setPermission(permission);
 
     if (permission === 'granted') return await subscribeToPushNotifications()
-  }, [])
+  };
 
   const subscribeToPushNotifications = async () => {
     const subscribeOptions = { userVisibleOnly: true, applicationServerKey }
@@ -54,15 +80,7 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
     
     // convert keys from ArrayBuffer to string
     pushSubscription = JSON.parse(JSON.stringify(pushSubscription))
-    // Send subscription to service worker to save it so we can use it later during `pushsubscriptionchange`
-    // see https://medium.com/@madridserginho/how-to-handle-webpush-api-pushsubscriptionchange-event-in-modern-browsers-6e47840d756f
-    /*navigator.serviceWorker.controller.postMessage({
-      action: 'STORE_SUBSCRIPTION',
-      subscription: pushSubscription
-    })
-    logger.info('sent STORE_SUBSCRIPTION to service worker', { endpoint })*/
-    // send subscription to server
-    console.log(pushSubscription)
+    
     const variables: SubscriptionVariables = {
       endpoint: pushSubscription.endpoint,
       p256dh: pushSubscription.keys.p256dh,
@@ -92,46 +110,18 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
       return unsubscribeFromPushNotifications(pushSubscription)
     }
     return subscribeToPushNotifications()
-  }, [])
+  }, [])  
 
-  useEffect(() => {
-    setSupport({
-      serviceWorker: 'serviceWorker' in navigator,
-      notification: 'Notification' in window,
-      pushManager: 'PushManager' in window
-    })
-    setPermission('Notification' in window ? window.Notification.permission : 'denied' )
-
-    if (!('serviceWorker' in navigator)) {
-      console.error('device does not support service worker')
-      return
-    }
-
-    const wb = new Workbox('/sw.js', { scope: '/' })
-    wb.register()
-      .then(setRegistration);
-  }, [])
-
-  useEffect(() => {
-    // wait until successful registration
-    if (!registration) return
-    // setup channel between app and service worker
-    /*const channel = new MessageChannel()
-    navigator?.serviceWorker?.controller?.postMessage({ action: 'ACTION_PORT' }, [channel.port2])
-    channel.port1.onmessage = (event) => {
-      if (event.data.action === 'RESUBSCRIBE') {
-        return subscribeToPushNotifications()
-      }
-    }*/
-    // since (a lot of) browsers don't support the pushsubscriptionchange event,
-    // we sync with server manually by checking on every page reload if the push subscription changed.
-    // see https://medium.com/@madridserginho/how-to-handle-webpush-api-pushsubscriptionchange-event-in-modern-browsers-6e47840d756f
-    /*navigator?.serviceWorker?.controller?.postMessage?.({ action: 'SYNC_SUBSCRIPTION' })
-    logger.info('sent SYNC_SUBSCRIPTION to service worker')*/
-  }, [registration])
+  const contextValue = useMemo<SWContext>(() => ({
+    registration,
+    support,
+    permission,
+    requestNotificationPermission,
+    togglePushSubscription
+  }), [registration, support, permission, requestNotificationPermission, togglePushSubscription])
 
   return (
-    <ServiceWorkerContext.Provider value={{ registration, support, permission, requestNotificationPermission, togglePushSubscription }}>
+    <ServiceWorkerContext.Provider value={contextValue}>
       {children}
     </ServiceWorkerContext.Provider>
   )

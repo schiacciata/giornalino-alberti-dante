@@ -72,7 +72,7 @@ export function UserDialog({ user }: UserDialogProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {sw ? <NotificationsDialog serviceWorker={sw} /> : null}
+      {sw ? <NotificationsDialog sw={sw} /> : null}
     </AlertDialog>
   )
 }
