@@ -81,16 +81,6 @@ export function PostOperations({ post }: PostOperationsProps) {
           <span className="sr-only">Open</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {post.published ? null : (
-            <>
-              <DropdownMenuItem
-                className="flex cursor-pointer items-center font-bold focus:text-green-500"
-                onSelect={() => setShowPublishAlert(true)}
-              >
-                Publish
-              </DropdownMenuItem>
-            </>
-          )}
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/posts/${post.id}`}>
                 Edit
@@ -138,43 +128,6 @@ export function PostOperations({ post }: PostOperationsProps) {
                 <Icons.trash className="mr-2 h-4 w-4" />
               )}
               <span>Delete</span>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      <AlertDialog open={showPublishAlert} onOpenChange={setShowPublishAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure you want to publish this post?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={async (event) => {
-                event.preventDefault()
-                setIsPublishLoading(true)
-
-                const published = await publishPost(post.id)
-
-                if (published) {
-                  setIsPublishLoading(false)
-                  setShowPublishAlert(false)
-                  router.refresh()
-                }
-              }}
-              className="bg-green-600 focus:ring-green-600"
-            >
-              {isPublishLoading ? (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Icons.globe className="mr-2 h-4 w-4" />
-              )}
-              <span>Publish</span>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
