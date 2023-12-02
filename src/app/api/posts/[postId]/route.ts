@@ -65,7 +65,7 @@ export async function PATCH(
 
     // Update the post.
     // TODO: Implement sanitization for content.
-    await db.post.update({
+    const post = await db.post.update({
       where: {
         id: params.postId,
       },
@@ -77,9 +77,10 @@ export async function PATCH(
 
     if (body.published) {
       notifications.sendEveryoneNotification({
-        title: 'Un nuovo post è stato pubblicato',
+        title: 'Nuovo post pubblicato',
+        body: `Leggi ora ${post.title}`,
         tag: 'POST_PUBLISHED'
-      })
+      });
     }
 
     return new Response(null, { status: 200 })

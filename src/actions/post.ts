@@ -67,7 +67,8 @@ export const likePost = async (formData: postLikeFormData) => {
 
             if (body.liked) {
                 notifications.sendUserNotification(post.authorId, {
-                    title: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post!`,
+                    title: 'Nuovo Like',
+                    body: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post!`,
                     tag: 'POST_LIKED'
                 })
             }
@@ -107,7 +108,8 @@ export const editPost = async (formData: FormData) => {
 
             if (body.published) {
                 notifications.sendEveryoneNotification({
-                    title: 'Un nuovo post è stato pubblicato',
+                    title: 'Nuovo post pubblicato',
+                    body: `Leggi ora ${post.title}`,
                     tag: 'POST_PUBLISHED'
                 });
             }

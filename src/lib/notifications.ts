@@ -56,7 +56,6 @@ class Notifications {
         p256dh: subscription.p256dh
       },
     }, payload)
-      .then(x => console.log(x))
       .catch(async (err) => await this.handlePushError(subscription.id, err))
   }
 
