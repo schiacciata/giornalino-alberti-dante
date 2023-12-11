@@ -1,5 +1,6 @@
 import { FC, useCallback, useState } from 'react';
 import { pdfjs, Document, Page } from 'react-pdf';
+import { Progress } from "@/components/ui/progress"
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import '@/styles/pdf.css'
@@ -7,6 +8,7 @@ import '@/styles/pdf.css'
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { PageSwitcher } from './page-switcher';
+import { toast } from './ui/use-toast';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -55,14 +57,20 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
     setNumPages(nextNumPages);
   }
 
+  const loadingDiv = (
+    <p className='text-muted-foreground italic'>Loading file...</p>
+  )
+
   return (
     <div className="Example__container__document" ref={setContainerRef}>
+      <Progress value={(pageIndex+1)/numPages*100} />
       <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
-      <Document file={file} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+      <Document loading={loadingDiv} file={file} onLoadSuccess={onDocumentLoadSuccess} options={options}>
           <Page
             key={`page_${pageIndex + 1}`}
             pageNumber={pageIndex + 1}
             width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
+            className='rounded-md'
           />
       </Document>
     </div>

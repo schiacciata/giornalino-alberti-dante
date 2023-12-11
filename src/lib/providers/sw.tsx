@@ -33,6 +33,8 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
   const [permission, setPermission] = useState<NotificationPermission>("denied");
 
   useEffect(() => {
+    if (!navigator) return;
+
     const supportsSW = 'serviceWorker' in navigator;
     const supportsNotifications = 'Notification' in window;
     
@@ -53,7 +55,7 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
       pushManager: 'PushManager' in window
     })
     setPermission(supportsNotifications ? window.Notification.permission : 'denied' )
-  }, []);
+  }, [navigator]);
 
   const savePushSubscription = async (vars: SubscriptionVariables) => {
     return (await fetch('/api/subscriptions', {
