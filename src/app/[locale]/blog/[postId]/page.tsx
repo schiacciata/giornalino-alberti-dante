@@ -53,7 +53,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         author={{ image: author.image, name: author.name, id: author.id }}
         post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
       />
-      <PostContent pages={pages}/>
+      <PostContent pages={pages} post={{ pdfPath: post.pdfPath }}/>
     </Shell>
   )
 }

@@ -21,12 +21,10 @@ const mergeAndShowNotification = (sw: ServiceWorkerGlobalScope, payload: any, cu
   }
 
 const handle = async (sw: ServiceWorkerGlobalScope, event?: PushEvent) => {
-    console.log(event)
     if (!event) return;
     let activeCount = 0;
 
-    const payload = event.data?.json()
-    console.log(payload)
+    const payload = event.data?.json();
     if (!payload) return;
 
     const { tag } = payload.options;

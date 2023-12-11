@@ -48,6 +48,7 @@ model Post {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String   @db.String
   image        String?
+  pdfPath      String?
   pages        Page[]
   published    Boolean  @default(false)
   createdAt    DateTime @default(now()) @map(name: "created_at")

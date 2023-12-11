@@ -13,7 +13,12 @@ const nextConfig = {
                 hostname: '*.googleusercontent.com'
             }
         ]
-    }
+    },
+    webpack: (config) => {
+        config.resolve.alias.canvas = false;
+        
+        return config;
+    },
 }
 
 const withPWA = pwa({

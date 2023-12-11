@@ -1,9 +1,15 @@
 "use client"
 
-import * as React from "react"
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import 'quill/dist/quill.snow.css';
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import EditorJS from "@editorjs/editorjs"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Page, Post } from "@prisma/client"
 import { useForm } from "react-hook-form"
@@ -16,6 +22,18 @@ import { pagePatchSchema } from "@/lib/validations/page"
 import { buttonVariants } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
+import { Button } from './ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Badge } from './ui/badge';
+import Quill from 'quill';
+import { useSocket } from '@/lib/providers/socket';
+import { useSession } from 'next-auth/react';
 
 interface EditorProps {
   page: Pick<Page, "id" | "number" | "content">
@@ -24,70 +42,220 @@ interface EditorProps {
 
 type FormData = z.infer<typeof pagePatchSchema>
 
+const TOOLBAR_OPTIONS = [
+  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+  ['blockquote', 'code-block'],
+
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+  [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+  [{ direction: 'rtl' }], // text direction
+
+  [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+
+  ['clean'], // remove formatting button
+];
+
 export function Editor({ page, post }: EditorProps) {
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(pagePatchSchema),
   })
-  const ref = React.useRef<EditorJS>()
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const router = useRouter()
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
-  const [isMounted, setIsMounted] = React.useState<boolean>(false)
+  const [collaborators, setCollaborators] = useState<
+    { id: string; email: string; avatarUrl: string }[]
+  >([]);
+  const [deletingBanner, setDeletingBanner] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [localCursors, setLocalCursors] = useState<any>([]);
+  const [quill, setQuill] = useState<Quill | null>(null);
+  const { socket, isConnected } = useSocket();
+  const { data: session } = useSession();
 
-  const initializeEditor = React.useCallback(async () => {
-    const EditorJS = (await import("@editorjs/editorjs")).default
-    const Header = (await import("@editorjs/header")).default
-    const Embed = (await import("@editorjs/embed")).default
-    const Table = (await import("@editorjs/table")).default
-    const List = (await import("@editorjs/list")).default
-    const Code = (await import("@editorjs/code")).default
-    const LinkTool = (await import("@editorjs/link")).default
-    const InlineCode = (await import("@editorjs/inline-code")).default
-
-    const body = pagePatchSchema.parse(page)
-
-    if (!ref.current) {
-      const editor = new EditorJS({
-        holder: "editor",
-        onReady() {
-          ref.current = editor
+  const wrapperRef = useCallback(async (wrapper: any) => {
+    if (typeof window !== 'undefined') {
+      if (wrapper === null) return;
+      wrapper.innerHTML = '';
+      const editor = document.createElement('div');
+      wrapper.append(editor);
+      
+      const Quill = (await import('quill')).default;
+      const QuillCursors = (await import('quill-cursors')).default;
+      Quill.register('modules/cursors', QuillCursors);
+      
+      const q = new Quill(editor, {
+        theme: 'snow',
+        modules: {
+          toolbar: TOOLBAR_OPTIONS,
+          cursors: {
+            transformOnTextChange: true,
+          },
         },
-        placeholder: "Type here to write your page...",
-        inlineToolbar: true,
-        data: body.content,
-        tools: {
-          header: Header,
-          linkTool: LinkTool,
-          list: List,
-          code: Code,
-          inlineCode: InlineCode,
-          table: Table,
-          embed: Embed,
-        },
-      })
+      });
+      q.disable()
+      q.setText("Loading...")
+      setQuill(q);
     }
-  }, [page])
+  }, []);
 
-  React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMounted(true)
-    }
-  }, [])
-
-  React.useEffect(() => {
-    if (isMounted) {
-      initializeEditor()
-
-      return () => {
-        ref.current?.destroy()
-        ref.current = undefined
+  useEffect(() => {
+    if (quill === null || socket === null || !localCursors.length)
+      return;
+    const socketHandler = (range: any, roomId: string, cursorId: string) => {
+      if (roomId === page.id) {
+        const cursorToMove = localCursors.find(
+          (c: any) => c.cursors()?.[0].id === cursorId
+        );
+        if (cursorToMove) {
+          cursorToMove.moveCursor(cursorId, range);
+        }
       }
-    }
-  }, [isMounted, initializeEditor])
+    };
+    socket.on('receive-cursor-move', socketHandler);
+    return () => {
+      socket.off('receive-cursor-move', socketHandler);
+    };
+  }, [quill, socket, localCursors]);
+
+  //Send quill changes to all clients
+  useEffect(() => {
+    if (quill === null || socket === null || !session || !page.id) return;
+
+    const selectionChangeHandler = (cursorId: string) => {
+      return (range: any, oldRange: any, source: any) => {
+        if (source === 'user' && cursorId) {
+          socket.emit('send-cursor-move', range, page.id, cursorId);
+        }
+      };
+    };
+    const quillHandler = (delta: any, oldDelta: any, source: any) => {
+      if (source !== 'user') return;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      setSaving(true);
+      const contents = quill.getContents();
+      const quillLength = quill.getLength();
+      saveTimerRef.current = setTimeout(async () => {
+        // if (contents && quillLength !== 1 && page.id) {
+        //   if (dirType == 'workspace') {
+        //     dispatch({
+        //       type: 'UPDATE_WORKSPACE',
+        //       payload: {
+        //         workspace: { data: JSON.stringify(contents) },
+        //         workspaceId: page.id,
+        //       },
+        //     });
+        //     await updateWorkspace({ data: JSON.stringify(contents) }, page.id);
+        //   }
+        //   if (dirType == 'folder') {
+        //     if (!workspaceId) return;
+        //     dispatch({
+        //       type: 'UPDATE_FOLDER',
+        //       payload: {
+        //         folder: { data: JSON.stringify(contents) },
+        //         workspaceId,
+        //         folderId: page.id,
+        //       },
+        //     });
+        //     await updateFolder({ data: JSON.stringify(contents) }, page.id);
+        //   }
+        //   if (dirType == 'file') {
+        //     if (!workspaceId || !folderId) return;
+        //     dispatch({
+        //       type: 'UPDATE_FILE',
+        //       payload: {
+        //         file: { data: JSON.stringify(contents) },
+        //         workspaceId,
+        //         folderId: folderId,
+        //         page.id,
+        //       },
+        //     });
+        //     await updateFile({ data: JSON.stringify(contents) }, page.id);
+        //   }
+        // }
+        setSaving(false);
+      }, 850);
+      socket.emit('send-changes', delta, page.id);
+    };
+    quill.on('text-change', quillHandler);
+    quill.on('selection-change', selectionChangeHandler(session.user.id));
+
+    return () => {
+      quill.off('text-change', quillHandler);
+      quill.off('selection-change', selectionChangeHandler(session.user.id));
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [quill, socket, page.id, session]);
+
+  useEffect(() => {
+    if (quill === null || socket === null) return;
+    const socketHandler = (deltas: any, id: string) => {
+      if (id === page.id) {
+        quill.updateContents(deltas);
+      }
+    };
+    socket.on('receive-changes', socketHandler);
+    return () => {
+      socket.off('receive-changes', socketHandler);
+    };
+  }, [quill, socket, page.id]);
+
+  /*useEffect(() => {
+    if (!page.id || quill === null) return;
+    const room = supabase.channel(page.id);
+    const subscription = room
+      .on('presence', { event: 'sync' }, () => {
+        const newState = room.presenceState();
+        const newCollaborators = Object.values(newState).flat() as any;
+        setCollaborators(newCollaborators);
+        if (user) {
+          const allCursors: any = [];
+          newCollaborators.forEach(
+            (collaborator: { id: string; email: string; avatar: string }) => {
+              if (collaborator.id !== user.id) {
+                const userCursor = quill.getModule('cursors');
+                userCursor.createCursor(
+                  collaborator.id,
+                  collaborator.email.split('@')[0],
+                  `#${Math.random().toString(16).slice(2, 8)}`
+                );
+                allCursors.push(userCursor);
+              }
+            }
+          );
+          setLocalCursors(allCursors);
+        }
+      })
+      .subscribe(async (status) => {
+        if (status !== 'SUBSCRIBED' || !user) return;
+        const response = await findUser(user.id);
+        if (!response) return;
+
+        room.track({
+          id: user.id,
+          email: user.email?.split('@')[0],
+          avatarUrl: response.avatarUrl
+            ? supabase.storage.from('avatars').getPublicUrl(response.avatarUrl)
+                .data.publicUrl
+            : '',
+        });
+      });
+    return () => {
+      supabase.removeChannel(room);
+    };
+  }, [quill, user]);*/
 
   async function onSubmit(data: FormData) {
     setIsSaving(true)
+    if (!quill) return;
 
-    const blocks = await ref.current?.save()
+    const blocks = await quill.getContents();
 
     const response = await fetch(`/api/posts/${post.id}/pages/${page.id}`, {
       method: "PATCH",
@@ -115,10 +283,6 @@ export function Editor({ page, post }: EditorProps) {
     return toast({
       description: "Your page has been saved.",
     })
-  }
-
-  if (!isMounted) {
-    return null
   }
 
   return (
@@ -156,16 +320,13 @@ export function Editor({ page, post }: EditorProps) {
             className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
           />
           <input type="hidden" disabled value={page.number} {...register("number")} />
-          <div id="editor" className="min-h-[500px]" />
-          <p className="text-sm text-gray-500">
-            Use{" "}
-            <kbd className="rounded-md border bg-muted px-1 text-xs uppercase">
-              Tab
-            </kbd>{" "}
-            to open the command menu.
-          </p>
+          <div
+            id="container"
+            className="min-h-[500px]"
+            ref={wrapperRef}
+          />
         </div>
       </div>
     </form>
-  )
+  );
 }

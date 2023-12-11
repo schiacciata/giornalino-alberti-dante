@@ -1,42 +1,37 @@
 'use client'
 
-import { Parser } from '@alkhipce/editorjs-react'
-import { Page } from '@prisma/client'
-import { FC, useState } from 'react'
-import { Button, buttonVariants } from './ui/button';
-import { Icon } from './icons';
+// PostContent.tsx
+import { FC, useState } from 'react';
+import { Page, Post } from '@prisma/client';
+import { PDFViewer } from './pdf-viewer'; // Assuming you export your component as PostContent from PDFViewer.tsx
+import { PageSwitcher } from './page-switcher'; // Import the PageSwitcher component
 
 interface PostContentProps {
-  pages: Pick<Page,  'number' | 'content'>[];
+  pages: Pick<Page, 'number' | 'content'>[];
+  post: Pick<Post, 'pdfPath'>;
 }
 
-export const PostContent: FC<PostContentProps> = ({ pages }) => {
-    const [pageIndex, setPageIndex] = useState<number>(0);
-    if (pages.length === 0) return null;
+export const PostContent: FC<PostContentProps> = ({ pages, post }) => {
+  const [pageIndex, setPageIndex] = useState<number>(0);
 
-    const handleClick = (forth: boolean) => {
-        setPageIndex((prev) => {
-            if (!forth && prev === 0) return 0;
-            if (forth && prev+1 === pages.length) return 0;
-
-            return (forth ? 1 : -1) + prev;
-        })
+  const handlePageChange = (increment: number) => {
+    const newPageIndex = pageIndex + increment;
+    if (newPageIndex >= 0 && newPageIndex < pages.length) {
+      setPageIndex(newPageIndex);
     }
-    
-    return (
+  };
+
+  return (
+    <>
+      {post.pdfPath ? (
+        <PDFViewer path={post.pdfPath} />
+      ) : (
         <>
-            {<Parser data={pages[pageIndex].content as any}/>}
-            <div className='content-center justify-items-center grid grid-cols-3 py-6 max-w-[200px]'>
-                <Button onClick={() => handleClick(false)} disabled={pageIndex === 0}>
-                    <Icon icon='chevronLeft'/>
-                </Button>
-                <p className={buttonVariants({ variant: 'outline' })}>
-                    {pages[pageIndex].number}
-                </p>
-                <Button onClick={() => handleClick(true)} disabled={pageIndex >= pages.length-1}>
-                    <Icon icon='chevronRight'/>
-                </Button>
-            </div>
+            <PageSwitcher pageIndex={pageIndex} pageCount={pages.length} onPageChange={handlePageChange} />
+            WIP
+            {/*<Parser data={pages[pageIndex].content as any}/>*/}
         </>
-    )
-}
+      )}
+    </>
+  );
+};
