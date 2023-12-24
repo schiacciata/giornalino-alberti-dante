@@ -29,13 +29,13 @@ export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPa
     <>
       <center className='content-center justify-items-center grid grid-cols-3 py-6'>
         <Button onClick={() => onPageChange(-1)} disabled={pageIndex === 0}>
-          <Icon icon='chevronLeft'/>
+          <Icon icon='chevronLeft' className='mr-0'/>
         </Button>
         <p className={buttonVariants({ variant: 'outline' })} onClick={openDialog} style={{ cursor: 'pointer' }}>
           {pageIndex + 1} of {pageCount}
         </p>
         <Button onClick={() => onPageChange(1)} disabled={pageIndex >= pageCount - 1}>
-          <Icon icon='chevronRight'/>
+          <Icon icon='chevronRight' className='mr-0'/>
         </Button>
       </center>
 

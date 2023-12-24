@@ -45,18 +45,19 @@ model Page {
 }
 
 model Post {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  title        String   @db.String
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  title        String    @db.String
   image        String?
   pdfPath      String?
   pages        Page[]
-  published    Boolean  @default(false)
-  createdAt    DateTime @default(now()) @map(name: "created_at")
-  updatedAt    DateTime @updatedAt @map(name: "updated_at")
-  likesUserIDs String[] @db.ObjectId
-  likes        User[]   @relation("LikedPosts", fields: [likesUserIDs], references: [id])
-  authorId     String   @db.ObjectId
-  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  published    Boolean   @default(false)
+  createdAt    DateTime  @default(now()) @map(name: "created_at")
+  updatedAt    DateTime  @updatedAt @map(name: "updated_at")
+  likesUserIDs String[]  @db.ObjectId
+  likes        User[]    @relation("LikedPosts", fields: [likesUserIDs], references: [id])
+  authorId     String    @db.ObjectId
+  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments     Comment[] @relation("PostComments")
 }
 
 enum Role {
@@ -78,6 +79,7 @@ model User {
   likedPostsIDs     String[]           @db.ObjectId
   likedPosts        Post[]             @relation("LikedPosts", fields: [likedPostsIDs], references: [id])
   PushSubscriptions PushSubscription[]
+  comments          Comment[]          @relation("PostComments")
   createdAt         DateTime           @default(now()) @map(name: "created_at")
   updatedAt         DateTime           @updatedAt @map(name: "updated_at")
 }
@@ -97,8 +99,21 @@ model PushSubscription {
   endpoint  String
   p256dh    String
   auth      String
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId], map: "PushSubscription.userId_index")
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  authorId  String   @db.ObjectId
+  postId    String   @db.ObjectId
+
+  author User @relation("PostComments", fields: [authorId], references: [id], onDelete: Cascade)
+  post   Post @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
 }

@@ -22,14 +22,6 @@ import { pagePatchSchema } from "@/lib/validations/page"
 import { buttonVariants } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
-import { Button } from './ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from './ui/tooltip';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
 import Quill from 'quill';
 import { useSocket } from '@/lib/providers/socket';
@@ -76,6 +68,33 @@ export function Editor({ page, post }: EditorProps) {
   const [quill, setQuill] = useState<Quill | null>(null);
   const { socket, isConnected } = useSocket();
   const { data: session } = useSession();
+
+  async function saveDocument(data: FormData) {
+    setIsSaving(true);
+    if (!quill) return;
+
+    const blocks = await quill.getContents();
+    const response = await editPage(page.id, {
+      number: data.number,
+      content: JSON.parse(JSON.stringify(blocks)),
+    });
+
+    setIsSaving(false);
+
+    if (!response.success) {
+      return toast({
+        title: 'Something went wrong.',
+        description: 'Your page was not saved. Please try again.',
+        variant: 'destructive',
+      });
+    }
+
+    router.refresh();
+
+    return toast({
+      description: 'Your page has been saved.',
+    });
+  }
 
   useEffect(() => {
     if (quill === null || socket === null) return;
@@ -133,7 +152,6 @@ export function Editor({ page, post }: EditorProps) {
     };
   }, [quill, socket, localCursors]);
 
-  //Send quill changes to all clients
   useEffect(() => {
     if (quill === null || socket === null || !session || !page.id) return;
 
@@ -146,50 +164,15 @@ export function Editor({ page, post }: EditorProps) {
     };
     const quillHandler = (delta: any, oldDelta: any, source: any) => {
       if (source !== 'user') return;
+
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      setIsSaving(true);
-      const contents = quill.getContents();
-      const quillLength = quill.getLength();
+
       saveTimerRef.current = setTimeout(async () => {
-        // if (contents && quillLength !== 1 && page.id) {
-        //   if (dirType == 'workspace') {
-        //     dispatch({
-        //       type: 'UPDATE_WORKSPACE',
-        //       payload: {
-        //         workspace: { data: JSON.stringify(contents) },
-        //         workspaceId: page.id,
-        //       },
-        //     });
-        //     await updateWorkspace({ data: JSON.stringify(contents) }, page.id);
-        //   }
-        //   if (dirType == 'folder') {
-        //     if (!workspaceId) return;
-        //     dispatch({
-        //       type: 'UPDATE_FOLDER',
-        //       payload: {
-        //         folder: { data: JSON.stringify(contents) },
-        //         workspaceId,
-        //         folderId: page.id,
-        //       },
-        //     });
-        //     await updateFolder({ data: JSON.stringify(contents) }, page.id);
-        //   }
-        //   if (dirType == 'file') {
-        //     if (!workspaceId || !folderId) return;
-        //     dispatch({
-        //       type: 'UPDATE_FILE',
-        //       payload: {
-        //         file: { data: JSON.stringify(contents) },
-        //         workspaceId,
-        //         folderId: folderId,
-        //         page.id,
-        //       },
-        //     });
-        //     await updateFile({ data: JSON.stringify(contents) }, page.id);
-        //   }
-        // }
-        setIsSaving(false);
+        saveDocument({
+          number: page.number,
+        });
       }, 850);
+
       socket.emit('send-changes', delta, page.id);
     };
     quill.on('text-change', quillHandler);
@@ -260,37 +243,7 @@ export function Editor({ page, post }: EditorProps) {
     };
   }, [quill, user]);*/
 
-  async function onSubmit(data: FormData) {
-    setIsSaving(true);
-
-    if (!quill) return;
-
-    const blocks = await quill.getContents();
-
-    const response = await editPage(page.id, {
-      number: data.number,
-      content: blocks,
-    });
-
-    setIsSaving(false);
-
-    if (!response.success) {
-      return toast({
-        title: 'Something went wrong.',
-        description: 'Your page was not saved. Please try again.',
-        variant: 'destructive',
-      });
-    }
-
-    router.refresh();
-
-    return toast({
-      description: 'Your page has been saved.',
-    });
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid w-full gap-10">
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center space-x-10">
@@ -307,12 +260,16 @@ export function Editor({ page, post }: EditorProps) {
               {post.title}
             </p>
           </div>
-          <button type="submit" className={cn(buttonVariants())}>
-            {isSaving && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <Badge className={cn("", isSaving ? '' : 'bg-green-500')}>
+            {isSaving ? (
+              <>
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                <span>Saving</span>
+              </>
+            ) : (
+            <span>Saved</span>
             )}
-            <span>Save</span>
-          </button>
+          </Badge>
         </div>
         <div className="prose prose-stone mx-auto w-[800px] dark:prose-invert">
           <TextareaAutosize
@@ -331,6 +288,5 @@ export function Editor({ page, post }: EditorProps) {
           />
         </div>
       </div>
-    </form>
   );
 }

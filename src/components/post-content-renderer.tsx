@@ -34,6 +34,7 @@ export const PostContentRenderer: FC<PostContentRendererProps> = ({ pages }) => 
             <Progress value={(pageIndex+1)/numPages*100} />
             <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
             <EditorContentRender operations={getOperations(pageIndex)}/>
+            <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
         </>
     )
 };

@@ -119,7 +119,6 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                                 id="id"
                                 name="id"
                                 value={post.id}
-                                className="col-span-3"
                                 form="editPost"
                                 hidden
                                 readOnly

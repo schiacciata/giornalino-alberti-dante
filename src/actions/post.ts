@@ -63,18 +63,22 @@ export const likePost = async (formData: postLikeFormData) => {
                     likes: {
                         [body.liked ? 'connect' : 'disconnect']: { id: user.id }
                     }
+                },
+                select: {
+                    authorId: true,
+                    title: true,
                 }
             })
 
             if (body.liked) {
                 notifications.sendUserNotification(post.authorId, {
                     title: 'Nuovo Like',
-                    body: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post!`,
+                    body: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post "${post.title}"!`,
                     tag: 'POST_LIKED'
                 })
             }
 
-            return { liked: post.likesUserIDs.some(userId => userId === user.id) };
+            return { liked: body.liked };
         } catch (e) {
             return { error: 'There was an error.' };
         }

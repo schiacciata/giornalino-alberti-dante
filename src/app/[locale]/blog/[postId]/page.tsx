@@ -6,6 +6,8 @@ import { PostAuthorSection } from "@/components/post-author-section";
 import { getScopedI18n } from "@/lib/i18n/server";
 import { LikePostButton } from "@/components/like-post-button";
 import { PostContent } from "@/components/post-content";
+import PostCommentSection from "@/components/post-comment-section";
+import { Separator } from "@/components/ui/separator";
 
 type BlogPostPageProps = {
     params: {
@@ -28,6 +30,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         },
         take: 20,
       },
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              image: true,
+              name: true,
+            }
+          },
+        },
+        orderBy: {
+          updatedAt: 'desc',
+        }
+      },
     },
   });
 
@@ -41,7 +57,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         content: p.content,
         number: p.number,
       };
-    })
+    });
 
   return (
     <Shell className="gap-1">
@@ -49,11 +65,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }}/>
       </Header>
 
-      <PostAuthorSection
-        author={{ image: author.image, name: author.name, id: author.id }}
-        post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
-      />
-      <PostContent pages={pages} post={{ pdfPath: post.pdfPath }}/>
+      <div className="grid grid-cols-1 gap-y-4">
+        <PostAuthorSection
+          author={{ image: author.image, name: author.name, id: author.id }}
+          post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
+        />
+        <PostContent pages={pages} post={{ pdfPath: post.pdfPath }}/>
+        <Separator/>
+        <PostCommentSection post={{ id: post.id }} comments={post.comments}/>
+      </div>
     </Shell>
   )
 }

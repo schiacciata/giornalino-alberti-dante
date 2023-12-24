@@ -8,7 +8,6 @@ import '@/styles/pdf.css'
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { PageSwitcher } from './page-switcher';
-import { toast } from './ui/use-toast';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.js',
@@ -26,10 +25,9 @@ interface PDFViewerProps {
 
 const resizeObserverOptions = {};
 const maxWidth = 800;
-type PDFFile = string | File | null;
 
 export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
-  const [file, setFile] = useState<PDFFile>(decodeURIComponent(path));
+  const file = decodeURIComponent(path);
   const [numPages, setNumPages] = useState<number>(0);
   const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>();
@@ -73,6 +71,7 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
             className='rounded-md'
           />
       </Document>
+      <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
     </div>
   );
 };

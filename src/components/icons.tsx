@@ -43,6 +43,7 @@ import {
     Globe,
     Music,
     PenBox,
+    MessageCircle,
 } from "lucide-react"
 
 export const Icons = {
@@ -103,6 +104,7 @@ export const Icons = {
     globe: Globe,
     spotify: Music,
     edit: PenBox,
+    message: MessageCircle,
 }
 
 export type TIcon = keyof typeof Icons;

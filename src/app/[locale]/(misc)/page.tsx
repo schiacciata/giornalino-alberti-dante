@@ -20,6 +20,11 @@ export default async function IndexPage() {
       title: true,
       createdAt: true,
       likesUserIDs: true,
+      comments: {
+        select: {
+          id: true,
+        }
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -38,7 +43,7 @@ export default async function IndexPage() {
       </div>
       <div className="divide-y divide-border rounded-md border">
         {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <PostCard key={post.id} post={post} comments={post.comments} />
         ))}
       </div>
 

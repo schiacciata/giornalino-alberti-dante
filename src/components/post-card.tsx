@@ -1,7 +1,7 @@
 'use client'
 
 import { formatDate } from '@/lib/utils'
-import { Post } from '@prisma/client'
+import { Comment, Post } from '@prisma/client'
 import Link from 'next/link'
 import { FC } from 'react'
 import { buttonVariants } from './ui/button'
@@ -9,10 +9,11 @@ import { Icon } from './icons'
 import { useI18n } from '@/lib/i18n/client'
 
 interface PostCardProps {
-    post: Pick<Post, "id" | "title" | "createdAt" | "likesUserIDs">
+  post: Pick<Post, "id" | "title" | "createdAt" | "likesUserIDs">;
+  comments:  Pick<Comment, 'id'>[];
 }
 
-export const PostCard: FC<PostCardProps> = ({ post }) => {
+export const PostCard: FC<PostCardProps> = ({ post, comments }) => {
   const t = useI18n();
 
   return (
@@ -26,7 +27,11 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
         </Link>
         <div>
           <p className="text-sm text-muted-foreground">
-            {formatDate(post.createdAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
+            {formatDate(post.createdAt?.toDateString())} ∘ <b>
+              {post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/>
+            </b> ∘ <b>
+              {comments.length || 0} <Icon icon='message' className='inline-flex'/>
+            </b>
           </p>
         </div>
       </div>

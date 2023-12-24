@@ -55,7 +55,7 @@ export async function deletePage(pageId: string) {
     });
   
     if (!page) {
-      return new Error('Page not found');
+      return { error: 'Page not found' };
     }
   
     await db.page.delete({
