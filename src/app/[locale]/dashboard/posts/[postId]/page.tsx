@@ -9,6 +9,9 @@ import { Shell } from "@/components/shell"
 import { PageCreateButton } from "@/components/page-create-button"
 import { PageItem } from "@/components/page-item"
 import { PostEditDialog } from "@/components/post-edit-dialog"
+import Link from "next/link"
+import { buttonVariants } from "@/components/ui/button"
+import { Icon } from "@/components/icons"
 
 export const metadata = {
   title: "Pages",
@@ -38,7 +41,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
             pdfPath: true,
         }
     });
-    if (!post || post.pdfPath) return notFound();
+    if (!post) return notFound();
   
     const pages = await db.page.findMany({
         where: {
@@ -59,10 +62,10 @@ export default async function PostsPage({ params }: PostsPageProps) {
       <Shell>
         <Header heading={`Pagine di "${post.title}" ${post.published ? '🌐' : '🔐'}`} text="Create and manage posts.">
             <PostEditDialog post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath }} />
-            <PageCreateButton postId={post.id} />
+            {!post.pdfPath && (<PageCreateButton postId={post.id} />)}
         </Header>
         <div>
-          {pages?.length ? (
+          {pages?.length || post.pdfPath ? (
             <div className="divide-y divide-border rounded-md border">
               {pages.map((page) => (
                 <PageItem key={page.id} page={page} />
@@ -76,6 +79,20 @@ export default async function PostsPage({ params }: PostsPageProps) {
                 This page doesn&apos;t have any pages yet. Start creating content.
               </EmptyPlaceholder.Description>
               <PageCreateButton postId={post.id} variant="outline" />
+            </EmptyPlaceholder>
+          )}
+
+          {post.pdfPath && (
+            <EmptyPlaceholder>
+              <EmptyPlaceholder.Icon name="page" />
+              <EmptyPlaceholder.Title>Post con pdf</EmptyPlaceholder.Title>
+              <EmptyPlaceholder.Description>
+                Questo post ha un file pdf impostato
+              </EmptyPlaceholder.Description>
+              <Link className={buttonVariants({ variant: 'outline' })} href={post.pdfPath} target="_blank">
+                <Icon icon="download"/>
+                Scarica
+              </Link>
             </EmptyPlaceholder>
           )}
         </div>
