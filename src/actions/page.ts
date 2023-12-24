@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
-import { pageCreateSchema } from '@/lib/validations/page';
+import { pageCreateSchema, pagePatchSchema } from '@/lib/validations/page';
 
 export const newPage = async (formData: FormData) => {
     const createPage = async (formData: FormData) => {
@@ -68,4 +68,34 @@ export async function deletePage(pageId: string) {
     revalidatePath(`/dashboard/posts/${page.postId}`);
 
     return { success: true };
+}
+
+export const editPage = async (pageId: string, formData: any) => {
+  try {
+    const user = await getCurrentUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const body = pagePatchSchema.parse(formData);
+
+    const page = await db.page.update({
+      where: {
+        id: pageId,
+      },
+      data: {
+        number: body.number,
+        content: body.content,
+      },
+      select: {
+        postId: true,
+      },
+    });
+
+    revalidatePath(`/blog/${page.postId}`);
+    revalidatePath(`/dashboard/posts/${page.postId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: 'There was an error.' };
   }
+};

@@ -34,6 +34,7 @@ import { Badge } from './ui/badge';
 import Quill from 'quill';
 import { useSocket } from '@/lib/providers/socket';
 import { useSession } from 'next-auth/react';
+import { editPage } from '@/actions/page';
 
 interface EditorProps {
   page: Pick<Page, "id" | "number" | "content">
@@ -71,8 +72,6 @@ export function Editor({ page, post }: EditorProps) {
   const [collaborators, setCollaborators] = useState<
     { id: string; email: string; avatarUrl: string }[]
   >([]);
-  const [deletingBanner, setDeletingBanner] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [localCursors, setLocalCursors] = useState<any>([]);
   const [quill, setQuill] = useState<Quill | null>(null);
   const { socket, isConnected } = useSocket();
@@ -148,7 +147,7 @@ export function Editor({ page, post }: EditorProps) {
     const quillHandler = (delta: any, oldDelta: any, source: any) => {
       if (source !== 'user') return;
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      setSaving(true);
+      setIsSaving(true);
       const contents = quill.getContents();
       const quillLength = quill.getLength();
       saveTimerRef.current = setTimeout(async () => {
@@ -189,7 +188,7 @@ export function Editor({ page, post }: EditorProps) {
         //     await updateFile({ data: JSON.stringify(contents) }, page.id);
         //   }
         // }
-        setSaving(false);
+        setIsSaving(false);
       }, 850);
       socket.emit('send-changes', delta, page.id);
     };
@@ -262,37 +261,32 @@ export function Editor({ page, post }: EditorProps) {
   }, [quill, user]);*/
 
   async function onSubmit(data: FormData) {
-    setIsSaving(true)
+    setIsSaving(true);
+
     if (!quill) return;
 
     const blocks = await quill.getContents();
 
-    const response = await fetch(`/api/posts/${post.id}/pages/${page.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        number: data.number,
-        content: blocks,
-      }),
-    })
+    const response = await editPage(page.id, {
+      number: data.number,
+      content: blocks,
+    });
 
-    setIsSaving(false)
+    setIsSaving(false);
 
-    if (!response?.ok) {
+    if (!response.success) {
       return toast({
-        title: "Something went wrong.",
-        description: "Your page was not saved. Please try again.",
-        variant: "destructive",
-      })
+        title: 'Something went wrong.',
+        description: 'Your page was not saved. Please try again.',
+        variant: 'destructive',
+      });
     }
 
-    router.refresh()
+    router.refresh();
 
     return toast({
-      description: "Your page has been saved.",
-    })
+      description: 'Your page has been saved.',
+    });
   }
 
   return (

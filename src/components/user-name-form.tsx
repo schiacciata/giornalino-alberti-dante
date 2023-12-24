@@ -22,9 +22,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
+import { updateUser } from "@/actions/user"
 
 interface UserUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
-  user: Pick<User, "id" | "name">
+  user: Pick<User, "name">
 }
 
 type FormData = z.infer<typeof userUpdateSchema>
@@ -44,33 +45,32 @@ export function UserUpdateForm({ user, className, ...props }: UserUpdateFormProp
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
 
   async function onSubmit(data: FormData) {
-    setIsSaving(true)
+    setIsSaving(true);
 
-    const response = await fetch(`/api/users/${user.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      const { success, error } = await updateUser({
         name: data.name,
-      }),
-    })
+      });
 
-    setIsSaving(false)
+      setIsSaving(false);
 
-    if (!response?.ok) {
-      return toast({
-        title: "Something went wrong.",
-        description: "Your name was not updated. Please try again.",
-        variant: "destructive",
-      })
+      if (!success) {
+        return toast({
+          title: "Something went wrong.",
+          description: error || "Your name was not updated. Please try again.",
+          variant: "destructive",
+        });
+      }
+
+      toast({
+        description: "Your name has been updated.",
+      });
+
+      router.refresh();
+    } catch (error) {
+      console.error("Error updating user:", error);
+      setIsSaving(false);
     }
-
-    toast({
-      description: "Your name has been updated.",
-    })
-
-    router.refresh()
   }
 
   return (
@@ -109,9 +109,7 @@ export function UserUpdateForm({ user, className, ...props }: UserUpdateFormProp
             className={cn(buttonVariants(), className)}
             disabled={isSaving}
           >
-            {isSaving && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
+            {isSaving && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
             <span>Save</span>
           </button>
         </CardFooter>

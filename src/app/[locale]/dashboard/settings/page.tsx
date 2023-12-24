@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth/options"
 import { getCurrentUser } from "@/lib/auth/user"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
-import { UserNameForm } from "@/components/user-name-form"
+import { UserUpdateForm } from "@/components/user-name-form"
 
 export const metadata = {
   title: "Settings",
@@ -25,7 +25,7 @@ export default async function SettingsPage() {
         text="Manage account and website settings."
       />
       <div className="grid gap-10">
-        <UserNameForm user={{ id: user.id, name: user.name || "" }} />
+        <UserUpdateForm user={{ name: user.name || "" }} />
       </div>
     </Shell>
   )
