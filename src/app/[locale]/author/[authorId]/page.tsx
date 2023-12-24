@@ -37,6 +37,11 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
             title: true,
             createdAt: true,
             likesUserIDs: true,
+            comments: {
+              select: {
+                id: true,
+              }
+            },
         },
         orderBy: {
             createdAt: "desc",
@@ -48,7 +53,7 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
             <Header heading={scopedT('heading', { name: author.name })} text={scopedT('headingDescription', { date: formatDate(author.createdAt.toDateString()) })} />
             <div className="divide-border-200 divide-y rounded-md border">
                 {posts.map((post) => (
-                    <PostCard key={post.id} post={post} />
+                    <PostCard key={post.id} post={post} comments={post.comments}/>
                 ))}
             </div>
         </Shell>
