@@ -6,6 +6,9 @@ import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { Editor } from "@/components/editor"
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getPageForUser(pageId: Page["id"]) {
   return await db.page.findFirst({
     where: {

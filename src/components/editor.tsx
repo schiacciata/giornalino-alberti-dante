@@ -43,12 +43,11 @@ interface EditorProps {
 type FormData = z.infer<typeof pagePatchSchema>
 
 const TOOLBAR_OPTIONS = [
-  ['bold', 'italic', 'underline', 'strike'], // toggled buttons
-  ['blockquote', 'code-block'],
-
-  [{ header: 1 }, { header: 2 }], // custom button values
+  ['bold', 'italic', 'underline', 'strike'],
+  ['image', 'blockquote', 'code-block'],
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ list: 'ordered' }, { list: 'bullet' }],
-  [{ script: 'sub' }, { script: 'super' }], // superscript/subscript
+  [{ script: 'sub' }, { script: 'super' }],
   [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
   [{ direction: 'rtl' }], // text direction
 
@@ -78,6 +77,17 @@ export function Editor({ page, post }: EditorProps) {
   const [quill, setQuill] = useState<Quill | null>(null);
   const { socket, isConnected } = useSocket();
   const { data: session } = useSession();
+
+  useEffect(() => {
+    if (quill === null || socket === null) return;
+    const socketHandler = (content: any) => {
+      quill.setContents(content)
+      quill.enable()
+    };
+
+    socket.emit("create-room", page.id);
+    socket.once('load-file', socketHandler);
+  }, [quill, socket]);
 
   const wrapperRef = useCallback(async (wrapper: any) => {
     if (typeof window !== 'undefined') {

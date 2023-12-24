@@ -13,15 +13,18 @@ import { cn } from "@/lib/utils";
 import { useFormStatus } from 'react-dom';
 import { Icons } from "./icons";
 import { Switch } from "./ui/switch";
+import { isAdmin } from "@/lib/auth/roles";
+import { useSession } from "next-auth/react"
 
 type PostEditDialogProps = {
-    post: Pick<Post, "id" | "title" | "published">,
+    post: Pick<Post, "id" | "title" | "published" | "pdfPath">,
 }
 
 export function PostEditDialog({ post }: PostEditDialogProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
     const { pending } = useFormStatus();
+    const { data: session } = useSession();
 
     const onSubmit = async (formData: FormData) => {
         formData.set('published', isPublished.toString());
@@ -72,18 +75,20 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                 </DialogHeader>
                 <form action={onSubmit} id="editPost" className="space-y-8">
                     <div className="grid gap-2">
-                        <div className="flex flex-col gap-2">
-                            <Label htmlFor="title" className="text-right">
-                                Title
-                            </Label>
-                            <Input
-                                id="title"
-                                name="title"
-                                required
-                                defaultValue={post.title}
-                                form="editPost"
-                                className="col-span-3"
-                            />
+                        <div className="flex flex-col gap-y-4 py-4">
+                            <div>
+                                <Label htmlFor="title">
+                                    Title
+                                </Label>
+                                <Input
+                                    id="title"
+                                    name="title"
+                                    required
+                                    defaultValue={post.title}
+                                    form="editPost"
+                                    className="col-span-3"
+                                />
+                            </div>
                             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                                 <Label htmlFor="title" className={isPublished ? `text-green-500` : 'text-orange-500'}>
                                     {isPublished ? 'Published' : 'Not published'}
@@ -94,6 +99,21 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                                     onCheckedChange={setIsPublished}
                                 />
                             </div>
+
+                            {session && isAdmin(session.user) && (
+                                <div>
+                                    <Label htmlFor="pdfPath">
+                                        PDF path
+                                    </Label>
+                                    <Input
+                                        id="pdfPath"
+                                        name="pdfPath"
+                                        defaultValue={post.pdfPath || undefined}
+                                        form="editPost"
+                                        className="col-span-3"
+                                    />
+                                </div>
+                            )}
 
                             <input
                                 id="id"

@@ -5,6 +5,7 @@ import { postCreateSchema, postCreateFormData, postLikeSchema, postLikeFormData,
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
 import { notifications } from '@/lib/notifications';
+import { isAdmin } from '@/lib/auth/roles';
 
 export const newPost = async (formData: postCreateFormData) => {
     const createPost = async (formData: postCreateFormData) => {
@@ -94,12 +95,15 @@ export const editPost = async (formData: FormData) => {
 
             const data = Object.fromEntries(formData);
             const body = postPatchSchema.parse(data);
+
             if (!body.id) return { error: 'No post id' }
+            if (body.pdfPath && !isAdmin(user)) return { error: 'You can\'t modify post\'s pdf path' }
         
             const post = await db.post.update({
                 data: {
                   title: body.title,
                   published: body.published,
+                  pdfPath: body.pdfPath,
                 },
                 where: {
                     id: body.id
@@ -129,4 +133,28 @@ export const editPost = async (formData: FormData) => {
     if ("error" in post) return post;
 
     return { message: 'Updated post' };
+}
+
+export async function deletePost(postId: string) {
+    const post = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+  
+    if (!post) {
+      throw new Error('Post not found');
+    }
+  
+    await db.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+  
+    revalidatePath('/');
+    revalidatePath('/dashboard/posts');
+    revalidatePath('/blog');
+  
+    return { success: true };
 }

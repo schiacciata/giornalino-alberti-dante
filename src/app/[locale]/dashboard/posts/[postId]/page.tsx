@@ -35,9 +35,10 @@ export default async function PostsPage({ params }: PostsPageProps) {
             id: true,
             title: true,
             published: true,
+            pdfPath: true,
         }
     });
-    if (!post) return notFound();
+    if (!post || post.pdfPath) return notFound();
   
     const pages = await db.page.findMany({
         where: {
@@ -57,7 +58,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
     return (
       <Shell>
         <Header heading={`Pagine di "${post.title}" ${post.published ? '🌐' : '🔐'}`} text="Create and manage posts.">
-            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published }} />
+            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath }} />
             <PageCreateButton postId={post.id} />
         </Header>
         <div>

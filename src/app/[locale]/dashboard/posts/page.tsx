@@ -26,6 +26,7 @@ export default async function PostsPage() {
         title: true,
         published: true,
         createdAt: true,
+        pdfPath: true,
       },
       orderBy: {
         updatedAt: "desc",

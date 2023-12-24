@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { cn } from "@/lib/utils"
-import { userNameSchema } from "@/lib/validations/user"
+import { userUpdateSchema } from "@/lib/validations/user"
 import { buttonVariants } from "@/components/ui/button"
 import {
   Card,
@@ -23,20 +23,20 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
-interface UserNameFormProps extends React.HTMLAttributes<HTMLFormElement> {
+interface UserUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
   user: Pick<User, "id" | "name">
 }
 
-type FormData = z.infer<typeof userNameSchema>
+type FormData = z.infer<typeof userUpdateSchema>
 
-export function UserNameForm({ user, className, ...props }: UserNameFormProps) {
+export function UserUpdateForm({ user, className, ...props }: UserUpdateFormProps) {
   const router = useRouter()
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(userNameSchema),
+    resolver: zodResolver(userUpdateSchema),
     defaultValues: {
       name: user?.name || "",
     },

@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Page } from "@prisma/client"
@@ -24,31 +24,37 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
-
-async function deletePage(pageId: string) {
-  const response = await fetch(`/api/pages/${pageId}`, {
-    method: "DELETE",
-  })
-
-  if (!response?.ok) {
-    toast({
-      title: "Something went wrong.",
-      description: "Your page was not deleted. Please try again.",
-      variant: "destructive",
-    })
-  }
-
-  return true
-}
+import { deletePage } from "@/actions/page"
 
 interface PageOperationsProps {
   page: Pick<Page, "id">
 }
 
 export function PageOperations({ page }: PageOperationsProps) {
-  const router = useRouter()
-  const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false)
-  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false)
+  const router = useRouter();
+  const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+
+  const handleDeletePage = async () => {
+    try {
+      setIsDeleteLoading(true);
+      const data = await deletePage(page.id);
+
+      if ("success" in data) {
+        setIsDeleteLoading(false);
+        setShowDeleteAlert(false);
+        router.refresh();
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: "Your page was not deleted. Please try again.",
+        variant: "destructive",
+      })
+      setIsDeleteLoading(false);
+      setShowDeleteAlert(false);
+    }
+  };
 
   return (
     <>
@@ -85,18 +91,7 @@ export function PageOperations({ page }: PageOperationsProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={async (event) => {
-                event.preventDefault()
-                setIsDeleteLoading(true)
-
-                const deleted = await deletePage(page.id)
-
-                if (deleted) {
-                  setIsDeleteLoading(false)
-                  setShowDeleteAlert(false)
-                  router.refresh()
-                }
-              }}
+              onClick={handleDeletePage}
               className="bg-red-600 focus:ring-red-600"
             >
               {isDeleteLoading ? (

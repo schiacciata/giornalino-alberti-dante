@@ -2,6 +2,7 @@ import { NextApiResponseServerIo } from '@/types/socket';
 import { Server as NetServer } from 'http';
 import { Server as ServerIO } from 'socket.io';
 import { NextApiRequest } from 'next';
+import { db } from '@/lib/db';
 
 export const config = {
   api: {
@@ -20,8 +21,19 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
     });
     
     io.on('connection', (s) => {
-      s.on('create-room', (fileId) => {
+      s.on('create-room', async (fileId) => {
+        const document = await db.page.findFirstOrThrow({
+          where: {
+            id: fileId,
+          },
+          select: {
+            content: true,
+          }
+        });
+      
         s.join(fileId);
+        s.emit("load-file", document.content);
+
       });
       s.on('send-changes', (deltas, fileId) => {
         s.to(fileId).emit('receive-changes', deltas, fileId);

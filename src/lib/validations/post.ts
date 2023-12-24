@@ -13,6 +13,7 @@ export const postPatchSchema = z.object({
 
   // TODO: Type this properly from editorjs block types?
   content: z.any().optional(),
+  pdfPath: z.string().optional(),
   published: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
 })
 

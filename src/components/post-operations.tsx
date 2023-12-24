@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Post } from "@prisma/client"
 
@@ -23,55 +23,39 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
-import { Button, buttonVariants } from "./ui/button"
 import Link from "next/link"
-
-async function deletePost(postId: string) {
-  const response = await fetch(`/api/posts/${postId}`, {
-    method: "DELETE",
-  })
-
-  if (!response?.ok) {
-    toast({
-      title: "Something went wrong.",
-      description: "Your post was not deleted. Please try again.",
-      variant: "destructive",
-    })
-  }
-
-  return true
-}
-
-async function publishPost(postId: string) {
-  const response = await fetch(`/api/posts/${postId}`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      published: true,
-    })
-  })
-
-  if (!response?.ok) {
-    toast({
-      title: "Something went wrong.",
-      description: "Your post was not published. Please try again.",
-      variant: "destructive",
-    })
-  }
-
-  return true
-}
+import { deletePost } from "@/actions/post"
 
 interface PostOperationsProps {
-  post: Pick<Post, "id" | "title" | 'published'>
+  post: Pick<Post, "id" | "title">
 }
 
 export function PostOperations({ post }: PostOperationsProps) {
-  const router = useRouter()
-  const [showDeleteAlert, setShowDeleteAlert] = React.useState<boolean>(false)
-  const [showPublishAlert, setShowPublishAlert] = React.useState<boolean>(false)
-  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false)
-  const [isPublishLoading, setIsPublishLoading] = React.useState<boolean>(false)
+  const router = useRouter();
+  const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+
+  const handleDeletePost = async () => {
+    try {
+      setIsDeleteLoading(true);
+
+      const data = await deletePost(post.id);
+
+      if ("success" in data) {
+        setIsDeleteLoading(false);
+        setShowDeleteAlert(false);
+        router.refresh();
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: "Your post was not deleted. Please try again.",
+        variant: "destructive",
+      })
+      setIsDeleteLoading(false);
+      setShowDeleteAlert(false);
+    }
+  };
 
   return (
     <>
@@ -108,18 +92,7 @@ export function PostOperations({ post }: PostOperationsProps) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={async (event) => {
-                event.preventDefault()
-                setIsDeleteLoading(true)
-
-                const deleted = await deletePost(post.id)
-
-                if (deleted) {
-                  setIsDeleteLoading(false)
-                  setShowDeleteAlert(false)
-                  router.refresh()
-                }
-              }}
+              onClick={handleDeletePost}
               className="bg-red-600 focus:ring-red-600"
             >
               {isDeleteLoading ? (

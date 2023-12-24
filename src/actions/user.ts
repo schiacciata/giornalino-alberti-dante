@@ -2,14 +2,14 @@
 
 import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
-import { userNameSchema, userUpdateFormData } from '@/lib/validations/user';
+import { userUpdateSchema, userUpdateFormData } from '@/lib/validations/user';
 
 export const updateUser = async (formData: userUpdateFormData) => {
     try {
         const user = await getCurrentUser();
         if (!user) return { error: 'Not authenticated' };
 
-        const payload = userNameSchema.parse({
+        const payload = userUpdateSchema.parse({
             name: formData.name,
         });
     
@@ -22,7 +22,6 @@ export const updateUser = async (formData: userUpdateFormData) => {
             },
         })
 
-        //revalidatePath('/dashboard/settings')
         return { success: true }
     } catch (e) {
         return { error: 'There was an error.' };

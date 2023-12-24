@@ -40,3 +40,32 @@ export const newPage = async (formData: FormData) => {
 
     return redirect(`/editor/${page.id}`);
 }
+
+export async function deletePage(pageId: string) {
+    const user = await getCurrentUser();
+    if (!user) return { error: 'Not authenticated' };
+
+    const page = await db.page.findUnique({
+      where: {
+        id: pageId,
+      },
+      select: {
+        postId: true,
+      }
+    });
+  
+    if (!page) {
+      return new Error('Page not found');
+    }
+  
+    await db.page.delete({
+      where: {
+        id: pageId,
+      },
+    });
+  
+    revalidatePath(`/blog/${page.postId}`);
+    revalidatePath(`/dashboard/posts/${page.postId}`);
+
+    return { success: true };
+  }
