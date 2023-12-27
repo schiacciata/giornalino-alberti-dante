@@ -2,8 +2,6 @@ import { redirect } from "next/navigation"
 
 import { authOptions } from "@/lib/auth/options"
 import { getCurrentUser } from "@/lib/auth/user"
-import { Header } from "@/components/header"
-import { Shell } from "@/components/shell"
 import { UserUpdateForm } from "@/components/user-name-form"
 
 export const metadata = {
@@ -19,14 +17,8 @@ export default async function SettingsPage() {
   }
 
   return (
-    <Shell>
-      <Header
-        heading="Settings"
-        text="Manage account and website settings."
-      />
-      <div className="grid gap-10">
+      <>
         <UserUpdateForm user={{ name: user.name || "" }} />
-      </div>
-    </Shell>
+      </>
   )
 }

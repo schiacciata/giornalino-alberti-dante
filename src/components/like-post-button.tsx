@@ -9,12 +9,14 @@ import { useSession } from "next-auth/react"
 import { useFormStatus } from "react-dom"
 import { likePost } from "@/actions/post"
 import { toast } from "./ui/use-toast"
+import { useI18n } from "@/lib/i18n/client"
 
 interface LikePostButtonProps {
     post: Pick<Post, 'id' | 'likesUserIDs'>
 }
 
 export function LikePostButton({ post }: LikePostButtonProps) {
+  const t = useI18n();
   const { pending } = useFormStatus();
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const { data: session, status } = useSession();
@@ -36,7 +38,7 @@ export function LikePostButton({ post }: LikePostButtonProps) {
     if ('error' in res) {
       return toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
+        title: t('errors.general'),
         description: res.error,
       });
     }
@@ -44,7 +46,7 @@ export function LikePostButton({ post }: LikePostButtonProps) {
     setIsLiked(!isLiked);
     return toast({
       variant: "default",
-      title: "Success!",
+      title: t('success'),
       description: res.message,
     });
   }

@@ -66,7 +66,6 @@ export const Icons = {
     chevronLeft: ChevronLeft,
     chevronRight: ChevronRight,
     dashboard: LayoutDashboard,
-    admin: Shield,
     calendar: CalendarDays,
     wrench: Wrench,
     notice: Megaphone,
@@ -105,7 +104,9 @@ export const Icons = {
     spotify: Music,
     edit: PenBox,
     message: MessageCircle,
-    editor: PenBox,
+    ADMIN: Shield,
+    EDITOR: PenBox,
+    USER: User,
 }
 
 export type TIcon = keyof typeof Icons;

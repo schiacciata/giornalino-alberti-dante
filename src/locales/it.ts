@@ -2,6 +2,9 @@ export default {
     'hello': 'Ciao',
     'welcome': 'Benvenuto',
     'back': 'Indietro',
+    'and': 'e',
+    submit: 'Invia',
+    success: 'Successo!',
     homepage: {
         headingDescription: 'Leggi gli ultimi {postsNumber} post:',
         readMore: 'Leggi di più',
@@ -17,6 +20,11 @@ export default {
         title: 'Uh oh! Non trovato',
         description: 'Questa risorsa non può essere trovata. Per favore, riprova.',
         action: 'Vai alla home',
+    },
+    errors: {
+        general: 'Uh oh! Qualcosa è andato storto.',
+        unauthorized: 'Non sei autorizzato a eseguire questa azione',
+        unauthenticated: 'Non sei autenticato, effettua il login e riprova!',
     },
     author: {
         heading: 'Post di {name}',
@@ -39,5 +47,27 @@ export default {
         changeUser: 'o cambia',
         settings: 'Impostazioni',
 
-    }
+    },
+    settings: {
+        heading: 'Impostazioni',
+        headingDescription: 'Gestisci le impostazioni dell\'account e del sito web.',
+    },
+    comments: {
+        heading: 'Commenti',
+        insert: {
+            label: 'Il tuo commento',
+            placeholder: 'Digita il tuo messaggio qui.',
+            success: 'Commento inviato con successo',
+        },
+        delete: {
+            notFound: 'Commento non trovato',
+            otherUserComment: 'Impossibile eliminare il commento di un altro utente',
+            success: 'Commento eliminato con successo',
+        },
+    },
+    pageSwitcher: {
+        title: 'Vai alla pagina',
+        description: 'Scegli un numero di pagina a cui navigare.',
+        label: 'Numero',
+    },
 } as const;

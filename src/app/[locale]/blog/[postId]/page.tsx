@@ -37,6 +37,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               id: true,
               image: true,
               name: true,
+              role: true,
             }
           },
         },

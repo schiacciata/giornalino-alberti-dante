@@ -13,6 +13,7 @@ import { toast } from "./ui/use-toast";
 import { newPage } from "@/actions/page";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { useI18n } from "@/lib/i18n/client";
 
 interface PageCreateButtonProps extends ButtonProps {
     postId: string;
@@ -24,6 +25,7 @@ export function PageCreateButton({
     variant,
     ...props
 }: PageCreateButtonProps) {
+    const t = useI18n();
     const { pending } = useFormStatus();
 
     const onSubmit = async (formData: FormData) => {
@@ -32,7 +34,7 @@ export function PageCreateButton({
         if ('error' in res) {
             return toast({
                 variant: "destructive",
-                title: "Uh oh! Something went wrong.",
+                title: t('errors.general'),
                 description: res.error,
             });
         }

@@ -15,12 +15,14 @@ import { Icons } from "./icons";
 import { Switch } from "./ui/switch";
 import { isAdmin } from "@/lib/auth/roles";
 import { useSession } from "next-auth/react"
+import { useI18n } from "@/lib/i18n/client";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath">,
 }
 
 export function PostEditDialog({ post }: PostEditDialogProps) {
+    const t = useI18n();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
     const { pending } = useFormStatus();
@@ -35,14 +37,14 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
         if ('error' in res) {
             return toast({
               variant: "destructive",
-              title: "Uh oh! Something went wrong.",
+              title: t('errors.general'),
               description: res.error,
             });
         }
           
         return toast({
             variant: "default",
-            title: "Success!",
+            title: t('success'),
             description: res.message,
         });
     }

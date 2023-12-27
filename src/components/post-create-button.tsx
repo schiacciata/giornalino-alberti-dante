@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
 
 import { newPost } from '@/actions/post'
+import { useI18n } from "@/lib/i18n/client";
 
 interface PostCreateButtonProps extends ButtonProps {}
 
@@ -18,6 +19,7 @@ export function PostCreateButton({
   variant,
   ...props
 }: PostCreateButtonProps) {
+  const t = useI18n();
   const { pending } = useFormStatus();
   
   async function onCreate(formData: FormData) {
@@ -27,7 +29,7 @@ export function PostCreateButton({
     
     toast({
       variant: "destructive",
-      title: "Uh oh! Something went wrong.",
+      title: t('errors.general'),
       description: res.error,
     });
   }

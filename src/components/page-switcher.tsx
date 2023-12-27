@@ -1,9 +1,12 @@
+'use client'
+
 import { FC, useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Icon } from './icons';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { useI18n, useScopedI18n } from '@/lib/i18n/client';
 
 interface PageSwitcherProps {
   pageIndex: number;
@@ -12,6 +15,9 @@ interface PageSwitcherProps {
 }
 
 export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPageChange }) => {
+  const t = useI18n();
+  const scopedT = useScopedI18n('pageSwitcher');
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPage, setSelectedPage] = useState(pageIndex + 1);
 
@@ -45,14 +51,14 @@ export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPa
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Go to Page</DialogTitle>
+            <DialogTitle>{scopedT('title')}</DialogTitle>
             <DialogDescription>
-              Choose a page number to navigate to.
+              {scopedT('description')}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-y-4 py-4">
             <Label htmlFor="number" className="text-right">
-                Numero
+              {scopedT('label')}
             </Label>
             <Input
                 id="number"
@@ -66,7 +72,9 @@ export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPa
                 max={pageCount}
             />
             <DialogFooter>
-              <Button onClick={handlePageChange}>Go</Button>
+              <Button onClick={handlePageChange}>
+                {t('submit')}
+              </Button>
             </DialogFooter>
           </div>
         </DialogContent>

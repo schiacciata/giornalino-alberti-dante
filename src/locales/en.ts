@@ -3,6 +3,8 @@ export default {
     'welcome': 'Welcome',
     'back': 'Back',
     'and': 'and',
+    submit: 'Submit',
+    success: 'Success!',
     homepage: {
         headingDescription: 'Read the latest {postsNumber} posts:',
         readMore: 'Read more',
@@ -18,6 +20,11 @@ export default {
         title: 'Uh oh! Not Found',
         description: 'This resource could not be found. Please try again.',
         action: 'Go home',
+    },
+    errors: {
+        general: 'Uh oh! Something went wrong.',
+        unauthorized: 'You\'re not authorized to perform this action',
+        unauthenticated: 'You\'re not authenticated, login then try again!',
     },
     author: {
         heading: '{name}\'s posts',
@@ -36,9 +43,31 @@ export default {
         enterEmail: 'Enter your email below to create your account',
     },
     dashboard: {
+        homeGreetings: 'Welcome, {name}',
         createNew: 'Create new',
         changeUser: 'or change user',
         settings: 'settings',
-
-    }
+    },
+    settings: {
+        heading: 'Settings',
+        headingDescription: 'Manage account and website settings.',
+    },
+    comments: {
+        heading: 'Comments',
+        insert: {
+            label: 'Your message',
+            placeholder: 'Type your message here.',
+            success: 'Successfully posted comment',
+        },
+        delete: {
+            notFound: 'Comment not found',
+            otherUserComment: 'Can\'t delete other user\'s comment',
+            success: 'Comment successfully deleted',
+        },
+    },
+    pageSwitcher: {
+        title: 'Go to Page',
+        description: 'Choose a page number to navigate to.',
+        label: 'Number',
+    },
 } as const

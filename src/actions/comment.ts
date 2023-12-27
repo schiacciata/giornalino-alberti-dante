@@ -3,15 +3,18 @@
 import { isAdmin } from "@/lib/auth/roles";
 import { getCurrentUser } from "@/lib/auth/user";
 import { db } from "@/lib/db";
+import { getI18n } from "@/lib/i18n/server";
 import { notifications } from "@/lib/notifications";
 import { commentCreateSchema } from "@/lib/validations/comment";
 import { revalidatePath } from "next/cache";
 
 export const newComment = async (formData: FormData) => {
+    const t = await getI18n();
+
     const createComment = async (formData: FormData) => {
         try {
             const user = await getCurrentUser();
-            if (!user) return { error: 'Not authenticated' };
+            if (!user) return { error: t('errors.unauthenticated') };
 
             const data = Object.fromEntries(formData);
             const body = commentCreateSchema.parse(data);
@@ -46,21 +49,20 @@ export const newComment = async (formData: FormData) => {
               body: `${user.name}: "${notificationContent}"`
             })
 
-            return { message: 'Successfully posted comment', };
+            return { message: t('comments.insert.success'), };
         } catch (e) {
-            console.log(e)
-            return { error: 'There was an error.' };
+            return { error: t('errors.general') };
         }
     };
     
     return await createComment(formData);
 }
 
-
-
 export async function deleteComment(commentId: string) {
+    const t = await getI18n();
+
     const user = await getCurrentUser();
-    if (!user) return { error: 'Not authenticated' };
+    if (!user) return { error: t('errors.unauthenticated') };
 
     const comment = await db.comment.findUnique({
       where: {
@@ -73,11 +75,11 @@ export async function deleteComment(commentId: string) {
     });
   
     if (!comment) {
-      return { error: 'Comment not found' };
+      return { error: t('comments.delete.notFound') };
     }
   
     if (user.id !== comment.authorId && !isAdmin(user)) {
-      return { error: 'Can\'t delete other user\'s comment' };
+      return { error: t('comments.delete.otherUserComment') };
     }
   
     await db.comment.delete({
@@ -89,5 +91,5 @@ export async function deleteComment(commentId: string) {
     revalidatePath(`/blog/${comment.postId}`);
     revalidatePath(`/dashboard/posts/${comment.postId}`);
 
-    return { message: 'Comment successfully deleted' };
+    return { message: t('comments.delete.success') };
 }
