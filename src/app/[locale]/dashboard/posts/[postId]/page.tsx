@@ -89,7 +89,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
               <EmptyPlaceholder.Description>
                 Questo post ha un file pdf impostato
               </EmptyPlaceholder.Description>
-              <Link className={buttonVariants({ variant: 'outline' })} href={post.pdfPath} target="_blank">
+              <Link className={buttonVariants({ variant: 'outline' })} href={post.pdfPath} target="_blank" download={true}>
                 <Icon icon="download"/>
                 Scarica
               </Link>
