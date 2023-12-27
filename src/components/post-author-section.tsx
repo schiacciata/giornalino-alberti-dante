@@ -16,18 +16,16 @@ interface PostAuthorSectionProps {
 export function PostAuthorSection({ author, post }: PostAuthorSectionProps) {
 
   return (
-    <>
-        <div className="divide-y divide-border rounded-md border px-4 py-2">
-            <Link  className={buttonVariants({ variant: 'link' })} href={`/author/${author.id}`}>
-                <UserAvatar
-                    user={{ name: author.name, image: author.image }}
-                    className="h-8 w-8" />  
-                <p className="font-bold px-4 text-lg">{author.name}</p>
-            </Link>
-            <p className="py-4 text-muted-foreground italic">
-                {formatDate(post.updatedAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
-            </p>
-        </div>
-      </>
+    <div className="divide-y divide-border rounded-md border px-4 py-4">
+        <Link  className={buttonVariants({ variant: 'link' })} href={`/author/${author.id}`}>
+            <UserAvatar
+                user={{ name: author.name, image: author.image }}
+                className="h-8 w-8" />  
+            <p className="font-bold px-4 text-lg">{author.name}</p>
+        </Link>
+        <p className="px-4 py-2 text-muted-foreground italic">
+            {formatDate(post.updatedAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
+        </p>
+    </div>
   )
 }

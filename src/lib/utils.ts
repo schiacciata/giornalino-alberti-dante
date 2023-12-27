@@ -14,9 +14,10 @@ export async function wait(ms: number = 5000) {
 
 export const randomColor = () => "#"+Math.floor(Math.random() * 0x1000000).toString(16);
 
-export function formatDate(input: string | number): string {
-  const date = new Date(input)
-  return date.toLocaleDateString("en-US", {
+export function formatDate(input: string | number | Date): string {
+  const date = new Date(input);
+
+  return date.toLocaleDateString(undefined, {
     month: "long",
     day: "numeric",
     year: "numeric",

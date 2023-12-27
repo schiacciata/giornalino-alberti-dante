@@ -105,6 +105,7 @@ export const Icons = {
     spotify: Music,
     edit: PenBox,
     message: MessageCircle,
+    editor: PenBox,
 }
 
 export type TIcon = keyof typeof Icons;
