@@ -29,7 +29,7 @@ export default async function PostsPage() {
         pdfPath: true,
       },
       orderBy: {
-        updatedAt: "desc",
+        createdAt: "desc",
       },
     })
   
