@@ -36,6 +36,9 @@ interface EditorProps {
 
 type FormData = z.infer<typeof pagePatchSchema>
 
+export const fetchCache = 'force-no-store';
+export const dynamic = 'force-dynamic'
+
 const TOOLBAR_OPTIONS = [
   ['bold', 'italic', 'underline', 'strike'],
   ['image', 'blockquote', 'code-block'],

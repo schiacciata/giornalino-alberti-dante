@@ -8,7 +8,8 @@ import { Editor } from "@/components/editor"
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+//export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 async function getPageForUser(pageId: Page["id"]) {
   return await db.page.findFirst({
