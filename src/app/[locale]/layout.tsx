@@ -5,7 +5,7 @@ import '@/styles/scrollbar.css'
 import siteConfig from "@/config/site"
 import { Providers } from "@/lib/providers"
 import { RootLayoutProps } from '@/types/layout'
-import { Toaster } from '@/components/ui/toaster'
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: {

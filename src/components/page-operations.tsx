@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { Icons } from "@/components/icons"
 import { deletePage } from "@/actions/page"
 
@@ -46,10 +46,8 @@ export function PageOperations({ page }: PageOperationsProps) {
         router.refresh();
       }
     } catch (error) {
-      toast({
-        title: "Something went wrong.",
+      toast.error("Something went wrong.", {
         description: "Your page was not deleted. Please try again.",
-        variant: "destructive",
       })
       setIsDeleteLoading(false);
       setShowDeleteAlert(false);

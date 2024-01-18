@@ -6,7 +6,7 @@ import { useFormStatus } from 'react-dom';
 
 import { cn } from "@/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { Icons } from "@/components/icons"
 
 import { newPost } from '@/actions/post'
@@ -27,9 +27,7 @@ export function PostCreateButton({
       title: "Untitled Post",
     });
     
-    toast({
-      variant: "destructive",
-      title: t('errors.general'),
+    toast.error(t('errors.general'), {
       description: res.error,
     });
   }

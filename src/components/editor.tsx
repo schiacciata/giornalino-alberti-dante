@@ -20,7 +20,7 @@ import "@/styles/editor.css"
 import { cn } from "@/lib/utils"
 import { pagePatchSchema } from "@/lib/validations/page"
 import { buttonVariants } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { Icons } from "@/components/icons"
 import { Badge } from './ui/badge';
 import Quill from 'quill';
@@ -85,18 +85,14 @@ export function Editor({ page, post }: EditorProps) {
     setIsSaving(false);
 
     if (!response.success) {
-      return toast({
-        title: 'Something went wrong.',
+      return toast.error('Something went wrong.', {
         description: 'Your page was not saved. Please try again.',
-        variant: 'destructive',
       });
     }
 
     router.refresh();
 
-    return toast({
-      description: 'Your page has been saved.',
-    });
+    return toast.success('Your page has been saved.');
   }
 
   useEffect(() => {

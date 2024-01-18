@@ -6,7 +6,7 @@ import { Post } from "@prisma/client";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { editPost } from "@/actions/post";
-import { toast } from "./ui/use-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 // @ts-ignore
@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react"
 import { useI18n } from "@/lib/i18n/client";
 
 type PostEditDialogProps = {
-    post: Pick<Post, "id" | "title" | "published" | "pdfPath">,
+    post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
 }
 
 export function PostEditDialog({ post }: PostEditDialogProps) {
@@ -33,19 +33,15 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
 
         const res = await editPost(formData);
         setIsOpen(false);
-
+    
         if ('error' in res) {
-            return toast({
-              variant: "destructive",
-              title: t('errors.general'),
-              description: res.error,
-            });
+          return toast.error(t('errors.general'), {
+            description: res.error,
+          });
         }
-          
-        return toast({
-            variant: "default",
-            title: t('success'),
-            description: res.message,
+        
+        return toast.success(t('success'), {
+          description: res.message,
         });
     }
 
@@ -103,18 +99,32 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                             </div>
 
                             {session && isAdmin(session.user) && (
-                                <div>
-                                    <Label htmlFor="pdfPath">
-                                        PDF path
-                                    </Label>
-                                    <Input
-                                        id="pdfPath"
-                                        name="pdfPath"
-                                        defaultValue={post.pdfPath || undefined}
-                                        form="editPost"
-                                        className="col-span-3"
-                                    />
-                                </div>
+                                <>
+                                    <div>
+                                        <Label htmlFor="pdfPath">
+                                            PDF path
+                                        </Label>
+                                        <Input
+                                            id="pdfPath"
+                                            name="pdfPath"
+                                            defaultValue={post.pdfPath || undefined}
+                                            form="editPost"
+                                            className="col-span-3"
+                                        />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="authorId">
+                                            Author Id
+                                        </Label>
+                                        <Input
+                                            id="authorId"
+                                            name="authorId"
+                                            defaultValue={post.authorId || undefined}
+                                            form="editPost"
+                                            className="col-span-3"
+                                        />
+                                    </div>
+                                </>
                             )}
 
                             <input

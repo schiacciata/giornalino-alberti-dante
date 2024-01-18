@@ -100,14 +100,22 @@ export const editPost = async (formData: FormData) => {
             const data = Object.fromEntries(formData);
             const body = postPatchSchema.parse(data);
 
-            if (!body.id) return { error: 'No post id' }
-            if (body.pdfPath && !isAdmin(user)) return { error: 'You can\'t modify post\'s pdf path' }
+            const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
+
+            if (!body.id) return { error: 'No post id' };
+
+            const updatedFields = Object
+                .keys(body)
+                .filter((k) => protectedFields.includes(k));
+
+            if (updatedFields.length > 0 && !isAdmin(user)) return { error: 'You can\'t modify protected fields' }
         
             const post = await db.post.update({
                 data: {
                   title: body.title,
                   published: body.published,
                   pdfPath: body.pdfPath,
+                  authorId: body.authorId,
                 },
                 where: {
                     id: body.id

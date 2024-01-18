@@ -39,6 +39,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
             title: true,
             published: true,
             pdfPath: true,
+            authorId: true,
         }
     });
     if (!post) return notFound();
@@ -61,7 +62,7 @@ export default async function PostsPage({ params }: PostsPageProps) {
     return (
       <Shell>
         <Header heading={`Pagine di "${post.title}" ${post.published ? '🌐' : '🔐'}`} text="Create and manage posts.">
-            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath }} />
+            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath, authorId: post.authorId }} />
             {!post.pdfPath && (<PageCreateButton postId={post.id} />)}
         </Header>
         <div>

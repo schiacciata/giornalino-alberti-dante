@@ -15,6 +15,7 @@ export const postPatchSchema = z.object({
   content: z.any().optional(),
   pdfPath: z.string().optional(),
   published: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
+  authorId: z.string().optional(),
 })
 
 export type postUpdateFormData = z.infer<typeof postPatchSchema>;

@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/components/ui/use-toast"
+import { toast } from "sonner"
 import { Icons } from "@/components/icons"
 import { updateUser } from "@/actions/user"
 
@@ -55,16 +55,12 @@ export function UserUpdateForm({ user, className, ...props }: UserUpdateFormProp
       setIsSaving(false);
 
       if (!success) {
-        return toast({
-          title: "Something went wrong.",
+        return toast.error("Something went wrong.", {
           description: error || "Your name was not updated. Please try again.",
-          variant: "destructive",
         });
       }
 
-      toast({
-        description: "Your name has been updated.",
-      });
+      toast.success("Your name has been updated.",);
 
       router.refresh();
     } catch (error) {

@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react"
 // @ts-ignore
 import { useFormStatus } from "react-dom"
 import { likePost } from "@/actions/post"
-import { toast } from "./ui/use-toast"
+import { toast } from "sonner"
 import { useI18n } from "@/lib/i18n/client"
 
 interface LikePostButtonProps {
@@ -36,17 +36,13 @@ export function LikePostButton({ post }: LikePostButtonProps) {
     });
     
     if ('error' in res) {
-      return toast({
-        variant: "destructive",
-        title: t('errors.general'),
+      return toast.error(t('errors.general'), {
         description: res.error,
       });
     }
     
     setIsLiked(!isLiked);
-    return toast({
-      variant: "default",
-      title: t('success'),
+    return toast.success(t('success'), {
       description: res.message,
     });
   }

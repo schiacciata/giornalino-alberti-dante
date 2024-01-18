@@ -9,7 +9,7 @@ import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { toast } from "./ui/use-toast";
+import { toast } from "sonner";
 import { newPage } from "@/actions/page";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -30,12 +30,10 @@ export function PageCreateButton({
 
     const onSubmit = async (formData: FormData) => {
         const res = await newPage(formData);
-
+    
         if ('error' in res) {
-            return toast({
-                variant: "destructive",
-                title: t('errors.general'),
-                description: res.error,
+            return toast.error(t('errors.general'), {
+              description: res.error,
             });
         }
     }
