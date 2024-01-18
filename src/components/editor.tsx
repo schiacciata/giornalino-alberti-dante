@@ -27,6 +27,7 @@ import Quill from 'quill';
 import { useSocket } from '@/lib/providers/socket';
 import { useSession } from 'next-auth/react';
 import { editPage } from '@/actions/page';
+import { unstable_noStore as noStore } from 'next/cache';
 
 interface EditorProps {
   page: Pick<Page, "id" | "number" | "content">
@@ -55,6 +56,8 @@ const TOOLBAR_OPTIONS = [
 ];
 
 export function Editor({ page, post }: EditorProps) {
+  noStore();
+  
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(pagePatchSchema),
   })

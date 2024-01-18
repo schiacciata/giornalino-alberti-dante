@@ -30,9 +30,11 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
             content: true,
           }
         });
+
+        const { content } = document;
       
         s.join(fileId);
-        s.emit("load-file", document.content);
+        s.emit("load-file", content);
 
       });
       s.on('send-changes', (deltas, fileId) => {

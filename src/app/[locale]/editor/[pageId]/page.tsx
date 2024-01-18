@@ -1,10 +1,11 @@
 import { notFound, redirect } from "next/navigation"
-import { Page, User } from "@prisma/client"
+import { Page } from "@prisma/client"
 
 import { authOptions } from "@/lib/auth/options"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { Editor } from "@/components/editor"
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -28,6 +29,7 @@ interface EditorPageProps {
 }
 
 export default async function EditorPage({ params }: EditorPageProps) {
+  noStore();
   const user = await getCurrentUser()
 
   if (!user) {
