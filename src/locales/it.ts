@@ -43,6 +43,7 @@ export default {
         enterEmail: 'Inserisci la tua email qui sotto per creare il tuo account',
     },
     dashboard: {
+        homeGreetings: 'Benvenuto, {name}',
         createNew: 'Crea nuovo',
         changeUser: 'o cambia',
         settings: 'Impostazioni',
