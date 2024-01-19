@@ -98,12 +98,12 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="file">
+                                <Label htmlFor="pdfFile">
                                     Carica PDF
                                 </Label>
                                 <Input
                                   type="file"
-                                  id={`pdfFil`}
+                                  id={`pdfFile`}
                                   accept=".pdf"
                                   form="editPost"
                                   className="col-span-3"
