@@ -97,6 +97,18 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                                     onCheckedChange={setIsPublished}
                                 />
                             </div>
+                            <div>
+                                <Label htmlFor="file">
+                                    Carica PDF
+                                </Label>
+                                <Input
+                                  type="file"
+                                  id={`pdfFil`}
+                                  accept=".pdf"
+                                  form="editPost"
+                                  className="col-span-3"
+                                />
+                            </div>
 
                             {session && isAdmin(session.user) && (
                                 <>
