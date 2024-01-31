@@ -44,6 +44,7 @@ import {
     Music,
     PenBox,
     MessageCircle,
+    Check,
 } from "lucide-react"
 
 export const Icons = {
@@ -107,6 +108,8 @@ export const Icons = {
     ADMIN: Shield,
     EDITOR: PenBox,
     USER: User,
+    check: Check,
+    cross: X,
 }
 
 export type TIcon = keyof typeof Icons;

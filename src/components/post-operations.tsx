@@ -36,23 +36,20 @@ export function PostOperations({ post }: PostOperationsProps) {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
   const handleDeletePost = async () => {
-    try {
-      setIsDeleteLoading(true);
+    setIsDeleteLoading(true);
 
-      const data = await deletePost(post.id);
+    toast.promise(deletePost(post.id), {
+      loading: 'Loading...',
+      success: (data) => {
+        return `${data.title} è stato eliminato`;
+      },
+      error: (error) => {
+          return error.message;
+      },
+    });
 
-      if ("success" in data) {
-        setIsDeleteLoading(false);
-        setShowDeleteAlert(false);
-        router.refresh();
-      }
-    } catch (error) {
-      toast.error("Something went wrong.", {
-        description: "Your post was not deleted. Please try again.",
-      })
-      setIsDeleteLoading(false);
-      setShowDeleteAlert(false);
-    }
+    setIsDeleteLoading(false);
+    setShowDeleteAlert(false);
   };
 
   return (

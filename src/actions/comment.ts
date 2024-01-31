@@ -10,59 +10,50 @@ import { revalidatePath } from "next/cache";
 
 export const newComment = async (formData: FormData) => {
     const t = await getI18n();
+    const user = await getCurrentUser();
+    if (!user) throw new Error(t('errors.unauthenticated'));
 
-    const createComment = async (formData: FormData) => {
-        try {
-            const user = await getCurrentUser();
-            if (!user) return { error: t('errors.unauthenticated') };
+    const data = Object.fromEntries(formData);
+    const body = commentCreateSchema.parse(data);
 
-            const data = Object.fromEntries(formData);
-            const body = commentCreateSchema.parse(data);
-        
-            const comment = await db.comment.create({
-                data: {
-                    authorId: user.id,
-                    postId: body.postId,
-                    content: body.content,
-                },
-                select: {
-                  post: {
-                    select: {
-                      id: true,
-                      authorId: true,
-                      title: true,
-                    }
-                  },
-                },
-            })
-        
-            revalidatePath(`/blog/${comment.post.id}`);
+    const comment = await db.comment.create({
+        data: {
+            authorId: user.id,
+            postId: body.postId,
+            content: body.content,
+        },
+        select: {
+          post: {
+            select: {
+              id: true,
+              authorId: true,
+              title: true,
+            }
+          },
+        },
+    })
 
-            const maxNotificationContentLenght = 10;
-            const notificationContent = 
-              body.content.length > maxNotificationContentLenght
-              ? `${body.content.slice(0, maxNotificationContentLenght)}...`
-              : body.content;
+    revalidatePath(`/blog/${comment.post.id}`);
 
-            notifications.sendUserNotification(comment.post.authorId, {
-              title: `Nuovo commento su ${comment.post.title}`,
-              body: `${user.name}: "${notificationContent}"`
-            })
+    const maxNotificationContentLenght = 10;
+    const notificationContent = 
+      body.content.length > maxNotificationContentLenght
+      ? `${body.content.slice(0, maxNotificationContentLenght)}...`
+      : body.content;
 
-            return { message: t('comments.insert.success'), };
-        } catch (e) {
-            return { error: t('errors.general') };
-        }
-    };
-    
-    return await createComment(formData);
+    notifications.sendUserNotification(comment.post.authorId, {
+      title: `Nuovo commento su ${comment.post.title}`,
+      body: `${user.name}: "${notificationContent}"`
+    })
+
+    return { message: t('comments.insert.success'), };
 }
 
 export async function deleteComment(commentId: string) {
     const t = await getI18n();
 
     const user = await getCurrentUser();
-    if (!user) return { error: t('errors.unauthenticated') };
+    if (!user) throw new Error(t('errors.unauthenticated'));
 
     const comment = await db.comment.findUnique({
       where: {
@@ -75,11 +66,11 @@ export async function deleteComment(commentId: string) {
     });
   
     if (!comment) {
-      return { error: t('comments.delete.notFound') };
+      throw new Error(t('comments.delete.notFound'));
     }
   
     if (user.id !== comment.authorId && !isAdmin(user)) {
-      return { error: t('comments.delete.otherUserComment') };
+      throw new Error(t('comments.delete.otherUserComment'));
     }
   
     await db.comment.delete({

@@ -26,16 +26,22 @@ export function PageCreateButton({
     ...props
 }: PageCreateButtonProps) {
     const t = useI18n();
-    const { pending } = useFormStatus();
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     const onSubmit = async (formData: FormData) => {
-        const res = await newPage(formData);
-    
-        if ('error' in res) {
-            return toast.error(t('errors.general'), {
-              description: res.error,
-            });
-        }
+        setIsLoading(true);
+
+        toast.promise(newPage(formData), {
+            loading: 'Loading...',
+            success: () => {
+              return `Pagina creata`;
+            },
+            error: (error) => {
+                return error.message;
+            },
+        });
+
+        setIsLoading(false);
     }
 
     return (
@@ -45,14 +51,14 @@ export function PageCreateButton({
                     className={cn(
                         buttonVariants({ variant }),
                         {
-                            "cursor-not-allowed opacity-60": pending,
+                            "cursor-not-allowed opacity-60": isLoading,
                         },
                         className
                     )}
-                    disabled={pending}
+                    disabled={isLoading}
                     {...props}
                 >
-                    {pending ? (
+                    {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                         <Icons.add className="mr-2 h-4 w-4" />

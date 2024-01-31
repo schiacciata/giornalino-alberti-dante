@@ -5,14 +5,17 @@ import * as React from "react"
 import { useFormStatus } from 'react-dom';
 
 import { cn } from "@/lib/utils"
-import { ButtonProps, buttonVariants } from "@/components/ui/button"
+import { Button, ButtonProps, buttonVariants } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Icons } from "@/components/icons"
 
 import { newPost } from '@/actions/post'
 import { useI18n } from "@/lib/i18n/client";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 
-interface PostCreateButtonProps extends ButtonProps {}
+interface PostCreateButtonProps extends ButtonProps { }
 
 export function PostCreateButton({
   className,
@@ -20,17 +23,79 @@ export function PostCreateButton({
   ...props
 }: PostCreateButtonProps) {
   const t = useI18n();
-  const { pending } = useFormStatus();
-  
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+
   async function onCreate(formData: FormData) {
-    const res = await newPost({
-      title: "Untitled Post",
+    setIsLoading(true);
+
+    toast.promise(newPost(formData), {
+      loading: 'Loading...',
+      success: () => {
+        return `Post creato`;
+      },
+      error: (error) => {
+        return error.message;
+      },
     });
-    
-    toast.error(t('errors.general'), {
-      description: res.error,
-    });
+
+    setIsLoading(false);
   }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <button
+          type='submit'
+          className={cn(
+            buttonVariants({ variant }),
+            {
+              "cursor-not-allowed opacity-60": isLoading,
+            },
+            className
+          )}
+          disabled={isLoading}
+          {...props}
+        >
+          {isLoading ? (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Icons.add className="mr-2 h-4 w-4" />
+          )}
+          New post
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>New post</DialogTitle>
+          <DialogDescription>
+          </DialogDescription>
+        </DialogHeader>
+        <form action={onCreate} id="createPost" className="space-y-8">
+          <div className="grid gap-2">
+            <div className="flex flex-col gap-y-4 py-4">
+              <div>
+                <Label htmlFor="title">
+                  Title
+                </Label>
+                <Input
+                  id="title"
+                  name="title"
+                  required
+                  defaultValue={"Untitled Post"}
+                  form="createPost"
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">Crea</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
 
   return (
     <form action={onCreate}>
@@ -39,14 +104,14 @@ export function PostCreateButton({
         className={cn(
           buttonVariants({ variant }),
           {
-            "cursor-not-allowed opacity-60": pending,
+            "cursor-not-allowed opacity-60": isLoading,
           },
           className
         )}
-        disabled={pending}
+        disabled={isLoading}
         {...props}
       >
-        {pending ? (
+        {isLoading ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <Icons.add className="mr-2 h-4 w-4" />

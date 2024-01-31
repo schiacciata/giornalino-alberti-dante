@@ -8,19 +8,29 @@ import { Header } from "@/components/header"
 import { PostCreateButton } from "@/components/post-create-button"
 import { PostItem } from "@/components/post-item"
 import { Shell } from "@/components/shell"
+import { SearchParams } from "@/types"
+import { getPosts } from "@/lib/queries"
+import { PostTable } from "@/components/posts-table"
 
 export const metadata = {
   title: "Posts",
 }
 
-export default async function PostsPage() {
+export interface IndexPageProps {
+  searchParams: SearchParams
+}
+
+export default async function PostsPage({ searchParams }: IndexPageProps) {
     const user = await getCurrentUser()
 
     if (!user) {
       redirect(authOptions?.pages?.signIn || "/login")
     }
+    
+    const postsPromise = getPosts(searchParams)
+    const posts = [];
   
-    const posts = await db.post.findMany({
+    /*const posts = await db.post.findMany({
       select: {
         id: true,
         title: true,
@@ -31,20 +41,16 @@ export default async function PostsPage() {
       orderBy: {
         createdAt: "desc",
       },
-    })
-  
-    return (
-      <Shell>
-        <Header heading="Posts" text="Create and manage posts.">
-          <PostCreateButton />
-        </Header>
-        <div>
-          {posts?.length ? (
+    })*/
+
+
+    /*
+    {posts?.length ? (
             <div className="divide-y divide-border rounded-md border">
-              {posts.map((post) => (
-                <PostItem key={post.id} post={post} />
-              ))}
-            </div>
+            {posts.map((post) => (
+              <PostItem key={post.id} post={post} />
+            ))}
+          </div>
           ) : (
             <EmptyPlaceholder>
               <EmptyPlaceholder.Icon name="post" />
@@ -55,6 +61,15 @@ export default async function PostsPage() {
               <PostCreateButton variant="outline" />
             </EmptyPlaceholder>
           )}
+             */
+  
+    return (
+      <Shell>
+        <Header heading="Posts" text="Create and manage posts.">
+          <PostCreateButton />
+        </Header>
+        <div>
+          <PostTable postPromise={postsPromise}/>
         </div>
       </Shell>
     )

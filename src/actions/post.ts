@@ -7,144 +7,112 @@ import { getCurrentUser } from '@/lib/auth/user'
 import { notifications } from '@/lib/notifications';
 import { isAdmin } from '@/lib/auth/roles';
 
-export const newPost = async (formData: postCreateFormData) => {
-    const createPost = async (formData: postCreateFormData) => {
-        try {
-            const user = await getCurrentUser();
-            if (!user) return { error: 'Not authenticated' };
-    
-            const body = postCreateSchema.parse({
-                title: formData.title,
-                content: formData.content,
-            });
-        
-            const post = await db.post.create({
-                data: {
-                  title: body.title,
-                  authorId: user.id,
-                },
-                select: {
-                  id: true,
-                },
-            })
-        
-            revalidatePath('/');
-            revalidatePath('/dashboard/posts');
-            revalidatePath('/blog');
+export const newPost = async (formData: FormData) => {
+    const user = await getCurrentUser();
+    if (!user) throw new Error('Not authenticated');
 
-            return post;
-        } catch (e) {
-            return { error: 'There was an error.' };
-        }
-    };
-    
-    const post = await createPost(formData);
-    if ("error" in post) return post;
+    const data = Object.fromEntries(formData);
+    const body = postCreateSchema.parse(data);
+
+    const post = await db.post.create({
+        data: {
+            title: body.title,
+            authorId: user.id,
+        },
+        select: {
+            id: true,
+        },
+    })
+
+    revalidatePath('/');
+    revalidatePath('/dashboard/posts');
+    revalidatePath('/blog');
 
     return redirect(`/dashboard/posts/${post.id}`);
 }
 
 export const likePost = async (formData: postLikeFormData) => {
-    const updatePost = async (formData: postLikeFormData) => {
-        try {
-            const user = await getCurrentUser();
-            if (!user) return { error: 'Not authenticated' };
-    
-            const body = postLikeSchema.parse({
-                id: formData.id,
-                liked: formData.liked,
-            });
-        
-            const post = await db.post.update({
-                where: {
-                    id: body.id,
-                },
-                data: {
-                    likes: {
-                        [body.liked ? 'connect' : 'disconnect']: { id: user.id }
-                    }
-                },
-                select: {
-                    authorId: true,
-                    title: true,
-                }
-            })
+    const user = await getCurrentUser();
+    if (!user) throw new Error('Not authenticated');
 
-            if (body.liked) {
-                notifications.sendUserNotification(post.authorId, {
-                    title: 'Nuovo Like',
-                    body: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post "${post.title}"!`,
-                    tag: 'POST_LIKED'
-                })
+    const body = postLikeSchema.parse({
+        id: formData.id,
+        liked: formData.liked,
+    });
+
+    const post = await db.post.update({
+        where: {
+            id: body.id,
+        },
+        data: {
+            likes: {
+                [body.liked ? 'connect' : 'disconnect']: { id: user.id }
             }
-
-            return { liked: body.liked };
-        } catch (e) {
-            return { error: 'There was an error.' };
+        },
+        select: {
+            authorId: true,
+            title: true,
         }
-    };
-    
-    const post = await updatePost(formData);
-    if ("error" in post && post.error) return post;
+    })
 
-    return { message: `Successfully ${post.liked ? 'liked' : 'disliked'} post` };
+    if (body.liked) {
+        notifications.sendUserNotification(post.authorId, {
+            title: 'Nuovo Like',
+            body: `${user.name || 'Qualcuno'} ha messo mi piace al tuo post "${post.title}"!`,
+            tag: 'POST_LIKED'
+        })
+    }
+    
+    return {
+        ...post,
+        liked: body.liked
+    };
 }
 
 
 export const editPost = async (formData: FormData) => {
-    const update = async (formData: FormData) => {
-        try {
-            const user = await getCurrentUser();
-            if (!user) return { error: 'Not authenticated' };
+    const user = await getCurrentUser();
+    if (!user) throw new Error('Not authenticated');
 
-            const data = Object.fromEntries(formData);
-            const body = postPatchSchema.parse(data);
+    const data = Object.fromEntries(formData);
+    const body = postPatchSchema.parse(data);
 
-            const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
+    const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
 
-            if (!body.id) return { error: 'No post id' };
+    if (!body.id) throw new Error('No post id');
 
-            const updatedFields = Object
-                .keys(body)
-                .filter((k) => protectedFields.includes(k));
+    const updatedFields = Object
+        .keys(body)
+        .filter((k) => protectedFields.includes(k));
 
-            if (updatedFields.length > 0 && !isAdmin(user)) return { error: 'You can\'t modify protected fields' }
-        
-            const post = await db.post.update({
-                data: {
-                  title: body.title,
-                  published: body.published,
-                  pdfPath: body.pdfPath,
-                  authorId: body.authorId,
-                },
-                where: {
-                    id: body.id
-                }
-            });
+    if (updatedFields.length > 0 && !isAdmin(user)) throw new Error('You can\'t modify protected fields');
 
-            if (body.published) {
-                notifications.sendEveryoneNotification({
-                    title: 'Nuovo post pubblicato',
-                    body: `Leggi ora ${post.title}`,
-                    tag: 'POST_PUBLISHED'
-                });
-            }
-        
-            revalidatePath('/');
-            revalidatePath('/dashboard/posts');
-            revalidatePath('/blog');
-            revalidatePath(`/blog/${post.id}`);
-
-            return post;
-        } catch (e) {
-            return { error: 'There was an error.' };
+    const post = await db.post.update({
+        data: {
+            title: body.title,
+            published: body.published,
+            pdfPath: body.pdfPath,
+            authorId: body.authorId,
+        },
+        where: {
+            id: body.id
         }
-    };
-    
-    const post = await update(formData);
-    if ("error" in post) return post;
+    });
 
-    return { message: 'Updated post' };
+    if (body.published) {
+        notifications.sendEveryoneNotification({
+            title: 'Nuovo post pubblicato',
+            body: `Leggi ora ${post.title}`,
+            tag: 'POST_PUBLISHED'
+        });
+    }
+
+    revalidatePath('/');
+    revalidatePath('/dashboard/posts');
+    revalidatePath('/blog');
+    revalidatePath(`/blog/${post.id}`);
+
+    return post;
 }
 
 export async function deletePost(postId: string) {
@@ -158,7 +126,7 @@ export async function deletePost(postId: string) {
       throw new Error('Post not found');
     }
   
-    await db.post.delete({
+    const deletedPost = await db.post.delete({
       where: {
         id: postId,
       },
@@ -168,5 +136,5 @@ export async function deletePost(postId: string) {
     revalidatePath('/dashboard/posts');
     revalidatePath('/blog');
   
-    return { success: true };
+    return deletedPost;
 }

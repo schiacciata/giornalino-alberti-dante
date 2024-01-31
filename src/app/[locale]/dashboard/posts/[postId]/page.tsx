@@ -57,12 +57,33 @@ export default async function PostsPage({ params }: PostsPageProps) {
         orderBy: {
             updatedAt: "desc",
         },
+    });
+
+    const users = await db.user.findMany({
+      where: {
+        OR: [
+          {
+            role: 'ADMIN',
+          },
+          {
+            role: 'EDITOR',
+          },
+        ],
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      }
     })
   
     return (
       <Shell>
         <Header heading={`Pagine di "${post.title}" ${post.published ? '🌐' : '🔐'}`} text="Create and manage posts.">
-            <PostEditDialog post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath, authorId: post.authorId }} />
+            <PostEditDialog
+              post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath, authorId: post.authorId }}
+              users={users}
+              />
             {!post.pdfPath && (<PageCreateButton postId={post.id} />)}
         </Header>
         <div>

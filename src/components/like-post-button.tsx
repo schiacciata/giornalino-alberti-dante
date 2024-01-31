@@ -30,21 +30,21 @@ export function LikePostButton({ post }: LikePostButtonProps) {
   }, [status])
 
   async function handleAction() {
-    const res = await likePost({
-      id: post.id,
-      liked: !isLiked
-    });
     
-    if ('error' in res) {
-      return toast.error(t('errors.general'), {
-        description: res.error,
-      });
-    }
+    toast.promise(likePost({
+        id: post.id,
+        liked: !isLiked
+      }), {
+      loading: 'Loading...',
+      success: (data) => {
+        return `Successfully ${data.liked ? 'liked' : 'disliked'} post`;
+      },
+      error: (error) => {
+          return error.message;
+      },
+    });
     
     setIsLiked(!isLiked);
-    return toast.success(t('success'), {
-      description: res.message,
-    });
   }
 
   return (

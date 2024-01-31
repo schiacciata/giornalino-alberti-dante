@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
 import { newComment } from '@/actions/comment'
-import { toast } from './ui/use-toast'
+import { toast } from 'sonner'
 import { Post } from '@prisma/client'
 import { useI18n, useScopedI18n } from '@/lib/i18n/client'
 
@@ -18,20 +18,14 @@ const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
     const scopedT = useScopedI18n('comments');
 
     const handleCommentSubmit = async (formData: FormData) => {
-        const { error, message } = await newComment(formData);
-
-        if (error) {
-            return toast({
-                variant: "destructive",
-                title: t('errors.general'),
-                description: error,
-            });
-        }
-
-        return toast({
-            variant: "default",
-            title: t('success'),
-            description: message,
+        toast.promise(newComment(formData), {
+              loading: 'Loading...',
+              success: (data) => {
+                return data.message;
+              },
+              error: (error) => {
+                  return error.message;
+              },
         });
     };
 

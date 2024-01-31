@@ -2,7 +2,7 @@
 
 import { Button, buttonVariants } from "./ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
-import { Post } from "@prisma/client";
+import { Post, User } from "@prisma/client";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { editPost } from "@/actions/post";
@@ -16,12 +16,14 @@ import { Switch } from "./ui/switch";
 import { isAdmin } from "@/lib/auth/roles";
 import { useSession } from "next-auth/react"
 import { useI18n } from "@/lib/i18n/client";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
+    users: Pick<User, 'id' | 'email' | 'name'>[],
 }
 
-export function PostEditDialog({ post }: PostEditDialogProps) {
+export function PostEditDialog({ post, users }: PostEditDialogProps) {
     const t = useI18n();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
@@ -30,18 +32,16 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
 
     const onSubmit = async (formData: FormData) => {
         formData.set('published', isPublished.toString());
-
-        const res = await editPost(formData);
         setIsOpen(false);
-    
-        if ('error' in res) {
-          return toast.error(t('errors.general'), {
-            description: res.error,
-          });
-        }
-        
-        return toast.success(t('success'), {
-          description: res.message,
+
+        toast.promise(editPost(formData), {
+            loading: 'Loading...',
+            success: (data) => {
+              return `${data.title} è stato modificato`;
+            },
+            error: (error) => {
+                return error.message;
+            },
         });
     }
 
@@ -125,16 +125,24 @@ export function PostEditDialog({ post }: PostEditDialogProps) {
                                         />
                                     </div>
                                     <div>
-                                        <Label htmlFor="authorId">
-                                            Author Id
+                                    <Label htmlFor="authorId">
+                                            Author
                                         </Label>
-                                        <Input
-                                            id="authorId"
+                                        <Select
                                             name="authorId"
                                             defaultValue={post.authorId || undefined}
-                                            form="editPost"
-                                            className="col-span-3"
-                                        />
+                                        >
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue placeholder="Select Author" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {users.map((user) => (
+                                                    <SelectItem key={user.id} value={user.id}>
+                                                        {user.name} ({user.email})
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </>
                             )}

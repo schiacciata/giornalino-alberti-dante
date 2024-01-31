@@ -5,7 +5,7 @@ import { FC } from 'react'
 import { Button } from './ui/button';
 import { Icon } from './icons';
 import { deleteComment } from '@/actions/comment'
-import { toast } from './ui/use-toast'
+import { toast } from 'sonner'
 import { useI18n } from '@/lib/i18n/client';
 
 interface CommentDeleteButtonProps {
@@ -16,21 +16,15 @@ const CommentDeleteButton: FC<CommentDeleteButtonProps> = ({ comment }) => {
     const t = useI18n();
     
     const handleCommentDelete = async () => {
-        const { error, message } = await deleteComment(comment.id);
-
-        if (error) {
-            return toast({
-                variant: "destructive",
-                title: t('errors.general'),
-                description: error,
-            });
-        }
-
-        return toast({
-            variant: "default",
-            title: t('success'),
-            description: message,
-        });
+        toast.promise(deleteComment(comment.id), {
+            loading: 'Loading...',
+            success: (data) => {
+              return data.message;
+            },
+            error: (error) => {
+                return error.message;
+            },
+      });
     };
     
     return <form action={handleCommentDelete}>
