@@ -50,7 +50,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
     });
     if (!post) return notFound();
 
-    const users = await db.user.findMany({
+    const users = isAdmin(user) ? await db.user.findMany({
       where: {
         OR: [
           {
@@ -65,8 +65,9 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
         id: true,
         email: true,
         name: true,
+        image: true,
       }
-    });
+    }) : [];
 
     const getPagesComponent = async (): Promise<ReactElement> => {
       if (post.pdfPath) {
