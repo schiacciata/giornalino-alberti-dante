@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 export const newComment = async (formData: FormData) => {
     const t = await getI18n();
     const user = await getCurrentUser();
-    if (!user) throw new Error(t('errors.unauthenticated'));
+    if (!user) return Promise.reject(t('errors.unauthenticated'));
 
     const data = Object.fromEntries(formData);
     const body = commentCreateSchema.parse(data);
@@ -53,7 +53,7 @@ export async function deleteComment(commentId: string) {
     const t = await getI18n();
 
     const user = await getCurrentUser();
-    if (!user) throw new Error(t('errors.unauthenticated'));
+    if (!user) return Promise.reject(t('errors.unauthenticated'));
 
     const comment = await db.comment.findUnique({
       where: {
@@ -66,11 +66,11 @@ export async function deleteComment(commentId: string) {
     });
   
     if (!comment) {
-      throw new Error(t('comments.delete.notFound'));
+      return Promise.reject(t('comments.delete.notFound'));
     }
   
     if (user.id !== comment.authorId && !isAdmin(user)) {
-      throw new Error(t('comments.delete.otherUserComment'));
+      return Promise.reject(t('comments.delete.otherUserComment'));
     }
   
     await db.comment.delete({

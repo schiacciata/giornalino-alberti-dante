@@ -10,7 +10,7 @@ import { PostItem } from "@/components/post-item"
 import { Shell } from "@/components/shell"
 import { SearchParams } from "@/types"
 import { getPosts } from "@/lib/queries"
-import { PostTable } from "@/components/posts-table"
+import { PostTable } from "@/components/posts-table/posts-table"
 
 export const metadata = {
   title: "Posts",

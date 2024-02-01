@@ -7,7 +7,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { editPost } from "@/actions/post";
 import { toast } from "sonner";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { cn } from "@/lib/utils";
 // @ts-ignore
 import { useFormStatus } from 'react-dom';
@@ -17,6 +17,8 @@ import { isAdmin } from "@/lib/auth/roles";
 import { useSession } from "next-auth/react"
 import { useI18n } from "@/lib/i18n/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import PostDeletePDFButton from "./post/delete-pdf-button";
+import { Separator } from "./ui/separator";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
@@ -27,12 +29,20 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
     const t = useI18n();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
+    const [file, setFile] = useState<File | null>(null);
     const { pending } = useFormStatus();
     const { data: session } = useSession();
 
+    const isUserAdmin = session && isAdmin(session.user);
+
     const onSubmit = async (formData: FormData) => {
-        formData.set('published', isPublished.toString());
         setIsOpen(false);
+
+        formData.set('published', isPublished.toString());
+        if (file && file.size > 0 && file.type === 'application/pdf') {
+            formData.append('pdfFile', file);
+            //formData.append('pdfPath', file.name);
+        }
 
         toast.promise(editPost(formData), {
             loading: 'Loading...',
@@ -43,6 +53,15 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                 return error.message;
             },
         });
+    }
+
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files) return;
+
+        const file = event.target.files[0];
+        if (file.size === 0 || file.type !== 'application/pdf') return; 
+
+        setFile(file);
     }
 
     return (
@@ -97,52 +116,76 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                     onCheckedChange={setIsPublished}
                                 />
                             </div>
-                            <div>
-                                <Label htmlFor="pdfFile">
-                                    Carica PDF
-                                </Label>
-                                <Input
-                                  type="file"
-                                  id={`pdfFile`}
-                                  accept=".pdf"
-                                  form="editPost"
-                                  className="col-span-3"
-                                />
-                            </div>
+                            {post.pdfPath ? (
+                                <div>
+                                    <Label htmlFor="pdfFile">
+                                        PDF caricato
+                                    </Label>
 
-                            {session && isAdmin(session.user) && (
+                                    <Input
+                                        id="pdfFile"
+                                        disabled
+                                        value={post.pdfPath.split('/').pop()}
+                                        className="col-span-3 text-red-500"
+                                    />
+                                </div>
+                            ) : (
+                                <div>
+                                    <Label htmlFor="pdfFile">
+                                        Carica PDF
+                                    </Label>
+                                    <Input
+                                    type="file"
+                                    name="pdfFile"
+                                    id={`pdfFile`}
+                                    accept=".pdf"
+                                    form="editPost"
+                                    className="col-span-3"
+                                    onChange={handleFileChange}
+                                    />
+                                </div>
+                            )}
+
+                            {isUserAdmin && (
                                 <>
-                                    <div>
-                                        <Label htmlFor="pdfPath">
-                                            PDF path
-                                        </Label>
-                                        <Input
-                                            id="pdfPath"
-                                            name="pdfPath"
-                                            defaultValue={post.pdfPath || undefined}
-                                            form="editPost"
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                    <div>
-                                    <Label htmlFor="authorId">
-                                            Author
-                                        </Label>
-                                        <Select
-                                            name="authorId"
-                                            defaultValue={post.authorId || undefined}
-                                        >
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue placeholder="Select Author" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {users.map((user) => (
-                                                    <SelectItem key={user.id} value={user.id}>
-                                                        {user.name} ({user.email})
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                    <Separator/>
+                                    
+                                    <div className="flex flex-col gap-y-4 p-4 border-2 border-red-500 rounded-md">
+                                        <h1 className="font-bold italic">
+                                            Admin
+                                        </h1>
+                                        <div>
+                                            <Label htmlFor="pdfPath">
+                                                PDF path
+                                            </Label>
+                                            <Input
+                                                id="pdfPath"
+                                                name="pdfPath"
+                                                defaultValue={post.pdfPath || undefined}
+                                                form="editPost"
+                                                className="col-span-3"
+                                            />
+                                        </div>
+                                        <div>
+                                        <Label htmlFor="authorId">
+                                                Author
+                                            </Label>
+                                            <Select
+                                                name="authorId"
+                                                defaultValue={post.authorId || undefined}
+                                            >
+                                                <SelectTrigger className="w-[180px]">
+                                                    <SelectValue placeholder="Select Author" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {users.map((user) => (
+                                                        <SelectItem key={user.id} value={user.id}>
+                                                            {user.name} ({user.email})
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
                                 </>
                             )}
@@ -157,10 +200,12 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                             />
                         </div>
                     </div>
-                    <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                    </DialogFooter>
                 </form>
+                
+                <DialogFooter>
+                        <PostDeletePDFButton post={{ id: post.id }}/>
+                        <Button form="editPost" type="submit">Save changes</Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

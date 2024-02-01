@@ -116,7 +116,7 @@ interface MultiFilterRowProps<TData> extends DataTableMultiFilterProps<TData> {
   option: DataTableFilterOption<TData>
   operator?: (typeof operators)[number]
   setOperator: React.Dispatch<
-    React.SetStateAction<(typeof operators)[number] | undefined>
+    React.SetStateAction<(typeof operators)[number]>
   >
 }
 
@@ -221,9 +221,12 @@ export function MultiFilterRow<TData>({
       ) : i === 1 ? (
         <Select
           value={operator?.value}
-          onValueChange={(value) =>
-            setOperator(operators.find((o) => o.value === value))
-          }
+          onValueChange={(value) =>{
+            const operator = operators.find((o) => o.value === value);
+            
+            if (!operator) return;
+            setOperator(operator);
+          }}
         >
           <SelectTrigger className="h-8 w-fit text-xs">
             <SelectValue placeholder={operator?.label} />

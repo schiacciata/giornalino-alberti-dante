@@ -7,7 +7,7 @@ import { pageCreateSchema, pagePatchSchema } from '@/lib/validations/page';
 
 export const newPage = async (formData: FormData) => {
     const user = await getCurrentUser();
-    if (!user) throw new Error('Not authenticated');
+    if (!user) return Promise.reject('Not authenticated');
 
     const data = Object.fromEntries(formData);
     const body = pageCreateSchema.parse(data);

@@ -31,6 +31,7 @@ import { Post } from "@prisma/client"
 import { Icon } from "../icons"
 import { PostOperations } from "../post-operations"
 import { cn, formatDate } from "@/lib/utils"
+import Link from "next/link"
 
 export function fetchPostTableColumnDefs(
   isPending: boolean,
@@ -67,7 +68,15 @@ export function fetchPostTableColumnDefs(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Post" />
       ),
-      cell: ({ row }) => <div className="w-[150px]">{row.getValue("title")}</div>,
+      cell: ({ row }) => {
+        const post = row.original;
+
+        return (
+          <Link href={`/dashboard/posts/${post.id}`} className="w-[150px]">
+            {post.title}
+          </Link>
+        );
+      },
       enableSorting: false,
       enableHiding: false,
     },
