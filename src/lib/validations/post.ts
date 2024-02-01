@@ -14,7 +14,8 @@ export const postPatchSchema = z.object({
   // TODO: Type this properly from editorjs block types?
   content: z.any().optional(),
   pdfFile: z
-    .instanceof(File)
+    .any()
+    //.instanceof(File)
     //.refine((file) => file.size > 0, 'File size must be greater than 0MB')
     //.refine((file) => file.type === 'application/pdf', 'File type must be pdf')
     .optional(),
