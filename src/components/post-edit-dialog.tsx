@@ -30,13 +30,14 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
     const [file, setFile] = useState<File | null>(null);
-    const { pending } = useFormStatus();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { data: session } = useSession();
 
     const isUserAdmin = session && isAdmin(session.user);
 
     const onSubmit = async (formData: FormData) => {
         setIsOpen(false);
+        setIsLoading(true);
 
         formData.set('published', isPublished.toString());
         if (file && file.size > 0 && file.type === 'application/pdf') {
@@ -53,6 +54,8 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                 return error.message;
             },
         });
+        
+        setIsLoading(false);
     }
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,12 +74,12 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                     className={cn(
                         buttonVariants({ variant: 'default' }),
                         {
-                            "cursor-not-allowed opacity-60": pending,
+                            "cursor-not-allowed opacity-60": isLoading,
                         },
                     )}
-                    disabled={pending}
+                    disabled={isLoading}
                 >
-                    {pending ? (
+                    {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
                         <Icons.edit className="mr-2 h-4 w-4" />
