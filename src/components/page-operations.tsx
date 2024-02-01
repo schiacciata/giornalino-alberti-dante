@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
-import { Icons } from "@/components/icons"
+import { Icon, Icons } from "@/components/icons"
 import { deletePage } from "@/actions/page"
 
 interface PageOperationsProps {
@@ -62,14 +62,16 @@ export function PageOperations({ page }: PageOperationsProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Link href={`/editor/${page.id}`} className="flex w-full">
+              <Icon icon="edit"/>
               Edit
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="flex cursor-pointer items-center text-destructive focus:text-destructive"
+            className="flex cursor-pointer items-center text-red-500 focus:text-red-500"
             onSelect={() => setShowDeleteAlert(true)}
           >
+            <Icon icon="trash"/>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

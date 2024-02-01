@@ -90,34 +90,15 @@ export function PostCreateButton({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Crea</Button>
+            <Button disabled={isLoading} type="submit">
+              {isLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Crea
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
-
-  return (
-    <form action={onCreate}>
-      <button
-        type='submit'
-        className={cn(
-          buttonVariants({ variant }),
-          {
-            "cursor-not-allowed opacity-60": isLoading,
-          },
-          className
-        )}
-        disabled={isLoading}
-        {...props}
-      >
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.add className="mr-2 h-4 w-4" />
-        )}
-        New post
-      </button>
-    </form>
-  )
+  );
 }

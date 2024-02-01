@@ -11,6 +11,7 @@ import { Shell } from "@/components/shell"
 import { SearchParams } from "@/types"
 import { getPosts } from "@/lib/queries"
 import { PostTable } from "@/components/posts-table/posts-table"
+import { isAdmin } from "@/lib/auth/roles"
 
 export const metadata = {
   title: "Posts",
@@ -26,51 +27,54 @@ export default async function PostsPage({ searchParams }: IndexPageProps) {
     if (!user) {
       redirect(authOptions?.pages?.signIn || "/login")
     }
-    
-    const postsPromise = getPosts(searchParams)
-    const posts = [];
-  
-    /*const posts = await db.post.findMany({
-      select: {
-        id: true,
-        title: true,
-        published: true,
-        createdAt: true,
-        pdfPath: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    })*/
 
+    const getPostsComponent = async () => {
+      if (isAdmin(user)) {
+        const postsPromise = getPosts(searchParams)
+        return (<PostTable postPromise={postsPromise}/>);
+      };
 
-    /*
-    {posts?.length ? (
-            <div className="divide-y divide-border rounded-md border">
-            {posts.map((post) => (
-              <PostItem key={post.id} post={post} />
-            ))}
-          </div>
-          ) : (
-            <EmptyPlaceholder>
-              <EmptyPlaceholder.Icon name="post" />
-              <EmptyPlaceholder.Title>No posts created</EmptyPlaceholder.Title>
-              <EmptyPlaceholder.Description>
-                You don&apos;t have any posts yet. Start creating content.
-              </EmptyPlaceholder.Description>
-              <PostCreateButton variant="outline" />
-            </EmptyPlaceholder>
-          )}
-             */
+      const posts = await db.post.findMany({
+        select: {
+          id: true,
+          title: true,
+          published: true,
+          createdAt: true,
+          pdfPath: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      if (posts.length === 0) {
+        return (
+          <EmptyPlaceholder>
+            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Title>No posts created</EmptyPlaceholder.Title>
+            <EmptyPlaceholder.Description>
+              You don&apos;t have any posts yet. Start creating content.
+            </EmptyPlaceholder.Description>
+            <PostCreateButton variant="outline" />
+          </EmptyPlaceholder>
+        )
+      };
+
+      return (
+        <div className="divide-y divide-border rounded-md border">
+          {posts.map((post) => (
+            <PostItem key={post.id} post={post} />
+          ))}
+        </div>
+      )
+    }
   
     return (
       <Shell>
         <Header heading="Posts" text="Create and manage posts.">
           <PostCreateButton />
         </Header>
-        <div>
-          <PostTable postPromise={postsPromise}/>
-        </div>
+        {await getPostsComponent()}
       </Shell>
     )
 }

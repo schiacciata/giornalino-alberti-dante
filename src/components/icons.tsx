@@ -45,6 +45,7 @@ import {
     PenBox,
     MessageCircle,
     Check,
+    Eye,
 } from "lucide-react"
 
 export const Icons = {
@@ -110,6 +111,7 @@ export const Icons = {
     USER: User,
     check: Check,
     cross: X,
+    view: Eye,
 }
 
 export type TIcon = keyof typeof Icons;

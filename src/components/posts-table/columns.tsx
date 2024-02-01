@@ -145,22 +145,34 @@ export function fetchPostTableColumnDefs(
 }
 
 export const filterableColumns: DataTableFilterableColumn<Post>[] = [
-  /*{
+  {
     id: "published",
-    title: "Status",
-    options: post.status.enumValues.map((status) => ({
-      label: status[0]?.toUpperCase() + status.slice(1),
-      value: status,
-    })),
+    title: "Pubblicato",
+    options: [
+      {
+        label: 'Si',
+        value: 'true',
+      },
+      {
+        label: 'No',
+        value: 'false',
+      }
+    ],
   },
   {
     id: "pdfPath",
-    title: "Priority",
-    options: post.priority.enumValues.map((priority) => ({
-      label: priority[0]?.toUpperCase() + priority.slice(1),
-      value: priority,
-    })),
-  },*/
+    title: "PDF",
+    options: [
+      {
+        label: 'Si',
+        value: 'true',
+      },
+      {
+        label: 'No',
+        value: 'false',
+      }
+    ],
+  },
 ]
 
 export const searchableColumns: DataTableSearchableColumn<Post>[] = [

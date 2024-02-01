@@ -10,7 +10,7 @@ export function Shell({
   ...props
 }: ShellProps) {
   return (
-    <div className={cn("grid items-start gap-8", className)} {...props}>
+    <div className={cn("items-start gap-8", className)} {...props}>
       {children}
     </div>
   )

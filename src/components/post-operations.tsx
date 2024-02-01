@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
-import { Icons } from "@/components/icons"
+import { Icon, Icons } from "@/components/icons"
 import Link from "next/link"
 import { deletePost } from "@/actions/post"
 
@@ -62,14 +62,16 @@ export function PostOperations({ post }: PostOperationsProps) {
         <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/posts/${post.id}`}>
-                Edit
+                <Icon icon="view"/>
+                View
               </Link>
             </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="flex cursor-pointer items-center text-destructive focus:text-destructive"
+            className="flex cursor-pointer items-center text-red-500 focus:text-red-500"
             onSelect={() => setShowDeleteAlert(true)}
           >
+            <Icon icon="trash"/>
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
