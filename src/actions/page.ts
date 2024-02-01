@@ -30,7 +30,7 @@ export const newPage = async (formData: FormData) => {
 
 export async function deletePage(pageId: string) {
     const user = await getCurrentUser();
-    if (!user) return { error: 'Not authenticated' };
+    if (!user) return Promise.reject('Not authenticated');
 
     const page = await db.page.findUnique({
       where: {
@@ -42,47 +42,45 @@ export async function deletePage(pageId: string) {
     });
   
     if (!page) {
-      return { error: 'Page not found' };
+      return Promise.reject('Page not found');
     }
   
-    await db.page.delete({
+    const deletedPage = await db.page.delete({
       where: {
         id: pageId,
       },
+      select: {
+        number: true,
+      }
     });
   
     revalidatePath(`/blog/${page.postId}`);
     revalidatePath(`/dashboard/posts/${page.postId}`);
 
-    return { success: true };
+    return deletedPage;
 }
 
 export const editPage = async (pageId: string, formData: any) => {
-  try {
-    const user = await getCurrentUser();
-    if (!user) return { error: 'Not authenticated' };
+  const user = await getCurrentUser();
+  if (!user) return Promise.reject('Not authenticated');
 
-    const body = pagePatchSchema.parse(formData);
+  const body = pagePatchSchema.parse(formData);
 
-    const page = await db.page.update({
-      where: {
-        id: pageId,
-      },
-      data: {
-        number: body.number,
-        content: body.content,
-      },
-      select: {
-        postId: true,
-      },
-    });
+  const page = await db.page.update({
+    where: {
+      id: pageId,
+    },
+    data: {
+      number: body.number,
+      content: body.content,
+    },
+    select: {
+      postId: true,
+    },
+  });
 
-    revalidatePath(`/blog/${page.postId}`);
-    revalidatePath(`/dashboard/posts/${page.postId}`);
+  revalidatePath(`/blog/${page.postId}`);
+  revalidatePath(`/dashboard/posts/${page.postId}`);
 
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { error: 'There was an error.' };
-  }
+  return page;
 };

@@ -12,6 +12,7 @@ export const dynamic = 'force-dynamic';
 export const fetchCache = 'force-no-store';
 
 async function getPageForUser(pageId: Page["id"]) {
+  noStore();
   return await db.page.findFirst({
     where: {
       id: pageId,

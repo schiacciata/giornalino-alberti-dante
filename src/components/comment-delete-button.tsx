@@ -24,7 +24,7 @@ const CommentDeleteButton: FC<CommentDeleteButtonProps> = ({ comment }) => {
             error: (error) => {
                 return error.message;
             },
-      });
+        });
     };
     
     return <form action={handleCommentDelete}>

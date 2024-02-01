@@ -36,22 +36,20 @@ export function PageOperations({ page }: PageOperationsProps) {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
   const handleDeletePage = async () => {
-    try {
-      setIsDeleteLoading(true);
-      const data = await deletePage(page.id);
+    setIsDeleteLoading(true);
 
-      if ("success" in data) {
-        setIsDeleteLoading(false);
-        setShowDeleteAlert(false);
-        router.refresh();
-      }
-    } catch (error) {
-      toast.error("Something went wrong.", {
-        description: "Your page was not deleted. Please try again.",
-      })
-      setIsDeleteLoading(false);
-      setShowDeleteAlert(false);
-    }
+    toast.promise(deletePage(page.id), {
+      loading: 'Loading...',
+      success: (data) => {
+        return `La pagina ${data.number} è stata eliminata`;
+      },
+      error: (error) => {
+          return error.message;
+      },
+    });
+
+    setIsDeleteLoading(false);
+    setShowDeleteAlert(false);
   };
 
   return (

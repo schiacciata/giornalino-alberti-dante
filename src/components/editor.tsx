@@ -76,26 +76,27 @@ export function Editor({ page, post }: EditorProps) {
   const { data: session } = useSession();
 
   async function saveDocument(data: FormData) {
-    setIsSaving(true);
     if (!quill) return;
+    setIsSaving(true);
 
     const blocks = await quill.getContents();
-    const response = await editPage(page.id, {
+
+    toast.promise(editPage(page.id, {
       number: data.number,
       content: JSON.parse(JSON.stringify(blocks)),
+    }), {
+      loading: 'Loading...',
+      success: (data) => {
+        return 'Your page has been saved.';
+      },
+      error: (error) => {
+          return error.message;
+      },
     });
 
     setIsSaving(false);
 
-    if (!response.success) {
-      return toast.error('Something went wrong.', {
-        description: 'Your page was not saved. Please try again.',
-      });
-    }
-
     router.refresh();
-
-    return toast.success('Your page has been saved.');
   }
 
   useEffect(() => {
@@ -129,9 +130,14 @@ export function Editor({ page, post }: EditorProps) {
           },
         },
       });
-      q.disable()
-      q.setText("Loading...")
+
+      q.disable();
+      q.setText("Loading...");
+
       setQuill(q);
+
+      if (page.content) q.setContents(page.content as any, 'api');
+      q.enable();
     }
   }, []);
 
