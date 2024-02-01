@@ -27,20 +27,22 @@ const PostDeletePDFButton: FC<PostDeleteButtonProps> = ({ post }) => {
       });
     };
     
-    return (<form id="deletePostPDF" action={handlePostDelete}>
-        <input
-            id="id"
-            name="id"
-            value={post.id}
-            hidden
-            readOnly
-            form='deletePostPDF'
-        />
-        <Button type='submit' form='deletePostPDF' variant="destructive">
-            <Icon icon='trash' className='mr-0' />
-            Elimina PDF
-        </Button>
-    </form>)
+    return (
+        <form id="deletePostPDF" action={handlePostDelete} className='flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2'>
+            <input
+                id="id"
+                name="id"
+                value={post.id}
+                hidden
+                readOnly
+                form='deletePostPDF'
+            />
+            <Button type='submit' form='deletePostPDF' variant="destructive">
+                <Icon icon='trash' className='mr-0' />
+                Elimina PDF
+            </Button>
+        </form>
+    );
 }
 
 export default PostDeletePDFButton

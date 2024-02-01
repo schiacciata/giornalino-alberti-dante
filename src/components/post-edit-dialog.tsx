@@ -19,10 +19,11 @@ import { useI18n } from "@/lib/i18n/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import PostDeletePDFButton from "./post/delete-pdf-button";
 import { Separator } from "./ui/separator";
+import { UserAvatar } from "./user-avatar";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
-    users: Pick<User, 'id' | 'email' | 'name'>[],
+    users: Pick<User, 'id' | 'email' | 'name' | 'image'>[],
 }
 
 export function PostEditDialog({ post, users }: PostEditDialogProps) {
@@ -205,8 +206,8 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                     </div>
                 </form>
                 
-                <DialogFooter>
-                        <PostDeletePDFButton post={{ id: post.id }}/>
+                <DialogFooter className="gap-y-4">
+                        {post.pdfPath && <PostDeletePDFButton post={{ id: post.id }}/>}
                         <Button form="editPost" type="submit">Save changes</Button>
                 </DialogFooter>
             </DialogContent>

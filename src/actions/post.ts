@@ -129,10 +129,21 @@ export async function deletePost(postId: string) {
       where: {
         id: postId,
       },
+      select: {
+        pdfPath: true,
+      }
     });
   
     if (!post) {
       return Promise.reject('Post not found');
+    }
+
+    if (post.pdfPath) {
+        const deletedOK = await deleteFromGithub({
+            path: `public${post.pdfPath}`,
+        });
+    
+        if (!deletedOK) return Promise.reject('Could not delete pdf file');
     }
   
     const deletedPost = await db.post.delete({
