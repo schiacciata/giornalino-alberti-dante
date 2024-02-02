@@ -44,7 +44,7 @@ export function PostOperations({ post }: PostOperationsProps) {
         return `${data.title} è stato eliminato`;
       },
       error: (error) => {
-          return error.message;
+        return error.message;
       },
     });
 
@@ -60,24 +60,26 @@ export function PostOperations({ post }: PostOperationsProps) {
           <span className="sr-only">Open</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-            {post.pdfPath && (
+          {post.pdfPath && (
+            <DropdownMenuItem asChild>
               <a href={post.pdfPath} download>
-                <Icon icon="download"/>
+                <Icon icon="download" />
                 Download PDF
               </a>
-            )}
-            <DropdownMenuItem asChild>
-              <Link href={`/dashboard/posts/${post.id}`}>
-                <Icon icon="view"/>
-                View
-              </Link>
             </DropdownMenuItem>
+          )}
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/posts/${post.id}`}>
+              <Icon icon="view" />
+              View
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="flex cursor-pointer items-center text-red-500 focus:text-red-500"
             onSelect={() => setShowDeleteAlert(true)}
           >
-            <Icon icon="trash"/>
+            <Icon icon="trash" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
