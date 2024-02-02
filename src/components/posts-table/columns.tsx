@@ -137,7 +137,7 @@ export function fetchPostTableColumnDefs(
         const post = row.original
    
         return (
-          <PostOperations post={{ id: post.id, title: post.title }} />
+          <PostOperations post={{ id: post.id, title: post.title, pdfPath: post.pdfPath }} />
         )
       },
     },

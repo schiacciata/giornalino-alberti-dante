@@ -27,7 +27,7 @@ import Link from "next/link"
 import { deletePost } from "@/actions/post"
 
 interface PostOperationsProps {
-  post: Pick<Post, "id" | "title">
+  post: Pick<Post, "id" | "title" | "pdfPath">
 }
 
 export function PostOperations({ post }: PostOperationsProps) {
@@ -60,6 +60,12 @@ export function PostOperations({ post }: PostOperationsProps) {
           <span className="sr-only">Open</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+            {post.pdfPath && (
+              <a href={post.pdfPath} download>
+                <Icon icon="download"/>
+                Download PDF
+              </a>
+            )}
             <DropdownMenuItem asChild>
               <Link href={`/dashboard/posts/${post.id}`}>
                 <Icon icon="view"/>
