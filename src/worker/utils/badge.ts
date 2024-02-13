@@ -2,9 +2,9 @@ export const CLEAR_NOTIFICATIONS = 'CLEAR_NOTIFICATIONS'
 
 export const clearNotifications = () => navigator.serviceWorker?.controller?.postMessage({ action: CLEAR_NOTIFICATIONS })
 
-const badgingApiSupported = (sw = window) => 'setAppBadge' in sw.navigator
+const badgingApiSupported = (sw: ServiceWorkerGlobalScope) => 'setAppBadge' in sw.navigator
 
-const permissionGranted = async (sw = window, name: PermissionName = 'notifications') => {
+const permissionGranted = async (sw: ServiceWorkerGlobalScope, name: PermissionName = 'notifications') => {
   let permission
   try {
     permission = await sw.navigator.permissions.query({ name })
@@ -14,7 +14,7 @@ const permissionGranted = async (sw = window, name: PermissionName = 'notificati
   return permission?.state === 'granted'
 }
 
-export const setAppBadge = async (sw = window, count: number) => {
+export const setAppBadge = async (sw: ServiceWorkerGlobalScope, count: number) => {
   if (!badgingApiSupported(sw) || !(await permissionGranted(sw))) return
   try {
     await sw.navigator.setAppBadge(count)
@@ -23,7 +23,7 @@ export const setAppBadge = async (sw = window, count: number) => {
   }
 }
 
-export const clearAppBadge = async (sw = window) => {
+export const clearAppBadge = async (sw: ServiceWorkerGlobalScope) => {
   if (!badgingApiSupported(sw) || !(await permissionGranted(sw))) return
   try {
     await sw.navigator.clearAppBadge()

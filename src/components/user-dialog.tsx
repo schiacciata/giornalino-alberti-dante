@@ -49,11 +49,11 @@ export function UserDialog({ user }: UserDialogProps) {
             </>
             : null
           }
-          {(sw && sw.permission !== "granted") ? (
+          {(sw && sw.permission === "default") ? (
             <AlertDialogTrigger asChild>
               <DropdownMenuItem>
                 <p className="cursor-pointer font-bold bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 text-transparent bg-clip-text">
-                  Enable Notifications
+                  Notifications
                 </p>
               </DropdownMenuItem>
             </AlertDialogTrigger>

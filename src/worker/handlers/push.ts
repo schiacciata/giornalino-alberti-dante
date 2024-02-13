@@ -36,7 +36,7 @@ const handle = async (sw: ServiceWorkerGlobalScope, event?: PushEvent) => {
         }
 
         if (notifications.length === 0) {
-            setAppBadge(sw as any, ++activeCount)
+            setAppBadge(sw, ++activeCount)
             return sw.registration.showNotification(payload.title, payload.options)
         }
 

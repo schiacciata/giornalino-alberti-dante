@@ -26,7 +26,7 @@ const handle = async (sw: ServiceWorkerGlobalScope, event?: ExtendableMessageEve
             }
             notifications.forEach(notification => notification.close())
             //activeCount = 0
-            return await clearAppBadge(sw as any)
+            return await clearAppBadge(sw)
           })());
     
         default:
