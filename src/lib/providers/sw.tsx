@@ -2,6 +2,7 @@
 
 import { env } from '@/env.mjs'
 import { createContext, useContext, useEffect, useState, useCallback, ReactElement, useMemo } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 
 type SubscriptionVariables = {
   endpoint: string;
@@ -9,10 +10,16 @@ type SubscriptionVariables = {
   auth: ArrayBuffer | null;
 }
 
+export type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 export type SWContext = {
   registration?: ServiceWorkerRegistration
   support: Record<string, boolean>
   permission: NotificationPermission
+  promptInstall: BeforeInstallPromptEvent | null;
   requestNotificationPermission: () => Promise<void>
   togglePushSubscription: () => Promise<void>
 }
@@ -28,6 +35,8 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | undefined>()
   const [support, setSupport] = useState<Record<string, boolean>>({ serviceWorker: false, pushManager: false })
   const [permission, setPermission] = useState<NotificationPermission>("denied");
+  const [promptInstall, setPromptInstall] = useState<BeforeInstallPromptEvent | null>(null);
+  const [, setInstalled] = useLocalStorage('installed', false);
 
   useEffect(() => {
     if (!navigator) return;
@@ -52,9 +61,25 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
       serviceWorker: supportsSW,
       notification: supportsNotifications,
       pushManager: 'PushManager' in window
-    })
-    setPermission(supportsNotifications ? window.Notification.permission : 'denied' )
-  }, [navigator]);
+    });
+    setPermission(supportsNotifications ? window.Notification.permission : 'denied' );
+
+    
+    const appInstalledHandler = (e: Event) => {
+      e.preventDefault();
+      setInstalled(true);
+    };
+
+    const beforeInstallPromptHandler = (e: Event) => {
+      e.preventDefault();
+      setPromptInstall(e as any);
+    };
+
+    window.addEventListener("appinstalled", appInstalledHandler);
+    window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
+
+    return () => window.removeEventListener("transitionend", beforeInstallPromptHandler);
+  }, []);
 
   const savePushSubscription = async (vars: SubscriptionVariables) => {
     return (await fetch('/api/subscriptions', {
@@ -117,9 +142,10 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
     registration,
     support,
     permission,
+    promptInstall,
     requestNotificationPermission,
     togglePushSubscription
-  }), [registration, support, permission, requestNotificationPermission, togglePushSubscription])
+  }), [registration, support, permission, promptInstall, requestNotificationPermission, togglePushSubscription])
 
   return (
     <ServiceWorkerContext.Provider value={contextValue}>

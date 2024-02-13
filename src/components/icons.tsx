@@ -46,6 +46,7 @@ import {
     MessageCircle,
     Check,
     Eye,
+    BellPlus,
 } from "lucide-react"
 
 export const Icons = {
@@ -112,6 +113,7 @@ export const Icons = {
     check: Check,
     cross: X,
     view: Eye,
+    bell: BellPlus,
 }
 
 export type TIcon = keyof typeof Icons;

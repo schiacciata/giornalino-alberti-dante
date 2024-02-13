@@ -16,6 +16,11 @@ type UserDialogProps = {
 
 export function UserDialog({ user }: UserDialogProps) {
   const sw = useServiceWorker();
+  
+  const onInstallClick = () => {
+    if (!sw?.promptInstall) return;
+    sw.promptInstall.prompt();
+  };
 
   return (
     <AlertDialog>
@@ -49,14 +54,21 @@ export function UserDialog({ user }: UserDialogProps) {
             </>
             : null
           }
-          {(sw && sw.permission === "default") ? (
+          {(sw && sw.permission !== "granted") ? (
             <AlertDialogTrigger asChild>
               <DropdownMenuItem>
-                <p className="cursor-pointer font-bold bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 text-transparent bg-clip-text">
-                  Notifications
-                </p>
+                <button className="font-bold bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 text-transparent bg-clip-text">
+                  Enable Notifications
+                </button>
               </DropdownMenuItem>
             </AlertDialogTrigger>
+          ) : null}
+          {(sw && sw.promptInstall) ? (
+            <DropdownMenuItem>
+              <button onClick={onInstallClick} className="font-bold bg-gradient-to-r from-teal-500 to-cyan-400 via-cyan-400 text-transparent bg-clip-text">
+                Install
+              </button>
+            </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
           <DropdownMenuItem
