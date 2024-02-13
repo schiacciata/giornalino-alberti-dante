@@ -1,5 +1,10 @@
 import './src/env.mjs'
-import pwa from 'next-pwa';
+import withSerwistInit from "@serwist/next";
+      
+const withSerwist = withSerwistInit({
+    swSrc: "src/worker/index.ts",
+    swDest: "public/sw.js",
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,13 +24,7 @@ const nextConfig = {
         
         return config;
     },
+    register: false,
 }
 
-const withPWA = pwa({
-  dest: 'public',
-  register: false,
-  sw: 'sw.js',
-  customWorkerDir: 'src/worker'
-});
-
-export default withPWA(nextConfig);
+export default withSerwist(nextConfig);

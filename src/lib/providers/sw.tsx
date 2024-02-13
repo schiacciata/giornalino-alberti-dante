@@ -2,9 +2,6 @@
 
 import { env } from '@/env.mjs'
 import { createContext, useContext, useEffect, useState, useCallback, ReactElement, useMemo } from 'react'
-import { Workbox } from 'workbox-window'
-
-export const wb = new Workbox('/sw.js', { scope: '/' });
 
 type SubscriptionVariables = {
   endpoint: string;
@@ -43,11 +40,13 @@ export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) 
       return
     }
 
-    wb.register()
-      .then(registration => {
-        console.info('service worker registration successful')
-        setRegistration(registration)
-      })
+    if ("serviceWorker" in navigator && window.serwist !== undefined) {
+      window.serwist.register()
+        .then(registration => {
+          console.info('service worker registration successful')
+          setRegistration(registration)
+        });
+    }
 
     setSupport({
       serviceWorker: supportsSW,
