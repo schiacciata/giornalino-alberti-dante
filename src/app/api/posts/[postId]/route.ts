@@ -37,7 +37,6 @@ export async function DELETE(
 
     return new Response(null, { status: 204 })
   } catch (error) {
-    console.log(error)
     if (error instanceof z.ZodError) {
       return new Response(JSON.stringify(error.issues), { status: 422 })
     }

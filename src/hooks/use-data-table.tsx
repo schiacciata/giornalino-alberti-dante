@@ -234,7 +234,7 @@ export function useDataTable<TData, TValue>({
     }
 
     // Remove deleted values
-    for (const key of (searchParams?.keys() || [])) {
+    for (const key of (Object.keys(searchParams || {}))) {
       if (
         (searchableColumns.find((column) => column.id === key) &&
           !debouncedSearchableColumnFilters.find(
