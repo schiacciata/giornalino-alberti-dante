@@ -87,7 +87,7 @@ export const editPost = async (formData: FormData) => {
         .filter((k) => protectedFields.includes(k));
 
     if (updatedFields.length > 0 && !isAdmin(user)) return Promise.reject('You can\'t modify protected fields');
-    const pdfPath = body.pdfPath ?? (body.pdfFile.name ? `/pdfs/${body.pdfFile.name}` : undefined);
+    const pdfPath = body.pdfPath || (body.pdfFile.name ? `/pdfs/${body.pdfFile.name}` : undefined);
 
     const uploadOK = (body.pdfFile && pdfPath) ? await uploadToGithub({
         path: `public${pdfPath}`,

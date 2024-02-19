@@ -1,4 +1,10 @@
 import config from "@/config";
+import siteConfig from "@/config/site";
+
+const committer = {
+    name: siteConfig.title,
+    email: config.github.email,
+}
 
 type GithubUploadOptions = {
     path: string;
@@ -16,6 +22,7 @@ export async function uploadToGithub(options: GithubUploadOptions) {
         body: JSON.stringify({
             message: `💬 Upload ${options.path}`,
             content: Buffer.from(options.content).toString('base64'),
+            committer,
         }),
     });
 
@@ -58,6 +65,7 @@ export async function deleteFromGithub(options: GithubDeleteOptions) {
         body: JSON.stringify({
             message: `🔥 Delete ${options.path}`,
             sha: file.sha,
+            committer,
         }),
     });
 

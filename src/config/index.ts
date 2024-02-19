@@ -6,5 +6,6 @@ export default {
     github: {
         repo: 'schiacciata/next-blog',
         token: env.GITHUB_REPO_TOKEN,
+        email: '62028267+47PADO47@users.noreply.github.com',
     },
 }
