@@ -105,6 +105,10 @@ export const editPost = async (formData: FormData) => {
         },
         where: {
             id: body.id
+        },
+        select: {
+            title: true,
+            id: true,
         }
     });
 

@@ -16,7 +16,7 @@ export const postPatchSchema = z.object({
   pdfFile: z
     .any()
     //.instanceof(File)
-    //.refine((file) => file.size > 0, 'File size must be greater than 0MB')
+    .refine((file) => file.size <= 4 * 1024 * 1024, 'File size must be less than 4MB')
     //.refine((file) => file.type === 'application/pdf', 'File type must be pdf')
     .optional(),
   pdfPath: z.string().optional(),

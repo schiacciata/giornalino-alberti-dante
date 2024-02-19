@@ -42,7 +42,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
 
         formData.set('published', isPublished.toString());
         if (file && file.size > 0 && file.type === 'application/pdf') {
-            formData.append('pdfFile', file);
+            formData.set('pdfFile', file);
             //formData.append('pdfPath', file.name);
         }
 
