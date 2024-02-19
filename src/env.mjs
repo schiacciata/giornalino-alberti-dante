@@ -26,6 +26,7 @@ export const env = createEnv({
     VAPID_MAILTO: z.string().min(1),
     VAPID_PRIVKEY: z.string().min(1),
     GITHUB_REPO_TOKEN: z.string().min(1),
+    VERCEL_GIT_COMMIT_SHA: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -47,5 +48,6 @@ export const env = createEnv({
     VAPID_MAILTO: process.env.VAPID_MAILTO,
     VAPID_PRIVKEY: process.env.VAPID_PRIVKEY,
     GITHUB_REPO_TOKEN: process.env.GITHUB_REPO_TOKEN,
+    VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA
   },
 });

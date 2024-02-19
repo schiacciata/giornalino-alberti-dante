@@ -6,6 +6,7 @@ import siteConfig from "@/config/site"
 import { Providers } from "@/lib/providers"
 import { RootLayoutProps } from '@/types/layout'
 import { Toaster } from "@/components/ui/sonner"
+import GitHashIndicator from '@/components/git-hash-indicator'
 
 export const metadata: Metadata = {
   title: {
@@ -81,7 +82,9 @@ export default function RootLayout({ params, children }: RootLayoutProps) {
             </div>
           </div>
         </Providers>
+        
         <Toaster richColors={true} />
+        <GitHashIndicator/>
       </body>
     </html>
   )
