@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
-import { UserAuthForm } from "@/components/auth-form"
+import { UserAuthForm } from "@/components/auth/auth-form"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 
 export const metadata = {

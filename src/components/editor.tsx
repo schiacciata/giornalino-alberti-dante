@@ -161,7 +161,7 @@ export function Editor({ page, post }: EditorProps) {
   }, [quill, socket, localCursors]);
 
   useEffect(() => {
-    if (quill === null || socket === null || !session || !page.id) return;
+    if (quill === null || socket === null || !session || !session.user.id || !page.id) return;
 
     const selectionChangeHandler = (cursorId: string) => {
       return (range: any, oldRange: any, source: any) => {
@@ -188,7 +188,7 @@ export function Editor({ page, post }: EditorProps) {
 
     return () => {
       quill.off('text-change', quillHandler);
-      quill.off('selection-change', selectionChangeHandler(session.user.id));
+      quill.off('selection-change', selectionChangeHandler(session.user.id || ''));
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     };
   }, [quill, socket, page.id, session]);

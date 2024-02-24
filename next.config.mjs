@@ -24,7 +24,6 @@ const nextConfig = {
         
         return config;
     },
-    register: false,
 }
 
 export default withSerwist(nextConfig);

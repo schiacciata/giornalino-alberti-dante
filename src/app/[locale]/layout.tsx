@@ -5,7 +5,7 @@ import '@/styles/scrollbar.css'
 import siteConfig from "@/config/site"
 import { Providers } from "@/lib/providers"
 import { RootLayoutProps } from '@/types/layout'
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "sonner"
 import GitHashIndicator from '@/components/git-hash-indicator'
 
 export const metadata: Metadata = {
@@ -73,18 +73,18 @@ export default function RootLayout({ params, children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className="min-h-screen bg-background font-sans antialiased"
+        className="min-h-screen bg-background font-sans antialiased relative flex flex-col"
       >
-        <Providers params={params}>
-          <div className="relative flex min-h-screen flex-col">
-            <div className="flex-1">
-              {children}
-            </div>
-          </div>
-        </Providers>
-        
-        <Toaster richColors={true} />
-        <GitHashIndicator/>
+        <div className="min-h-screen h-full w-full dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
+          <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
+
+          <Providers params={params}>
+            {children}
+          </Providers>
+
+          <Toaster richColors={true} />
+          <GitHashIndicator />
+        </div>
       </body>
     </html>
   )

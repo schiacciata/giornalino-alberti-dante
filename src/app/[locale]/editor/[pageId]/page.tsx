@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation"
 import { Page } from "@prisma/client"
 
-import { authOptions } from "@/lib/auth/options"
+import authOptions from "@/lib/auth/config"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { Editor } from "@/components/editor"

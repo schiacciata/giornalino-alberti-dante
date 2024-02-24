@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-import { authOptions } from "@/lib/auth/options"
+import authOptions from "@/lib/auth/config"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"

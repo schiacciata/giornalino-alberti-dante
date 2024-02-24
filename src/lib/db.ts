@@ -9,7 +9,7 @@ declare global {
 let prisma: PrismaClient
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient({
-    log: config.debug ? ['error',  'query'] : []
+    log: config.debug ? ['error',  'query', 'info'] : []
   })
 } else {
   if (!global.cachedPrisma) {

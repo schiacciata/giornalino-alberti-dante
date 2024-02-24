@@ -1,6 +1,5 @@
 'use client'
 
-import { User } from "next-auth"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
 import { UserAvatar } from "./user-avatar"
@@ -9,14 +8,16 @@ import { isEditor } from "@/lib/auth/roles"
 import { NotificationsDialog } from "./notifications-dialog"
 import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog"
 import { useServiceWorker } from "@/lib/providers/sw"
+import { Meteors } from "./ui/meteors"
+import { AuthUser } from "@/types/next-auth"
 
 type UserDialogProps = {
-  user: User,
+  user: AuthUser,
 }
 
 export function UserDialog({ user }: UserDialogProps) {
   const sw = useServiceWorker();
-  
+
   const onInstallClick = () => {
     if (!sw?.promptInstall) return;
     sw.promptInstall.prompt();
@@ -32,14 +33,17 @@ export function UserDialog({ user }: UserDialogProps) {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <div className="flex items-center justify-start gap-2 p-2">
+          <div className="flex items-center justify-start gap-2 p-2 ">
             <div className="flex flex-col space-y-1 leading-none">
-              {user.name && <p className="font-medium">{user.name}</p>}
-              {user.email && (
-                <p className="w-[200px] truncate text-sm text-muted-foreground">
-                  {user.email}
-                </p>
-              )}
+              <div className="h-3/4 md:h-1/2 w-3/4 relative max-w-sm">
+                {user.name && <p className="font-medium">{user.name}</p>}
+                {user.email && (
+                  <p className="w-[200px] truncate text-sm text-muted-foreground">
+                    {user.email}
+                  </p>
+                )}
+                <Meteors number={10} />
+              </div>
             </div>
           </div>
           <DropdownMenuSeparator />
@@ -72,7 +76,7 @@ export function UserDialog({ user }: UserDialogProps) {
           ) : null}
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            className="cursor-pointer hover:bg-red-500"
+            className="hover:bg-red-500"
             onSelect={(event) => {
               event.preventDefault()
               signOut({

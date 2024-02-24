@@ -1,22 +1,23 @@
-import { getToken } from "next-auth/jwt"
-import { withAuth } from "next-auth/middleware"
-import { isAdmin, isEditor } from "./lib/auth/roles"
-import { I18nMiddleware, redirect } from "./lib/i18n/middleware"
+import NextAuth from "next-auth";
+import authConfig from "@/lib/auth/config";
 
-export default withAuth(
-  async function middleware(req) {
-    const token = await getToken({ req });
+const { auth } = NextAuth(authConfig);
+
+import { isEditor } from "./lib/auth/roles"
+import { I18nMiddleware, redirect } from "./lib/i18n/middleware"
+import { getCurrentUser } from "./lib/auth/user";
+
+export default auth(async (req) => {
+    const isLoggedIn = !!req.auth;
+
     const isLoginPage = ['/login', '/register']
       .some(p => req.nextUrl.pathname.startsWith(p));
       
     const isEditorPage = ["/dashboard", "/editor"]
       .some(p => req.nextUrl.pathname.startsWith(p));
-      
-    /*const isAdminPage = ["/dashboard", "/editor"]
-      .some(p => req.nextUrl.pathname.startsWith(p));*/
 
     if (isLoginPage) {
-      if (!!token) {
+      if (isLoggedIn) {
         return redirect('/', req);
       }
 
@@ -24,7 +25,7 @@ export default withAuth(
     }
 
     if (isEditorPage) {
-      if (!token) {
+      if (!isLoggedIn) {
         let from = req.nextUrl.pathname;
         if (req.nextUrl.search) {
           from += req.nextUrl.search;
@@ -33,22 +34,14 @@ export default withAuth(
         return redirect(`/login?from=${encodeURIComponent(from)}`, req);
       }
      
-      if (!isEditor(token)) return redirect(`/`, req);
+      const user = await getCurrentUser();
+      if (!user) return redirect(`/login`, req);
+
+      if (!isEditor(user)) return redirect(`/`, req);
     }
     
     return I18nMiddleware(req);
-  },
-  {
-    callbacks: {
-      async authorized() {
-        // This is a work-around for handling redirect on auth pages.
-        // We return true here so that the middleware function above
-        // is always called.
-        return true
-      },
-    },
-  }
-)
+});
 
 export const config = {
   matcher: ['/((?!api|static|.*\\..*|_next|favicon.ico|robots.txt).*)']
