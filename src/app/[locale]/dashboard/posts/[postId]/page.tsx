@@ -14,7 +14,7 @@ import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
 import { isAdmin } from "@/lib/auth/roles"
 import { ReactElement } from "react"
-import { getPages } from "@/lib/queries"
+import { getPages } from "@/lib/queries/page"
 import { SearchParams } from "@/types"
 import { PageTable } from "@/components/pages-table/pages-table"
 

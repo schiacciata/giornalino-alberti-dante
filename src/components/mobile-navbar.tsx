@@ -29,10 +29,10 @@ export function MobileNav({ sections, children }: MobileNavProps) {
         </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
           {sections.map((section) => (
-            <>
+            <div key={section.title}>
               <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
-                {/*section.icon && <Icon icon={section.icon} />*/}
-                {/*section.title*/}
+                {section.icon && <Icon icon={section.icon} />}
+                {section.title}
               </h2>
               <div className="space-y-1">
                 {section.items.map((item, index) => (
@@ -50,7 +50,7 @@ export function MobileNav({ sections, children }: MobileNavProps) {
                 ))}
               </div>
               <br />
-            </>
+            </div>
             ))}
         </nav>
         {children}
