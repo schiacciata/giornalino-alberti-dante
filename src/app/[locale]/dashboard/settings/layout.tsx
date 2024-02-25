@@ -12,7 +12,7 @@ export default async function DashboardSettingsLayout({ children }: RootLayoutPr
             heading={scopedT('heading')}
             text={scopedT('headingDescription')}
         />
-        <div className="grid gap-10">
+        <div className="grid md:grid-cols-2 gap-12">
             {children}
         </div>
         </Shell>

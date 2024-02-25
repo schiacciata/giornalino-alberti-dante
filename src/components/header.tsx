@@ -10,9 +10,9 @@ export function Header({ heading, text, children }: HeaderProps) {
   return (
     <div className="flex items-center md:justify-between px-2 py-4">
       <div className="grid gap-3">
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl w-max">
+        <div className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
           {heading}
-        </h1>
+        </div>
         {text && <p className="max-w-[700px] text-lg text-muted-foreground italic">{text}</p>}
         <div className='md:hidden'>
           {children}

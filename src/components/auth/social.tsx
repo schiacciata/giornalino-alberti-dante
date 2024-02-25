@@ -13,7 +13,7 @@ interface SocialProps {
 }
 
 const Social: FC<SocialProps> = ({ linkedAccounts, className }) => {
-    const socialsProviders = ['google', 'spotify'] as const;
+    const socialsProviders = ['google', 'spotify', 'discord'] as const;
     const filteredProviders = socialsProviders.filter(p => !linkedAccounts?.find(l => l.provider == p));
 
     return <>

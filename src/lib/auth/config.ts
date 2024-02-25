@@ -5,9 +5,10 @@ import config from "@/config";
 
 import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
-import SpotifyProvider from "next-auth/providers/spotify";
+import GoogleProvider from "@auth/core/providers/google"
+import CredentialsProvider from "@auth/core/providers/credentials"
+import SpotifyProvider from "@auth/core/providers/spotify";
+import DiscordProvider from "@auth/core/providers/discord"
 
 import { loginSchema } from "@/lib/validations/auth";
 import { getUserByEmail } from "@/lib/queries/user";
@@ -28,9 +29,13 @@ export default {
     }),
     SpotifyProvider({
       clientId: env.SPOTIFY_CLIENT_ID,
-      clientSecret: env.SPOTIFY_CLIENT_SECRET
+      clientSecret: env.SPOTIFY_CLIENT_SECRET,
     }),
-    Credentials({
+    DiscordProvider({
+      clientId: env.DISCORD_CLIENT_ID,
+      clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
       async authorize(credentials) {
         const validatedFields = loginSchema.safeParse(credentials);
 

@@ -94,7 +94,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
     <Shell>
       <Header heading={
         <h1>
-          Pagine di "{post.title}" <Icon
+          Pagine di &quot;{post.title}&quot; <Icon
             className={cn(
               "inline-flex h-6 w-6",
               post.published ? 'text-sky-400' : 'text-yellow-400',

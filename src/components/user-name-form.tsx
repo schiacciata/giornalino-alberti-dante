@@ -90,7 +90,7 @@ export function UserUpdateForm({ user, className, ...props }: UserUpdateFormProp
             </Label>
             <Input
               id="name"
-              className="w-[400px]"
+              className="w-full md:w-[400px]"
               size={32}
               {...register("name")}
             />

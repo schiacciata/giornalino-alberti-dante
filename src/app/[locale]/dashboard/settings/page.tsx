@@ -32,12 +32,14 @@ export default async function SettingsPage() {
   return (
     <>
       <UserUpdateForm user={{ name: user.name || "" }} />
-      <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-        Linked accounts
-      </h1>
-      <div className="grid grid-cols-2 gap-2 max-w-96">
-        {formattedAccounts.map(account => (<AccountCard account={account} key={account.provider} />))}
-        <Social linkedAccounts={formattedAccounts} />
+      <div>
+        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
+          Linked accounts
+        </h1>
+        <div className="py-4 grid justify-center md:grid-cols-2 gap-2 w-fit">
+          {formattedAccounts.map(account => (<AccountCard account={account} key={account.provider} />))}
+          <Social linkedAccounts={formattedAccounts} />
+        </div>
       </div>
     </>
   )
