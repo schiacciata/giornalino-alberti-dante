@@ -10,12 +10,13 @@ import '@/styles/pdf.css'
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { PageSwitcher } from './page-switcher';
+import { toast } from 'sonner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const options = {
-  cMapUrl: '/cmaps/',
-  standardFontDataUrl: '/standard_fonts/',
+  cMapUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/cmaps/`,
+  standardFontDataUrl: `https://unpkg.com/pdfjs-dist@${pdfjs.version}/standard_fonts`,
 };
 
 interface PDFViewerProps {
@@ -54,6 +55,11 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
     setNumPages(nextNumPages);
   }
 
+  function onError(error: Error): void {
+    console.log('h')
+    toast.error(error.message);
+  }
+
   const loadingDiv = (
     <p className='text-muted-foreground italic'>Loading file...</p>
   )
@@ -62,7 +68,7 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
     <div className="Example__container__document" ref={setContainerRef}>
       <Progress value={(pageIndex+1)/numPages*100} />
       <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
-      <Document loading={loadingDiv} file={file} onLoadSuccess={onDocumentLoadSuccess} options={options}>
+      <Document loading={loadingDiv} file={file} onLoadSuccess={onDocumentLoadSuccess} onSourceError={onError} onLoadError={onError} options={options}>
           <Page
             key={`page_${pageIndex + 1}`}
             pageNumber={pageIndex + 1}
