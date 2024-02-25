@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
 
-    if (!user || !isEditor(user)) {
+    if (!user || !user.id || !isEditor(user)) {
       return new Response("Unauthorized", { status: 403 })
     }
 

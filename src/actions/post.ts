@@ -11,7 +11,7 @@ import { deleteFromGithub } from '@/lib/files';
 
 export const newPost = async (formData: FormData) => {
     const user = await getCurrentUser();
-    if (!user) return Promise.reject('Not authenticated');
+    if (!user || !user.id) return Promise.reject('Not authenticated');
 
     const data = Object.fromEntries(formData);
     const body = postCreateSchema.parse(data);

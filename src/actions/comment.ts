@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 export const newComment = async (formData: FormData) => {
     const t = await getI18n();
     const user = await getCurrentUser();
-    if (!user) return Promise.reject(t('errors.unauthenticated'));
+    if (!user || !user.id) return Promise.reject(t('errors.unauthenticated'));
 
     const data = Object.fromEntries(formData);
     const body = commentCreateSchema.parse(data);
