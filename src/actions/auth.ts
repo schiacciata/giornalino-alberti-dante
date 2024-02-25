@@ -13,7 +13,7 @@ import { getTwoFactorTokenByEmail } from "@/lib/queries/two-factor-token";
   sendTwoFactorTokenEmail,
 } from "@/lib/mail";*/
 import { 
-  generateVerificationToken,
+  //generateVerificationToken,
   generateTwoFactorToken
 } from "@/lib/tokens";
 import { 

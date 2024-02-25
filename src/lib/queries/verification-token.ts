@@ -14,7 +14,7 @@ export const getVerificationTokenByToken = async (
   }
 }
 
-export const getVerificationTokenByEmail = async (
+/*export const getVerificationTokenByEmail = async (
   email: string
 ) => {
   try {
@@ -26,4 +26,4 @@ export const getVerificationTokenByEmail = async (
   } catch {
     return null;
   }
-}
+}*/
