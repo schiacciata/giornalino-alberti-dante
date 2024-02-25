@@ -8,7 +8,7 @@ const committer = {
 
 type GithubUploadOptions = {
     path: string;
-    content: string;
+    content: ArrayBuffer;
 }
 
 export async function uploadToGithub(options: GithubUploadOptions) {

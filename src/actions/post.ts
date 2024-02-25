@@ -79,19 +79,19 @@ export const editPost = async (formData: FormData) => {
     const body = postPatchSchema.parse(data);
 
     if (!body.id) return Promise.reject('No post id');
-    body.pdfFile = (body.pdfFile?.size || 0) > 0 ? body.pdfFile : undefined;
-
+    const pdfFile: File | undefined = ((body.pdfFile?.size || 0) > 0 ? body.pdfFile : undefined);
+    
     const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
     const updatedFields = Object
         .keys(body)
         .filter((k) => protectedFields.includes(k));
 
     if (updatedFields.length > 0 && !isAdmin(user)) return Promise.reject('You can\'t modify protected fields');
-    const pdfPath = body.pdfPath || (body.pdfFile.name ? `/pdfs/${body.pdfFile.name}` : undefined);
+    const pdfPath = pdfFile?.name ? `/pdfs/${pdfFile.name}` : undefined;
 
-    const uploadOK = (body.pdfFile && pdfPath) ? await uploadToGithub({
+    const uploadOK = (pdfFile && pdfPath) ? await uploadToGithub({
         path: `public${pdfPath}`,
-        content: await body.pdfFile.text(),
+        content: await pdfFile.arrayBuffer(),
     }) : true;
 
     if (!uploadOK) return Promise.reject('Could not upload pdf file');
