@@ -1,3 +1,5 @@
+'use client';
+
 import { FC, useCallback, useState } from 'react';
 import { pdfjs, Document, Page } from 'react-pdf';
 import { Progress } from "@/components/ui/progress"
@@ -9,10 +11,7 @@ import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { PageSwitcher } from './page-switcher';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const options = {
   cMapUrl: '/cmaps/',
