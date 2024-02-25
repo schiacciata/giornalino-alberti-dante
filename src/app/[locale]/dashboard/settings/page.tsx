@@ -36,7 +36,7 @@ export default async function SettingsPage() {
         Linked accounts
       </h1>
       <div className="grid grid-cols-2 gap-2 max-w-96">
-        {formattedAccounts.map(account => (<AccountCard account={account} />))}
+        {formattedAccounts.map(account => (<AccountCard account={account} key={account.provider} />))}
         <Social linkedAccounts={formattedAccounts} />
       </div>
     </>

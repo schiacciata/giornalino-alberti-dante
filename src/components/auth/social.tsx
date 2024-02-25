@@ -22,6 +22,7 @@ const Social: FC<SocialProps> = ({ linkedAccounts, className }) => {
                 type="button"
                 className={cn(buttonVariants({ variant: "outline", className: className }))}
                 onClick={() => signIn(provider)}
+                key={provider}
             >
                 <Icon icon={provider} />
                 {toPascalCase(provider)}
