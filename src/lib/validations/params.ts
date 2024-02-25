@@ -8,7 +8,8 @@ export const searchParamsSchema = z.object({
   title: z.string().optional(),
   category: z.string().optional(),
   store: z.string().optional(),
-  status: z.string().optional(),
-  priority: z.string().optional(),
+  published: z.string().optional(),
+  pdfPath: z.string().optional(),
+  number: z.string().optional(),
   operator: z.string().optional(),
 })

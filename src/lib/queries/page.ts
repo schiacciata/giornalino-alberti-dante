@@ -2,11 +2,12 @@ import { SearchParams } from "@/types";
 import { db } from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 import { searchParamsSchema } from "@/lib/validations/params";
+import { Page, Prisma } from "@prisma/client";
 
 export async function getPages(postId: string, searchParams: SearchParams) {
     noStore();
     try {
-        const { page, per_page, sort, title, status, priority, operator } =
+        const { page, per_page, sort, number, operator } =
         searchParamsSchema.parse(searchParams)
 
         // Fallback page for invalid page numbers
@@ -21,33 +22,32 @@ export async function getPages(postId: string, searchParams: SearchParams) {
         // Column and order to sort by
         // Spliting the sort string by "." to get the column and order
         // Example: "title.desc" => ["title", "desc"]
-        /*const [column, order] = (sort?.split(".") as [
-            keyof Post | undefined,
+        const [column, order] = (sort?.split(".") as [
+            keyof Page | undefined,
             "asc" | "desc" | undefined,
-        ]) ?? ["title", "desc"]
+        ]) ?? ["number", "desc"]
 
-        const statuses = (status?.split(".") as Post["published"][]) ?? []
-        const priorities = (priority?.split(".") as Post["pdfPath"][]) ?? []*/
-        // Your existing logic for page, per_page, sort, etc.
+        const orderBy = (column && order) ? { [column]: order } as Record<keyof Page, 'asc' | 'desc'> : null;
+
+        const options = {
+            where: {
+                postId: postId,
+            },
+            orderBy: orderBy ? [orderBy] : [
+                { number: "desc" as const },
+            ],
+        } as any;
+
+        const postPageNumber = Number(number);
+        if (!isNaN(postPageNumber) && options.where) options.where.number = postPageNumber;
 
         const data = await db.page.findMany({
             take: limit,
             skip: offset,
-            where: {
-                postId: postId,
-                // Your existing logic for filtering
-            },
-            orderBy: {
-                number: "desc",
-            },
+            ...options,
         });
 
-        const count = await db.page.count({
-            where: {
-                postId: postId,
-                // Your existing logic for counting
-            },
-        });
+        const count = await db.page.count(options);
 
         const pageCount = Math.ceil(count / limit);
 

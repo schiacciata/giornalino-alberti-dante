@@ -47,6 +47,7 @@ import {
     Check,
     Eye,
     BellPlus,
+    Lock,
 } from "lucide-react"
 
 export const Icons = {
@@ -132,6 +133,8 @@ export const Icons = {
           ></path>
         </svg>
     ),
+    private: Lock,
+    public: Globe,
 }
 
 export type TIcon = keyof typeof Icons;

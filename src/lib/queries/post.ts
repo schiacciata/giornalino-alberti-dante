@@ -2,12 +2,12 @@ import { SearchParams } from "@/types";
 import { db } from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 import { searchParamsSchema } from "@/lib/validations/params";
+import { Post } from "@prisma/client";
 
 export async function getPosts(searchParams: SearchParams) {
     noStore();
     try {
-        const { page, per_page, sort, title, status, priority, operator } =
-        searchParamsSchema.parse(searchParams)
+        const { page, per_page, sort, title, pdfPath, published, operator } = searchParamsSchema.parse(searchParams)
 
         // Fallback page for invalid page numbers
         const pageAsNumber = Number(page)
@@ -18,34 +18,32 @@ export async function getPosts(searchParams: SearchParams) {
         const limit = isNaN(perPageAsNumber) ? 10 : perPageAsNumber
         // Number of items to skip
         const offset = fallbackPage > 0 ? (fallbackPage - 1) * limit : 0
-        // Column and order to sort by
-        // Spliting the sort string by "." to get the column and order
-        // Example: "title.desc" => ["title", "desc"]
-        /*const [column, order] = (sort?.split(".") as [
+        
+        const [column, order] = (sort?.split(".") as [
             keyof Post | undefined,
             "asc" | "desc" | undefined,
-        ]) ?? ["title", "desc"]
+        ]) ?? ["createdAt", "desc"]
 
-        const statuses = (status?.split(".") as Post["published"][]) ?? []
-        const priorities = (priority?.split(".") as Post["pdfPath"][]) ?? []*/
-        // Your existing logic for page, per_page, sort, etc.
+        const orderBy = (column && order) ? { [column]: order } as Record<keyof Post, 'asc' | 'desc'> : null;
+
+        const options = {
+            where: {
+                title: {
+                    contains: title,
+                },
+            },
+            orderBy: orderBy ? [orderBy] : [
+                { createdAt: "desc" as const },
+            ],
+        };
 
         const data = await db.post.findMany({
             take: limit,
             skip: offset,
-            where: {
-                // Your existing logic for filtering
-            },
-            orderBy: {
-              createdAt: "desc",
-            },
+            ...options,
         });
 
-        const count = await db.post.count({
-            where: {
-                // Your existing logic for counting
-            },
-        });
+        const count = await db.post.count(options);
 
         const pageCount = Math.ceil(count / limit);
 
