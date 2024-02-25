@@ -6,7 +6,9 @@ import { UserUpdateForm } from "@/components/user-name-form"
 import Social from "@/components/auth/social"
 import { getAccountsByUserId } from "@/lib/queries/account"
 import { Account } from "@prisma/client"
-import AccountCard from "@/components/account-card"
+import AccountCard from "@/components/account/account-card"
+import { getScopedI18n } from "@/lib/i18n/server"
+import { Header } from "@/components/header"
 
 export const metadata = {
   title: "Settings",
@@ -14,6 +16,7 @@ export const metadata = {
 }
 
 export default async function SettingsPage() {
+  const scopedT = await getScopedI18n('accounts');
   const user = await getCurrentUser()
 
   if (!user || !user.id) {
@@ -33,9 +36,8 @@ export default async function SettingsPage() {
     <>
       <UserUpdateForm user={{ name: user.name || "" }} />
       <div>
-        <h1 className="text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl">
-          Linked accounts
-        </h1>
+        <Header heading={scopedT('heading')} text={scopedT('headingDescription')} />
+        
         <div className="py-4 grid justify-center md:grid-cols-2 gap-2 w-fit">
           {formattedAccounts.map(account => (<AccountCard account={account} key={account.provider} />))}
           <Social linkedAccounts={formattedAccounts} />

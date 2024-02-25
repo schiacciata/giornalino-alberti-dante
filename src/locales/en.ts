@@ -47,6 +47,11 @@ export default {
         createNew: 'Create new',
         changeUser: 'or change user',
         settings: 'settings',
+        sidebar: {
+            overview: 'Overview',
+            posts: 'Posts',
+            settings: 'Settings',
+        },
     },
     settings: {
         heading: 'Settings',
@@ -69,5 +74,13 @@ export default {
         title: 'Go to Page',
         description: 'Choose a page number to navigate to.',
         label: 'Number',
+    },
+    accounts: {
+        heading: 'Linked accounts',
+        headingDescription: 'Link/Unlink accounts',
+        delete: {
+            notFound: 'Account not found',
+            success: 'Account successfully unlinked',
+        },
     },
 } as const

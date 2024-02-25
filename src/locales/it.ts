@@ -47,7 +47,11 @@ export default {
         createNew: 'Crea nuovo',
         changeUser: 'o cambia',
         settings: 'Impostazioni',
-
+        sidebar: {
+            overview: 'Panoramica',
+            posts: 'Articoli',
+            settings: 'Impostazioni',
+        },
     },
     settings: {
         heading: 'Impostazioni',
@@ -70,5 +74,13 @@ export default {
         title: 'Vai alla pagina',
         description: 'Scegli un numero di pagina a cui navigare.',
         label: 'Numero',
+    },
+    accounts: {
+        heading: 'Account collegati',
+        headingDescription: 'Collega/Scollega account',
+        delete: {
+            notFound: 'Account non trovato',
+            success: 'Account scollegato con successo',
+        },
     },
 } as const;
