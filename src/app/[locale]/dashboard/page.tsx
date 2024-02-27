@@ -25,8 +25,6 @@ export default async function DashboardPage() {
       <p className="max-w-[700px] text-lg text-muted-foreground italic">
         {scopedT('createNew')} <Link className="underline font-bold" href={'/dashboard/posts'}>
           post
-        </Link> {scopedT('changeUser')} <Link className="underline font-bold" href={'/dashboard/settings'}>
-          {scopedT('settings')}
         </Link>
       </p>
     </Shell>
