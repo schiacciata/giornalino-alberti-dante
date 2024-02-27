@@ -5,7 +5,7 @@ import { AuthError } from "next-auth";
 
 import { db } from "@/lib/db";
 import { signIn } from "@/lib/auth";
-import { loginSchema } from "@/lib/validations/auth";
+import { loginSchema, registerSchema } from "@/lib/validations/auth";
 import { getUserByEmail } from "@/lib/queries/user";
 import { getTwoFactorTokenByEmail } from "@/lib/queries/two-factor-token";
 /*import { 
@@ -19,6 +19,7 @@ import {
 import { 
   getTwoFactorConfirmationByUserId
 } from "@/lib/queries/two-factor-confirmation";
+import bcrypt from 'bcryptjs';
 
 export const login = async (
   values: z.infer<typeof loginSchema>,
@@ -38,7 +39,7 @@ export const login = async (
     return { error: "Email does not exist!" }
   }
 
-  if (!existingUser.emailVerified) {
+  if (!existingUser.emailVerified && false) {
     /*const verificationToken = await generateVerificationToken(
       existingUser.email,
     );
@@ -119,4 +120,38 @@ export const login = async (
 
     throw error;
   }
+};
+
+export const register = async (values: z.infer<typeof registerSchema>) => {
+  const validatedFields = registerSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields!" };
+  }
+
+  const { email, password, name } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    return { error: "Email already in use!" };
+  }
+
+  await db.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+    },
+  });
+
+  /*const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(
+    verificationToken.email,
+    verificationToken.token,
+  );
+
+  return { success: "Confirmation email sent!" };*/
+  return { success: "Account created" };
 };

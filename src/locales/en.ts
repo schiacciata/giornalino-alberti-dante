@@ -50,12 +50,15 @@ export default {
         sidebar: {
             overview: 'Overview',
             posts: 'Posts',
-            settings: 'Settings',
         },
     },
     settings: {
         heading: 'Settings',
         headingDescription: 'Manage account and website settings.',
+        userUpdate: {
+            heading: 'User Info',
+            headingDescription: 'Edit your info',
+        },
     },
     comments: {
         heading: 'Comments',
@@ -82,5 +85,12 @@ export default {
             notFound: 'Account not found',
             success: 'Account successfully unlinked',
         },
+    },
+    userMenu: {
+        install: 'Install',
+        dashboard: 'Dashboard',
+        notifications: 'Enable Notifications',
+        settings: 'Settings',
+        signOut: 'Sign out',
     },
 } as const

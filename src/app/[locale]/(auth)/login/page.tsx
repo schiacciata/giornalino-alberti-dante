@@ -4,7 +4,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
-import { UserAuthForm } from "@/components/auth/auth-form"
+import { LoginForm } from "@/components/auth/login-form"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CardContainer } from "@/components/ui/3d-card"
@@ -47,8 +47,8 @@ export default async function LoginPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UserAuthForm />
-              <p className="px-8 text-center text-sm text-muted-foreground">
+              <LoginForm />
+              <p className="px-8 pt-4 text-center text-sm text-muted-foreground">
                 <Link
                   href="/register"
                   className="hover:text-brand underline underline-offset-4"

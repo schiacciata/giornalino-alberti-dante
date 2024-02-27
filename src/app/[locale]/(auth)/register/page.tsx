@@ -3,7 +3,7 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
-import { UserAuthForm } from "@/components/auth/auth-form"
+import { RegisterForm } from "@/components/auth/register-form"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 
 export const metadata = {
@@ -38,7 +38,7 @@ export default async function RegisterPage() {
               {scopedT('enterEmail')}
             </p>
           </div>
-          <UserAuthForm />
+          <RegisterForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
             {scopedT('privacyAgree')}
             {" "}

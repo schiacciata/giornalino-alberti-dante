@@ -26,7 +26,7 @@ import Social from "./social"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function LoginForm({ className, ...props }: UserAuthFormProps) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get("callbackUrl");
   const urlError = searchParams?.get("error") === "OAuthAccountNotLinked"
@@ -90,7 +90,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   }
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className={cn("grid gap-6 justify-center", className)} {...props}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -188,7 +188,9 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <Social/>
+      <div className="grid grid-cols-3 gap-2 w-fit">
+          <Social />
+      </div>
     </div>
   )
 }

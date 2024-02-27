@@ -50,12 +50,15 @@ export default {
         sidebar: {
             overview: 'Panoramica',
             posts: 'Articoli',
-            settings: 'Impostazioni',
         },
     },
     settings: {
         heading: 'Impostazioni',
         headingDescription: 'Gestisci le impostazioni dell\'account e del sito web.',
+        userUpdate: {
+            heading: 'Informazioni Utente',
+            headingDescription: 'Modifica le tue informazioni',
+        },
     },
     comments: {
         heading: 'Commenti',
@@ -82,5 +85,12 @@ export default {
             notFound: 'Account non trovato',
             success: 'Account scollegato con successo',
         },
+    },
+    userMenu: {
+        install: 'Installa app',
+        dashboard: 'Dashboard',
+        notifications: 'Abilita Notifiche',
+        settings: 'Impostazioni',
+        signOut: 'Log out',
     },
 } as const;

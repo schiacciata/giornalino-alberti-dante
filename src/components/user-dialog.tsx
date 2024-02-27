@@ -10,6 +10,7 @@ import { AlertDialog, AlertDialogTrigger } from "./ui/alert-dialog"
 import { useServiceWorker } from "@/lib/providers/sw"
 import { Meteors } from "./ui/meteors"
 import { AuthUser } from "@/types/next-auth"
+import { useScopedI18n } from "@/lib/i18n/client"
 
 type UserDialogProps = {
   user: AuthUser,
@@ -17,6 +18,7 @@ type UserDialogProps = {
 
 export function UserDialog({ user }: UserDialogProps) {
   const sw = useServiceWorker();
+  const scopedT = useScopedI18n('userMenu');
 
   const onInstallClick = () => {
     if (!sw?.promptInstall) return;
@@ -50,10 +52,9 @@ export function UserDialog({ user }: UserDialogProps) {
           {isEditor(user) ?
             <>
               <DropdownMenuItem asChild>
-                <Link href="/dashboard">Dashboard</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/settings">Settings</Link>
+                <Link href="/dashboard">
+                  {scopedT('dashboard')}
+                </Link>
               </DropdownMenuItem>
             </>
             : null
@@ -62,7 +63,7 @@ export function UserDialog({ user }: UserDialogProps) {
             <AlertDialogTrigger asChild>
               <DropdownMenuItem>
                 <button className="font-bold bg-gradient-to-r from-pink-500 via-indigo-500 to-purple-500 text-transparent bg-clip-text">
-                  Enable Notifications
+                  {scopedT('notifications')}
                 </button>
               </DropdownMenuItem>
             </AlertDialogTrigger>
@@ -70,10 +71,13 @@ export function UserDialog({ user }: UserDialogProps) {
           {(sw && sw.promptInstall) ? (
             <DropdownMenuItem>
               <button onClick={onInstallClick} className="font-bold bg-gradient-to-r from-teal-500 to-cyan-400 via-cyan-400 text-transparent bg-clip-text">
-                Install
+                {scopedT('install')}
               </button>
             </DropdownMenuItem>
           ) : null}
+          <DropdownMenuItem asChild>
+            <Link href="/settings">{scopedT('settings')}</Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className="hover:bg-red-500"
@@ -84,7 +88,7 @@ export function UserDialog({ user }: UserDialogProps) {
               })
             }}
           >
-            Sign out
+            {scopedT('signOut')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

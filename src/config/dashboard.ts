@@ -23,11 +23,6 @@ export const getSidebar = async () => {
             href: "/dashboard/posts",
             icon: "post",
           },
-          {
-            title: scopedT('settings'),
-            href: "/dashboard/settings",
-            icon: "settings",
-          },
         ],
     },
 ];
