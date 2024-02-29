@@ -95,6 +95,7 @@ export default {
         notifications: 'Enable Notifications',
         settings: 'Settings',
         signOut: 'Sign out',
+        users: 'Users',
     },
     roles: {
         ADMIN: 'Admin',

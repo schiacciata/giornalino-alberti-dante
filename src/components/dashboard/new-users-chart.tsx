@@ -25,7 +25,7 @@ const NewUsersChart: FC<NewUsersChartProps> = ({ userData }) => {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>User Creation Statistics for {new Date().getFullYear()}
+                <CardTitle>User Creation Statistics for {formattedData[0].date.getFullYear()}
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -43,9 +43,11 @@ const NewUsersChart: FC<NewUsersChartProps> = ({ userData }) => {
                             fontSize={12}
                             tickLine={false}
                             axisLine={false}
+                            type="number"
+                            domain={[0, 'dataMax + 10']}
                         />
                         <Tooltip />
-                        <Bar dataKey="usersCreated" fill={siteConfig.themeColor} radius={[4, 4, 0, 0]} name="Count" />
+                        <Bar dataKey="usersCreated" fill='hsl(var(--foreground))' radius={[4, 4, 0, 0]} name="Count" />
                     </BarChart>
                 </ResponsiveContainer>
             </CardContent>

@@ -7,6 +7,7 @@ import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 import NewUsersChart from "@/components/dashboard/new-users-chart"
 import { getCountInYear } from "@/lib/queries/user"
 import StatsCard from "@/components/dashboard/stats-card"
+import { db } from "@/lib/db"
 
 export const metadata = {
   title: "Dashboard",
@@ -22,6 +23,8 @@ export default async function DashboardPage() {
   }
 
   const userData = await getCountInYear();
+  const postCount = await db.post.count();
+  const usersCount = await db.user.count();
 
   return (
     <Shell className="gap-13">
@@ -35,8 +38,8 @@ export default async function DashboardPage() {
       </p>
 
       <div className="grid md:grid-cols-3 gap-4 py-4">
-        <StatsCard header={t('dashboard.sidebar.posts')} data={0}/>
-        <StatsCard header={'Articles'} data={0}/>
+        <StatsCard header={t('dashboard.sidebar.posts')} data={postCount}/>
+        <StatsCard header={t('userMenu.users')} data={usersCount}/>
       </div>
 
       <NewUsersChart userData={userData}/>
