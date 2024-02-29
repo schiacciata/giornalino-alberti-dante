@@ -1,23 +1,32 @@
-import { User } from '@prisma/client'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { Role, User } from '@prisma/client'
 import { FC } from 'react'
-import { Icon } from './icons'
+import { Badge } from './ui/badge'
+import { cn } from '@/lib/utils'
+import { getScopedI18n } from '@/lib/i18n/server'
 
 interface UserBadgeProps {
     user: Pick<User, 'role'>
 }
 
-const UserBadge: FC<UserBadgeProps> = ({ user }) => {
-    return <TooltipProvider>
-        <Tooltip>
-            <TooltipTrigger>
-                <Icon icon={user.role}/>
-            </TooltipTrigger>
-            <TooltipContent>
-                <p>{user.role}</p>
-            </TooltipContent>
-        </Tooltip>
-    </TooltipProvider>
+const getRoleColor = (role: Role): `text-${string}-${number}` => {
+    switch (role) {
+        case 'ADMIN':
+            return 'text-red-500';
+        case 'EDITOR':
+            return 'text-yellow-500';
+        default:
+            return 'text-primary-500';
+    }
+}
+
+const UserBadge: FC<UserBadgeProps> = async ({ user }) => {
+    const t = await getScopedI18n('roles');
+
+    return (
+        <Badge variant={'outline'} className={cn('border-current', getRoleColor(user.role))}>
+            {t(user.role)}
+        </Badge>
+    )
 
 }
 

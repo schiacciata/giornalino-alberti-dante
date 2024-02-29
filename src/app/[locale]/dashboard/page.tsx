@@ -3,13 +3,14 @@ import { Header } from "@/components/header"
 import { Shell } from "@/components/shell"
 import Link from "next/link"
 import { getCurrentUser } from "@/lib/auth/user"
-import { getScopedI18n } from "@/lib/i18n/server"
+import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 
 export const metadata = {
   title: "Dashboard",
 }
 
 export default async function DashboardPage() {
+  const t = await getI18n();
   const scopedT = await getScopedI18n('dashboard');
   const user = await getCurrentUser();
 
@@ -24,7 +25,7 @@ export default async function DashboardPage() {
       })}/>
       <p className="max-w-[700px] text-lg text-muted-foreground italic">
         {scopedT('createNew')} <Link className="underline font-bold" href={'/dashboard/posts'}>
-          post
+          {t('dashboard.sidebar.posts')}
         </Link>
       </p>
     </Shell>

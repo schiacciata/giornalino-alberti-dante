@@ -26,8 +26,6 @@ export default async function SettingsPage() {
     redirect(authOptions?.pages?.signIn)
   }
 
-  await wait(3000);
-
   const accounts = await getAccountsByUserId(user.id);
   const formattedAccounts: Pick<Account, 'provider' | 'providerAccountId'>[] = (accounts || [])
     .map((account) => {
@@ -49,7 +47,7 @@ export default async function SettingsPage() {
       title: accountsT('heading'),
       description: accountsT('headingDescription'),
       header: (
-        <div className="grid justify-center grid-cols-3 gap-2 w-fit">
+        <div className="grid justify-center grid-cols-auto gap-2 w-full">
         {formattedAccounts.map(account => (
           <AccountCard account={account} key={account.provider} />
         ))}

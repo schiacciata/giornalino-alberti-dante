@@ -11,10 +11,10 @@ interface AccountCardProps {
 
 const AccountCard: FC<AccountCardProps> = ({ account }) => {
     return (
-        <Card>
+        <Card className='w-fit'>
             <CardHeader>
             <div className="flex items-center justify-between mb-2 mr-2">
-                <CardTitle>
+                <CardTitle className='space-between'>
                     <Icon className='inline-flex' icon={account.provider as any} />
                     {toPascalCase(account.provider)}
                 </CardTitle>

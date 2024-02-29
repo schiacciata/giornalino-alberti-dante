@@ -1,3 +1,5 @@
+import { Role } from "@prisma/client";
+
 export default {
     'hello': 'Hello',
     'welcome': 'Welcome',
@@ -94,4 +96,9 @@ export default {
         settings: 'Settings',
         signOut: 'Sign out',
     },
+    roles: {
+        ADMIN: 'Admin',
+        EDITOR: 'Editor',
+        USER: 'User',
+    } as Record<Role, string>,
 } as const

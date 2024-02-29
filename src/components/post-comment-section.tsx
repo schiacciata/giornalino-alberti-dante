@@ -16,7 +16,7 @@ const PostCommentSection: FC<PostCommentSectionProps> = async ({ post, comments 
     <div>
       <center className="font-bold px-4 text-lg">{t('heading')}</center>
       <PostInsertComment post={{ id: post.id }} />
-      <div className='mt-3 grid grid-cols-1 gap-y-3 mx-auto w-[75%]'>
+      <div className='mt-3 grid grid-cols-1 gap-y-3 mx-auto w-full md:w-2/3'>
         {comments.length > 0 && (
           comments.map(((comment, index) => (
             <PostComment

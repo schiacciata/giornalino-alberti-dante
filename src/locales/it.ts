@@ -1,3 +1,5 @@
+import { Role } from "@prisma/client";
+
 export default {
     'hello': 'Ciao',
     'welcome': 'Benvenuto',
@@ -45,7 +47,7 @@ export default {
     },
     dashboard: {
         homeGreetings: 'Benvenuto, {name}',
-        createNew: 'Crea nuovo',
+        createNew: 'Crea nuovi',
         changeUser: 'o cambia',
         settings: 'Impostazioni',
         sidebar: {
@@ -94,4 +96,9 @@ export default {
         settings: 'Impostazioni',
         signOut: 'Log out',
     },
+    roles: {
+        ADMIN: 'Amministratore',
+        EDITOR: 'Editore',
+        USER: 'Utente',
+    } as Record<Role, string>,
 } as const;
