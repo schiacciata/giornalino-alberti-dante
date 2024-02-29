@@ -11,7 +11,7 @@ import { getCurrentUser } from "./lib/auth/user";
 export default auth(async (req) => {
     const isLoggedIn = !!req.auth;
 
-    const isAuthPage = req.nextUrl.pathname.startsWith('/auth');
+    const isAuthPage = req.nextUrl.pathname.startsWith('/auth/');
     const isEditorPage = ["/dashboard", "/editor"]
       .some(p => req.nextUrl.pathname.startsWith(p));
 
