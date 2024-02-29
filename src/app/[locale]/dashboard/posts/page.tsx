@@ -21,7 +21,7 @@ export default async function PostsPage({ searchParams }: IndexPageProps) {
     const user = await getCurrentUser()
 
     if (!user) {
-      redirect(authOptions?.pages?.signIn || "/login")
+      redirect(authOptions?.pages?.signIn)
     }
 
     const postsPromise = getPosts(searchParams)

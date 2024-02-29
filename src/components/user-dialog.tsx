@@ -11,6 +11,7 @@ import { useServiceWorker } from "@/lib/providers/sw"
 import { Meteors } from "./ui/meteors"
 import { AuthUser } from "@/types/next-auth"
 import { useScopedI18n } from "@/lib/i18n/client"
+import authOptions from "@/lib/auth/config"
 
 type UserDialogProps = {
   user: AuthUser,
@@ -84,7 +85,7 @@ export function UserDialog({ user }: UserDialogProps) {
             onSelect={(event) => {
               event.preventDefault()
               signOut({
-                callbackUrl: `${window.location.origin}/login`,
+                callbackUrl: authOptions.pages.signIn,
               })
             }}
           >

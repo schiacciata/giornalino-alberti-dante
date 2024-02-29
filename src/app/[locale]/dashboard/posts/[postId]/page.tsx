@@ -33,7 +33,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
   const user = await getCurrentUser()
 
   if (!user) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect(authOptions?.pages?.signIn)
   }
 
   const post = await db.post.findFirst({

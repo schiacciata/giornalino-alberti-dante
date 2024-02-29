@@ -6,6 +6,7 @@ import { Button } from "./ui/button"
 import { UserDialog } from "./user-dialog"
 import Link from "next/link"
 import { Avatar, AvatarFallback } from "./ui/avatar"
+import authOptions from "@/lib/auth/config"
 
 
 export function SessionIndicator() {
@@ -19,7 +20,7 @@ export function SessionIndicator() {
     }
 
     return (
-        <Link href={'/login'}>
+        <Link href={authOptions.pages.signIn}>
             { isLoading ? 
                 <>
                     <Avatar>

@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import authConfig from "@/lib/auth/config";
+import authOptions from "@/lib/auth/config"
 
 const { auth } = NextAuth(authConfig);
 
@@ -10,13 +11,11 @@ import { getCurrentUser } from "./lib/auth/user";
 export default auth(async (req) => {
     const isLoggedIn = !!req.auth;
 
-    const isLoginPage = ['/login', '/register']
-      .some(p => req.nextUrl.pathname.startsWith(p));
-      
+    const isAuthPage = req.nextUrl.pathname.startsWith('/auth');
     const isEditorPage = ["/dashboard", "/editor"]
       .some(p => req.nextUrl.pathname.startsWith(p));
 
-    if (isLoginPage) {
+    if (isAuthPage) {
       if (isLoggedIn) {
         return redirect('/', req);
       }
@@ -31,11 +30,11 @@ export default auth(async (req) => {
           from += req.nextUrl.search;
         }
   
-        return redirect(`/login?from=${encodeURIComponent(from)}`, req);
+        return redirect(`${authOptions.pages.signIn}?from=${encodeURIComponent(from)}`, req);
       }
      
       const user = await getCurrentUser();
-      if (!user) return redirect(`/login`, req);
+      if (!user) return redirect(authOptions.pages.signIn, req);
 
       if (!isEditor(user)) return redirect(`/`, req);
     }

@@ -23,7 +23,7 @@ export default async function SettingsPage() {
   const user = await getCurrentUser()
 
   if (!user || !user.id) {
-    redirect(authOptions?.pages?.signIn || "/login")
+    redirect(authOptions?.pages?.signIn)
   }
 
   await wait(3000);
