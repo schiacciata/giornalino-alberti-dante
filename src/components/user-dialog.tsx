@@ -85,7 +85,7 @@ export function UserDialog({ user }: UserDialogProps) {
             onSelect={(event) => {
               event.preventDefault()
               signOut({
-                callbackUrl: authOptions.pages.signIn,
+                //callbackUrl: `${window.location.origin}/login`,
               })
             }}
           >

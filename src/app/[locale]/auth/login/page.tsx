@@ -34,30 +34,30 @@ export default async function LoginPage() {
       <div className={cn("mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]")}>
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <CardContainer>
-          <Card className={cn("rounded-[25px] border")}>
-            <CardHeader>
-              <CardTitle className='flex flex-col space-y-2 text-center'>
-                <Icon icon="logo" />
-                <p className="text-2xl font-semibold">
-                  {scopedT('welcomeBack')}
+            <Card className={cn("rounded-[25px] border")}>
+              <CardHeader>
+                <CardTitle className='flex flex-col space-y-2 text-center'>
+                  <Icon icon="logo" />
+                  <p className="text-2xl font-semibold">
+                    {scopedT('welcomeBack')}
+                  </p>
+                </CardTitle>
+                <CardDescription>
+                  {scopedT('emailLabel')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <LoginForm />
+                <p className="px-8 pt-4 text-center text-sm text-muted-foreground">
+                  <Link
+                    href="/register"
+                    className="hover:text-brand underline underline-offset-4"
+                  >
+                    {scopedT('signUp')}
+                  </Link>
                 </p>
-              </CardTitle>
-              <CardDescription>
-                {scopedT('emailLabel')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <LoginForm />
-              <p className="px-8 pt-4 text-center text-sm text-muted-foreground">
-                <Link
-                  href="/register"
-                  className="hover:text-brand underline underline-offset-4"
-                >
-                  {scopedT('signUp')}
-                </Link>
-              </p>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
           </CardContainer>
         </div>
       </div>

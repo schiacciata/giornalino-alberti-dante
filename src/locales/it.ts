@@ -22,6 +22,7 @@ export default {
         action: 'Vai alla home',
     },
     errors: {
+        warning: 'Attenzione!',
         general: 'Uh oh! Qualcosa è andato storto.',
         unauthorized: 'Non sei autorizzato a eseguire questa azione',
         unauthenticated: 'Non sei autenticato, effettua il login e riprova!',

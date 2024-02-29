@@ -20,7 +20,8 @@ export default {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
+    error: "/auth/error",
   },
   providers: [
     GoogleProvider({

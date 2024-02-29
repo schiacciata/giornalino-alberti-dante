@@ -22,6 +22,7 @@ export default {
         action: 'Go home',
     },
     errors: {
+        warning: 'Warning!',
         general: 'Uh oh! Something went wrong.',
         unauthorized: 'You\'re not authorized to perform this action',
         unauthenticated: 'You\'re not authenticated, login then try again!',

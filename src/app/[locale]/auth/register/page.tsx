@@ -46,14 +46,14 @@ export default async function RegisterPage() {
               href="/terms"
               className="hover:text-brand underline underline-offset-4"
             >
-            {scopedT('termsOfService')}
+              {scopedT('termsOfService')}
             </Link>
             {` & `}
             <Link
               href="/privacy"
               className="hover:text-brand underline underline-offset-4"
             >
-            {scopedT('privacyPolicy')}
+              {scopedT('privacyPolicy')}
             </Link>
             .
           </p>
