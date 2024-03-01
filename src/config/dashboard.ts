@@ -31,6 +31,8 @@ export const getSidebar = async () => {
             href: "/dashboard/users",
             icon: "user",
             show: () => {
+              'use server';
+              
               if (!user) return false;
               
               return isAdmin(user);
