@@ -53,6 +53,7 @@ export default {
         sidebar: {
             overview: 'Panoramica',
             posts: 'Articoli',
+            users: 'Utenti',
         },
     },
     settings: {

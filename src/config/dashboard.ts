@@ -1,7 +1,10 @@
+import { isAdmin } from "@/lib/auth/roles";
+import { getCurrentUser } from "@/lib/auth/user";
 import { getScopedI18n } from "@/lib/i18n/server";
 import { SidebarNavSection } from "@/types/nav";
 
 export const getSidebar = async () => {
+  const user = await getCurrentUser();
   const scopedT = await getScopedI18n('dashboard.sidebar');
 
   const sections: SidebarNavSection[] = [
@@ -22,6 +25,16 @@ export const getSidebar = async () => {
             title: scopedT('posts'),
             href: "/dashboard/posts",
             icon: "post",
+          },
+          {
+            title: scopedT('users'),
+            href: "/dashboard/users",
+            icon: "user",
+            show: () => {
+              if (!user) return false;
+              
+              return isAdmin(user);
+            }
           },
         ],
     },

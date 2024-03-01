@@ -23,8 +23,10 @@ export default async function DashboardPage() {
   }
 
   const userData = await getCountInYear();
+
   const postCount = await db.post.count();
   const usersCount = await db.user.count();
+  const commentsCount = await db.comment.count();
 
   return (
     <Shell className="gap-13">
@@ -40,6 +42,7 @@ export default async function DashboardPage() {
       <div className="grid md:grid-cols-3 gap-4 py-4">
         <StatsCard header={t('dashboard.sidebar.posts')} data={postCount}/>
         <StatsCard header={t('userMenu.users')} data={usersCount}/>
+        <StatsCard header={t('comments.heading')} data={commentsCount}/>
       </div>
 
       <NewUsersChart userData={userData}/>
