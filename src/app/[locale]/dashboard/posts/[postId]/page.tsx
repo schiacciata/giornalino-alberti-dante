@@ -96,7 +96,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
   }
 
   return (
-    <Shell>
+    <>
       <Header heading={
         <h1>
           Pagine di &quot;{post.title}&quot; <Icon
@@ -108,7 +108,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
           />
         </h1>
       } text={t('updatedAt', {
-        updatedAt: formatDate(post.updatedAt, locale),
+        updatedAt: post.updatedAt.toLocaleString(locale),
       })}>
         <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           <PostEditDialog
@@ -121,6 +121,6 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
       <div>
         {await getPagesComponent()}
       </div>
-    </Shell>
+    </>
   )
 }

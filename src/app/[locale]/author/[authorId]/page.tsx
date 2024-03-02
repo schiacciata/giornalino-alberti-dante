@@ -3,8 +3,12 @@ import { db } from "@/lib/db"
 import { Header } from "@/components/header";
 import { Shell } from "@/components/shell";
 import { notFound } from "next/navigation";
-import { formatDate } from "@/lib/utils";
-import { getScopedI18n } from "@/lib/i18n/server";
+import { cn, formatDate } from "@/lib/utils";
+import { getI18n, getScopedI18n } from "@/lib/i18n/server";
+import { EmptyPlaceholder } from "@/components/empty-placeholder"
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { Icon } from "@/components/icons";
 
 type AuthorPostPageProps = {
     params: {
@@ -13,6 +17,7 @@ type AuthorPostPageProps = {
 }
 
 export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
+    const t = await getI18n();
     const scopedT = await getScopedI18n('author');
 
     const author = await db.user.findUnique({
@@ -38,9 +43,9 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
             createdAt: true,
             likesUserIDs: true,
             comments: {
-              select: {
-                id: true,
-              }
+                select: {
+                    id: true,
+                }
             },
         },
         orderBy: {
@@ -52,8 +57,25 @@ export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
         <Shell>
             <Header heading={scopedT('heading', { name: author.name })} text={scopedT('headingDescription', { date: formatDate(author.createdAt.toDateString()) })} />
             <div className="divide-border-200 divide-y rounded-md border">
+                {posts.length === 0 && (
+                    <EmptyPlaceholder>
+                        <EmptyPlaceholder.Icon name="cross" />
+                        <EmptyPlaceholder.Title>No posts found</EmptyPlaceholder.Title>
+                        <Link
+                            href="/"
+                            className={cn(
+                                buttonVariants({ variant: "ghost" }),
+                            )}
+                        >
+                            <>
+                                <Icon icon="back" />
+                                {t('back')}
+                            </>
+                        </Link>
+                    </EmptyPlaceholder>
+                )}
                 {posts.map((post) => (
-                    <PostCard key={post.id} post={post} comments={post.comments}/>
+                    <PostCard key={post.id} post={post} comments={post.comments} />
                 ))}
             </div>
         </Shell>
