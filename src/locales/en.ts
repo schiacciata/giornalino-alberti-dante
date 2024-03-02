@@ -109,4 +109,8 @@ export default {
         heading: 'Posts',
         headingDescription: 'Create and manage posts.',
     },
+    users: {
+        heading: 'Users',
+        headingDescription: 'Create and manage users.',
+    },
 } as const

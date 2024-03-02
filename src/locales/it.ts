@@ -107,6 +107,10 @@ export default {
     } as Record<BadgeRole, string>,
     posts: {
         heading: 'Articoli',
-        headingDescription: 'Crea e gestisci articoli',
+        headingDescription: 'Crea e gestisci articoli.',
+    },
+    users: {
+        heading: 'Utenti',
+        headingDescription: 'Crea e gestisci articoli utenti',
     },
 } as const;
