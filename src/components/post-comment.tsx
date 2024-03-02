@@ -27,9 +27,9 @@ const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
     const isAuthorEditor = isEditor(author);
 
     return (
-        <Card className="pt-4 px-4">
+        <Card className="pt-4 px-4" id={comment.id} >
             <div className="flex items-center justify-between mb-2 mr-2 gap-2">
-                <Link href={isAuthorEditor ? `/author/${author.id}` : '#'} className={cn("flex items-center gap-2", isAuthorEditor ? `` : 'cursor-default')}>
+                <Link href={isAuthorEditor ? `/author/${author.id}` : `#${comment.id}`} className={cn("flex items-center gap-2")}>
                     <UserAvatar user={{ name: author.name || null, image: author.image || null }} className="h-6 w-6" />
                     <CardTitle className="font-semibold">{author.name}</CardTitle>
                     {isPostAuthor && <UserBadge user={{ role: 'AUTHOR' }} />}
