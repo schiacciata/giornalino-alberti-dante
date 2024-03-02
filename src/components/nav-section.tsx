@@ -10,8 +10,6 @@ export function NavSection({ sections, item }: MobileNavProps) {
   return (
     <>
       {sections.map(async (section, index) => {
-        if (section.show && !(await section.show())) return;
-
         return (
           <nav key={index} className="hidden gap-6 md:flex">
             <div className="px-3 py-2 min-w-full">
@@ -21,8 +19,6 @@ export function NavSection({ sections, item }: MobileNavProps) {
               </h2>
               <div className="space-y-1">
                 {section.items.map(async (sectionItem) => {
-                  if (sectionItem.show && !(await sectionItem.show())) return;
-                  
                   return (
                     <div key={sectionItem.title} className="w-full">
                       {item({ item: sectionItem })}

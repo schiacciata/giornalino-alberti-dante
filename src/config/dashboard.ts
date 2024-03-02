@@ -30,9 +30,7 @@ export const getSidebar = async () => {
             title: scopedT('users'),
             href: "/dashboard/users",
             icon: "user",
-            show: async () => {
-              'use server';
-              
+            show: () => {
               if (!user) return false;
               
               return isAdmin(user);
