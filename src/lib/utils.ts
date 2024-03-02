@@ -17,7 +17,7 @@ export const randomColor = () => "#" + Math.floor(Math.random() * 0x1000000).toS
 export function formatDate(input: string | number | Date, locales?: Intl.LocalesArgument): string {
   const date = new Date(input);
 
-  return date.toLocaleDateString(locales, {
+  return date.toLocaleString(locales, {
     month: "long",
     day: "numeric",
     year: "numeric",
