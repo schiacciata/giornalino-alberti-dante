@@ -7,6 +7,7 @@ export default {
     'and': 'e',
     submit: 'Invia',
     success: 'Successo!',
+    updatedAt: 'Ultimo aggiornamento il {updatedAt}',
     homepage: {
         headingDescription: 'Leggi gli ultimi {postsNumber} post:',
         readMore: 'Leggi di più',
@@ -103,4 +104,8 @@ export default {
         EDITOR: 'Editore',
         USER: 'Utente',
     } as Record<Role, string>,
+    posts: {
+        heading: 'Articoli',
+        headingDescription: 'Crea e gestisci articoli',
+    },
 } as const;

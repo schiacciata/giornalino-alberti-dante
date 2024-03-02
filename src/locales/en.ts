@@ -7,6 +7,7 @@ export default {
     'and': 'and',
     submit: 'Submit',
     success: 'Success!',
+    updatedAt: 'Last updated on {updatedAt}',
     homepage: {
         headingDescription: 'Read the latest {postsNumber} posts:',
         readMore: 'Read more',
@@ -103,4 +104,8 @@ export default {
         EDITOR: 'Editor',
         USER: 'User',
     } as Record<Role, string>,
+    posts: {
+        heading: 'Posts',
+        headingDescription: 'Create and manage posts.',
+    },
 } as const

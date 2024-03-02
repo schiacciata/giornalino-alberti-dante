@@ -16,7 +16,8 @@ import { ReactElement } from "react"
 import { getPages } from "@/lib/queries/page"
 import { SearchParams } from "@/types"
 import { PageTable } from "@/components/pages-table/pages-table"
-import { cn } from "@/lib/utils"
+import { cn, formatDate } from "@/lib/utils"
+import { getCurrentLocale, getI18n } from "@/lib/i18n/server"
 
 export const metadata = {
   title: "Pages",
@@ -30,7 +31,9 @@ type PostsPageProps = {
 }
 
 export default async function PostsPage({ params, searchParams }: PostsPageProps) {
-  const user = await getCurrentUser()
+  const user = await getCurrentUser();
+  const locale = await getCurrentLocale();
+  const t = await getI18n();
 
   if (!user) {
     redirect(authOptions?.pages?.signIn)
@@ -46,8 +49,10 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
       published: true,
       pdfPath: true,
       authorId: true,
-    }
+      updatedAt: true,
+    },
   });
+
   if (!post) return notFound();
 
   const users = isAdmin(user) ? await db.user.findMany({
@@ -102,7 +107,9 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
             icon={post.published ? 'public' : 'private'}
           />
         </h1>
-      } text="Create and manage posts.">
+      } text={t('updatedAt', {
+        updatedAt: formatDate(post.updatedAt, locale),
+      })}>
         <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
           <PostEditDialog
             post={{ id: post.id, title: post.title, published: post.published, pdfPath: post.pdfPath, authorId: post.authorId }}
