@@ -23,7 +23,7 @@ const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
     const isCommentAuthor = user && user.id === author.id;
     const canDelete = isCommentAuthor || (user && isAdmin(user));
 
-    const isPostAuthor = user && user.id === post.authorId;
+    const isPostAuthor = author.id === post.authorId;
 
     return (
         <Card className="pt-4 px-4">
