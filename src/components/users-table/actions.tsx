@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from "react"
 import { unstable_noStore as noStore } from "next/cache"
 import { ArrowUpIcon, CheckCircledIcon, TrashIcon } from "@radix-ui/react-icons"
