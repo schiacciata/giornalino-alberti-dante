@@ -16,7 +16,15 @@ export default async function DashboardLayout({
     .map(s => {
       return {
         ...s,
-        items: s.items.filter(async (i)  => !i.show || await i.show()),
+        items: s.items
+          .filter(async (i)  => !i.show || await i.show())
+          .map(i => {
+            return {
+              ...i,
+              show: undefined,
+            }
+          }),
+        show: undefined,
       };
     });
 
