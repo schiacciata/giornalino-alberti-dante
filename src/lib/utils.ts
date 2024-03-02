@@ -38,4 +38,4 @@ export const toPascalCase = (str: string) => `${str}`
   )
   .replace(new RegExp(/\w/), s => s.toUpperCase());
 
-export const randomBool = () => Math.random() < 0.5; 
+export const randomBool = () => Math.random() < 0.5;

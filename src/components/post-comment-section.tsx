@@ -5,7 +5,7 @@ import PostInsertComment from './post-insert-comment';
 import { getScopedI18n } from '@/lib/i18n/server';
 
 interface PostCommentSectionProps {
-  post: Pick<Post, 'id'>;
+  post: Pick<Post, 'id' | 'authorId'>;
   comments: Pick<Comment & { author: Pick<User, 'id' | 'image' | 'name' | 'role'> }, "id" | "author" | "content" | 'updatedAt'>[];
 }
 
@@ -21,6 +21,7 @@ const PostCommentSection: FC<PostCommentSectionProps> = async ({ post, comments 
           comments.map(((comment, index) => (
             <PostComment
               key={index}
+              post={{ authorId: post.authorId }}
               comment={{ id: comment.id, content: comment.content, updatedAt: comment.updatedAt }}
               author={{ id: comment.author.id, image: comment.author.image, name: comment.author.name, role: comment.author.role }} />
           )))

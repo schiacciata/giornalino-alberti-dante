@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { BadgeRole } from "@/types/badge-role";
 
 export default {
     'hello': 'Hello',
@@ -103,7 +103,8 @@ export default {
         ADMIN: 'Admin',
         EDITOR: 'Editor',
         USER: 'User',
-    } as Record<Role, string>,
+        AUTHOR: 'Author',
+    } as Record<BadgeRole, string>,
     posts: {
         heading: 'Posts',
         headingDescription: 'Create and manage posts.',

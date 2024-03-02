@@ -1,22 +1,14 @@
-import { Role, User } from '@prisma/client'
 import { FC } from 'react'
 import { Badge } from './ui/badge'
 import { cn } from '@/lib/utils'
 import { getScopedI18n } from '@/lib/i18n/server'
+import { getRoleColor } from '@/lib/auth/color'
+import { BadgeRole } from '@/types/badge-role'
 
 interface UserBadgeProps {
-    user: Pick<User, 'role'>
-}
-
-const getRoleColor = (role: Role): `text-${string}-${number}` => {
-    switch (role) {
-        case 'ADMIN':
-            return 'text-red-500';
-        case 'EDITOR':
-            return 'text-yellow-500';
-        default:
-            return 'text-primary-500';
-    }
+    user: {
+        role: BadgeRole;
+    };
 }
 
 const UserBadge: FC<UserBadgeProps> = async ({ user }) => {

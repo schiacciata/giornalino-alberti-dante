@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         />
         <PostContent pages={pages} post={{ pdfPath: post.pdfPath }}/>
         <Separator/>
-        <PostCommentSection post={{ id: post.id }} comments={post.comments}/>
+        <PostCommentSection post={{ id: post.id, authorId: post.authorId }} comments={post.comments}/>
       </div>
     </Shell>
   )
