@@ -1,8 +1,6 @@
 import { Role } from "@prisma/client";
 import * as z from "zod"
 
-const roles = ['USER', 'EDITOR', 'ADMIN'] as const satisfies Role[];
-
 export const userUpdateSchema = z.object({
   name: z.optional(z.string().min(3).max(32)),
   isTwoFactorEnabled: z.optional(z.boolean()),
@@ -10,7 +8,7 @@ export const userUpdateSchema = z.object({
   password: z.optional(z.string().min(6)),
   newPassword: z.optional(z.string().min(6)),
   image: z.optional(z.string()),
-  role: z.optional(z.enum(roles)),
+  role: z.optional(z.enum(['USER', 'EDITOR', 'ADMIN'])),
 })
   .refine((data) => {
     if (data.password && !data.newPassword) {
