@@ -59,6 +59,7 @@ export default async function UsersPage({ params, searchParams }: UsersPageProps
             <Card className="w-full">
                 <CardContent>
                     <AdminEditForm user={{
+                        id: user.id,
                         email: user.email,
                         name: user.name,
                         image: user.image,

@@ -7,7 +7,7 @@ export const userUpdateSchema = z.object({
   email: z.optional(z.string().email()),
   password: z.optional(z.string().min(6)),
   newPassword: z.optional(z.string().min(6)),
-  image: z.optional(z.string()),
+  image: z.optional(z.string().url()),
   role: z.optional(z.enum(['USER', 'EDITOR', 'ADMIN'])),
 })
   .refine((data) => {
