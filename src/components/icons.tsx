@@ -49,6 +49,8 @@ import {
     BellPlus,
     Lock,
     Unlink,
+    Users,
+    ShieldPlus,
 } from "lucide-react"
 
 export const Icons = {
@@ -201,6 +203,8 @@ export const Icons = {
         </svg>
     ),
     unlink: Unlink,
+    users: Users,
+    role: ShieldPlus,
 }
 
 export type TIcon = keyof typeof Icons;

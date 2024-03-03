@@ -36,11 +36,23 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
 import { deleteUser, updateUserRole } from "@/actions/user"
 import { Role, User } from "@prisma/client"
 import UserBadge from "../user-badge"
+import Link from "next/link"
+import { Icon } from "../icons"
 
 export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {
   return [
@@ -72,16 +84,16 @@ export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {
     {
       accessorKey: "name",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="User" />
+        <DataTableColumnHeader column={column} title="Name" />
       ),
-      cell: ({ row }) => <div className="w-[80px]">{row.getValue("name")}</div>,
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
       enableSorting: true,
       enableHiding: true,
     },
     {
       accessorKey: "role",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Title" />
+        <DataTableColumnHeader column={column} title="Role" />
       ),
       cell: ({ row }) => {
         const role = Object.values(Role).find(
@@ -91,9 +103,6 @@ export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {
         return (
           <div className="flex space-x-2">
             {role && <UserBadge user={{ role }} />}
-            <span className="max-w-[500px] truncate font-medium">
-              {row.getValue("title")}
-            </span>
           </div>
         )
       },
@@ -101,9 +110,9 @@ export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {
     {
       accessorKey: "email",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="User" />
+        <DataTableColumnHeader column={column} title="Email" />
       ),
-      cell: ({ row }) => <div className="w-[80px]">{row.getValue("email")}</div>,
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
       enableSorting: true,
       enableHiding: true,
     },
@@ -119,74 +128,103 @@ function ActionsCell({ row }: { row: Row<User> }) {
   const [isDeletePending, startDeleteTransition] = React.useTransition()
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          aria-label="Open menu"
-          variant="ghost"
-          className="flex size-8 p-0 data-[state=open]:bg-muted"
-        >
-          <DotsHorizontalIcon className="size-4" aria-hidden="true" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Roles</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup
-              value={row.original.role}
-              onValueChange={(value) => {
-                startUpdateTransition(() => {
-                  toast.promise(
-                    updateUserRole({
-                      id: row.original.id,
-                      role: value as User["role"],
-                    }),
-                    {
-                      loading: "Updating...",
-                      success: "Label updated",
-                      error: (err) => catchError(err),
-                    }
-                  )
-                })
-              }}
-            >
-              {Object.values(Role).map((role) => (
-                <DropdownMenuRadioItem
-                  key={role}
-                  value={role}
-                  className="capitalize"
-                  disabled={isUpdatePending}
-                >
-                  {role}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => {
-            startDeleteTransition(() => {
-              row.toggleSelected(false)
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            aria-label="Open menu"
+            variant="ghost"
+            className="flex size-8 p-0 data-[state=open]:bg-muted"
+          >
+            <DotsHorizontalIcon className="size-4" aria-hidden="true" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/users/${row.original.id}`}>
+              <Icon icon="edit" />
+              Edit
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>Roles</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuRadioGroup
+                value={row.original.role}
+                onValueChange={(value) => {
+                  startUpdateTransition(() => {
+                    toast.promise(
+                      updateUserRole({
+                        id: row.original.id,
+                        role: value as User["role"],
+                      }),
+                      {
+                        loading: "Updating...",
+                        success: "Label updated",
+                        error: (err) => catchError(err),
+                      }
+                    )
+                  })
+                }}
+              >
+                {Object.values(Role).map((role) => (
+                  <DropdownMenuRadioItem
+                    key={role}
+                    value={role}
+                    className="capitalize"
+                    disabled={isUpdatePending}
+                  >
+                    {role}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <DialogTrigger asChild>
+            <DropdownMenuItem>
+              Delete
+              <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+          <Button
+            size="sm"
+            onClick={() => {
+              startDeleteTransition(() => {
+                row.toggleSelected(false)
 
-              toast.promise(
-                deleteUser(row.original.id),
-                {
-                  loading: "Deleting...",
-                  success: () => "User deleted",
-                  error: (err: unknown) => catchError(err),
-                }
-              )
-            })
-          }}
-          disabled={isDeletePending}
-        >
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+                toast.promise(
+                  deleteUser(row.original.id),
+                  {
+                    loading: "Deleting...",
+                    success: () => "User deleted",
+                    error: (err: unknown) => catchError(err),
+                  }
+                )
+              })
+            }}
+            disabled={isDeletePending}>
+            Continue
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 

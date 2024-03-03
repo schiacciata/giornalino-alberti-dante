@@ -21,6 +21,7 @@ import {
   updateUserRole,
 } from "@/actions/user"
 import { Role, User } from "@prisma/client"
+import { Icon } from "../icons"
 
 export function deleteSelectedRowsAction({
   table,
@@ -87,12 +88,12 @@ export function UserTableFloatingBarContent(table: Table<User>) {
         <SelectTrigger asChild>
           <Button
             aria-label="Delete selected rows"
-            title="Status"
+            title="Role"
             variant="ghost"
             size="icon"
             className="size-7 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
           >
-            <CheckCircledIcon className="size-4" aria-hidden="true" />
+            <Icon icon="role" className="size-4 m-0" aria-hidden="true" />
           </Button>
         </SelectTrigger>
         <SelectContent align="center">

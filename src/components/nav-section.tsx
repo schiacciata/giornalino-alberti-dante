@@ -1,9 +1,12 @@
+'use client'
+
 import { NavbarSection } from "@/types/nav"
 import { Icon } from "@/components/icons"
+import React from "react";
 
 interface MobileNavProps {
   sections: NavbarSection[];
-  item: (props: any) => "" | JSX.Element;
+  item: (props: any) => "" | React.ReactElement;
 }
 
 export function NavSection({ sections, item }: MobileNavProps) {
@@ -17,13 +20,9 @@ export function NavSection({ sections, item }: MobileNavProps) {
                 {section.icon && <Icon icon={section.icon} />}
                 {section.title}
               </h2>
-              <div className="space-y-1">
+              <div className="space-y-1 w-full">
                 {section.items.map(async (sectionItem) => {
-                  return (
-                    <div key={sectionItem.title} className="w-full">
-                      {item({ item: sectionItem })}
-                    </div>
-                  )
+                  return item({ item: sectionItem, })
                 })}
               </div>
             </div>
