@@ -50,7 +50,7 @@ export default async function LoginPage() {
                 <LoginForm />
                 <p className="px-8 pt-4 text-center text-sm text-muted-foreground">
                   <Link
-                    href="/register"
+                    href="/auth/register"
                     className="hover:text-brand underline underline-offset-4"
                   >
                     {scopedT('signUp')}

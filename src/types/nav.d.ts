@@ -6,14 +6,14 @@ type NavItem = {
     href: string;
     disabled?: boolean;
     icon?: TIcon;
-    show?: () => boolean | Promise<boolean>;
+    show?: () => boolean;
 }
 
 type NavbarSection<TNavItem = NavItem> = {
     title: string;
     icon?: TIcon;
     items: TNavItem[];
-    show?: () => boolean | Promise<boolean>;
+    show?: () => boolean;
 }
 
 type SidebarNavItem = NavItem & {

@@ -57,7 +57,7 @@ export const getCountInYear = async (currentYear: number = new Date().getFullYea
 export async function getUsers(searchParams: SearchParams) {
     noStore();
     try {
-        const { page, per_page, sort, name } = searchParamsSchema.parse(searchParams)
+        const { page, per_page, sort, name, email } = searchParamsSchema.parse(searchParams)
 
         const pageAsNumber = Number(page)
         const fallbackPage =
@@ -77,6 +77,9 @@ export async function getUsers(searchParams: SearchParams) {
             where: {
                 name: {
                     contains: name,
+                },
+                email: {
+                    contains: email,
                 },
             },
             orderBy: orderBy ? [orderBy] : [

@@ -12,13 +12,13 @@ export default async function DashboardLayout({
 }: DashboardLayoutProps) {
   const sidebar = await getSidebar();
   const sections: SidebarNavSection[] = sidebar
-    .filter(async (s) => (!s.show || await s.show()))
+    .filter((s) => !s.show || s.show())
     .map(s => {
       return {
         ...s,
         items: s.items
-          .filter(async (i)  => !i.show || await i.show())
-          .map(i => {
+          .filter((i)  => !i.show || i.show())
+          .map((i) => {
             return {
               ...i,
               show: undefined,

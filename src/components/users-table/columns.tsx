@@ -86,7 +86,11 @@ export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Name" />
       ),
-      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+      cell: ({ row }) => (
+        <Link href={`/dashboard/users/${row.original.id}`}>
+          {row.getValue('name')}
+        </Link>
+      ),
       enableSorting: true,
       enableHiding: true,
     },
@@ -160,7 +164,7 @@ function ActionsCell({ row }: { row: Row<User> }) {
                       }),
                       {
                         loading: "Updating...",
-                        success: "Label updated",
+                        success: "Role updated",
                         error: (err) => catchError(err),
                       }
                     )

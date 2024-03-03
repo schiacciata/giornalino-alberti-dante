@@ -4,7 +4,6 @@ import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { useState, useTransition } from "react";
-import { redirect, useSearchParams } from "next/navigation";
 import * as z from "zod"
 
 import { cn } from "@/lib/utils"
@@ -23,6 +22,7 @@ import { register } from "@/actions/auth";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import Social from "./social"
+import { useRouter } from "next/router";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -30,6 +30,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, startTransition] = useTransition();
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
@@ -49,7 +50,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
                 .then((data) => {
                     setError(data.error);
                     setSuccess(data.success);
-                    redirect('/');
+                    router.push('/auth/login');
                 });
         });
     };
