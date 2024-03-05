@@ -7,8 +7,10 @@ import { Providers } from "@/lib/providers"
 import { RootLayoutProps } from '@/types/layout'
 import { Toaster } from "sonner"
 import GitHashIndicator from '@/components/git-hash-indicator'
+import { absoluteUrl } from '@/lib/utils'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(absoluteUrl('')),
   title: {
     default: siteConfig.title,
     template: `${siteConfig.title} | %s`

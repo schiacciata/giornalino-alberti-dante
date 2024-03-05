@@ -5,7 +5,7 @@ import { getCurrentUser } from '@/lib/auth/user'
 import { isAdmin } from '@/lib/auth/roles';
 import { env } from '@/env.mjs';
 import Link from 'next/link';
-import config from '@/config';
+import github from '@/config/github';
 import { buttonVariants } from '@/components/ui/button';
 import { Icon } from './icons';
 
@@ -20,7 +20,7 @@ const GitHashIndicator: FC<GitHashIndicatorProps> = async ({}) => {
     const hash = env.VERCEL_GIT_COMMIT_SHA;
 
     return <center>
-            <Link href={`https://github.com/${config.github.repo}/commit/${hash}`} className={buttonVariants({ variant: 'link', className: 'italic' })}>
+            <Link href={`https://github.com/${github.repo}/commit/${hash}`} className={buttonVariants({ variant: 'link', className: 'italic' })}>
                 <Icon icon='github'/>
                 <kbd>{hash}</kbd>
             </Link>

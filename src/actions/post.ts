@@ -73,34 +73,25 @@ export const likePost = async (formData: postLikeFormData) => {
 
 export const editPost = async (formData: FormData) => {
     const user = await getCurrentUser();
-    if (!user) return Promise.reject('Not authenticated');
+    if (!user) return { error: 'Not authenticated' };
 
     const data = Object.fromEntries(formData);
     const body = postPatchSchema.parse(data);
 
-    if (!body.id) return Promise.reject('No post id');
-    const pdfFile: File | undefined = ((body.pdfFile?.size || 0) > 0 ? body.pdfFile : undefined);
+    if (!body.id) return { error: 'No post id' };
     
     const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
     const updatedFields = Object
         .keys(body)
         .filter((k) => protectedFields.includes(k));
 
-    if (updatedFields.length > 0 && !isAdmin(user)) return Promise.reject('You can\'t modify protected fields');
-    const pdfPath = pdfFile?.name ? `/pdfs/${pdfFile.name}` : undefined;
-
-    const uploadOK = (pdfFile && pdfPath) ? await uploadToGithub({
-        path: `public${pdfPath}`,
-        content: await pdfFile.arrayBuffer(),
-    }) : true;
-
-    if (!uploadOK) return Promise.reject('Could not upload pdf file');
+    if (updatedFields.length > 0 && !isAdmin(user)) return { error: 'You can\'t edit protected fields' };
 
     const post = await db.post.update({
         data: {
             title: body.title,
             published: body.published,
-            pdfPath: pdfPath,
+            pdfPath: body.pdfPath,
             authorId: body.authorId,
         },
         where: {
@@ -125,7 +116,7 @@ export const editPost = async (formData: FormData) => {
     revalidatePath('/blog');
     revalidatePath(`/blog/${post.id}`);
 
-    return post;
+    return { success: `${data.title} è stato modificato` };
 }
 
 export async function deletePost(postId: string) {

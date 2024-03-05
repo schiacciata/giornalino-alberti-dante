@@ -14,6 +14,7 @@ export function NavbarItem({ item }: NavbarItemProps) {
     return (
         <Link
             href={item.disabled ? "#" : item.href}
+            target={item._blank ? '_blank': '_self'}
             className={cn(
                 "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
                 item.href.startsWith(`/${segment}`)

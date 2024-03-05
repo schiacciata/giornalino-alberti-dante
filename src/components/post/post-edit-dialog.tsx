@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { editPost } from "@/actions/post";
 import { toast } from "sonner";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 // @ts-ignore
 import { useFormStatus } from 'react-dom';
@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PostDeletePDFButton from "./delete-pdf-button";
 import { Separator } from "@/components/ui/separator";
 import { UserAvatar } from "../user/user-avatar";
+import { uploadToGithub } from "@/lib/files";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
@@ -31,39 +32,53 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isPublished, setIsPublished] = useState<boolean>(post.published);
     const [file, setFile] = useState<File | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const { data: session } = useSession();
+    const [isLoading, startTransition] = useTransition();
 
     const isUserAdmin = session && isAdmin(session.user);
 
     const onSubmit = async (formData: FormData) => {
-        setIsOpen(false);
-        setIsLoading(true);
-
-        formData.set('published', isPublished.toString());
         if (file && file.size > 0 && file.type === 'application/pdf') {
-            formData.set('pdfFile', file);
-            //formData.append('pdfPath', file.name);
+            const pdfPath = `/pdfs/${file.name}`;
+
+            const uploadResult = await uploadToGithub({
+                path: `public${pdfPath}`,
+                content: await file.arrayBuffer(),
+            })
+
+            if (!uploadResult) {
+                return toast.error(`Could not upload "${file.name}"`);
+            }
+
+            toast.success(`"${file.name}" uploaded`);
+            
+            formData.set('pdfPath', pdfPath);
+            formData.delete('pdfFile');
         }
 
-        toast.promise(editPost(formData), {
-            loading: 'Loading...',
-            success: (data) => {
-              return `${data.title} è stato modificato`;
-            },
-            error: (error) => {
-                return error.message;
-            },
+        startTransition(() => {
+            formData.set('published', isPublished.toString());
+
+            editPost(formData)
+                .then((data) => {
+                    if (data.error) {
+                        toast.error(data.error);
+                    }
+
+                    if (data.success) {
+                        setIsOpen(false);
+                        toast.success(data.success);
+                    }
+                })
+                .catch(() => toast.error("Something went wrong!"));
         });
-        
-        setIsLoading(false);
     }
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) return;
 
         const file = event.target.files[0];
-        if (file.size === 0 || file.type !== 'application/pdf') return; 
+        if (file.size === 0 || file.type !== 'application/pdf') return;
 
         setFile(file);
     }
@@ -139,21 +154,21 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                         Carica PDF
                                     </Label>
                                     <Input
-                                    type="file"
-                                    name="pdfFile"
-                                    id={`pdfFile`}
-                                    accept=".pdf"
-                                    form="editPost"
-                                    className="col-span-3"
-                                    onChange={handleFileChange}
+                                        type="file"
+                                        name="pdfFile"
+                                        id={`pdfFile`}
+                                        accept=".pdf"
+                                        form="editPost"
+                                        className="col-span-3"
+                                        onChange={handleFileChange}
                                     />
                                 </div>
                             )}
 
                             {isUserAdmin && (
                                 <>
-                                    <Separator/>
-                                    
+                                    <Separator />
+
                                     <div className="flex flex-col gap-y-4 p-4 border-2 border-red-500 rounded-md">
                                         <h1 className="font-bold italic">
                                             Admin
@@ -171,7 +186,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                             />
                                         </div>
                                         <div>
-                                        <Label htmlFor="authorId">
+                                            <Label htmlFor="authorId">
                                                 Author
                                             </Label>
                                             <Select
@@ -205,10 +220,10 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                         </div>
                     </div>
                 </form>
-                
+
                 <DialogFooter className="gap-y-4">
-                        {post.pdfPath && <PostDeletePDFButton post={{ id: post.id }}/>}
-                        <Button form="editPost" type="submit">Save changes</Button>
+                    {post.pdfPath && <PostDeletePDFButton post={{ id: post.id }} />}
+                    <Button form="editPost" type="submit">Save changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

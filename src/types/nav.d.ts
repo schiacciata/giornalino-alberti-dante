@@ -4,6 +4,7 @@ import { User } from "./api";
 type NavItem = {
     title: string | React.ReactElement;
     href: string;
+    _blank?: boolean;
     disabled?: boolean;
     icon?: TIcon;
 }

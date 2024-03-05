@@ -8,6 +8,7 @@ export default {
     submit: 'Invia',
     success: 'Successo!',
     updatedAt: 'Ultimo aggiornamento il {updatedAt}',
+    help: 'Aiuto',
     homepage: {
         headingDescription: 'Leggi gli ultimi {postsNumber} post:',
         readMore: 'Leggi di più',

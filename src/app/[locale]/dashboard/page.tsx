@@ -40,9 +40,9 @@ export default async function DashboardPage() {
       </p>
 
       <div className="grid md:grid-cols-3 gap-4 py-4">
-        <StatsCard header={t('dashboard.sidebar.posts')} data={postCount}/>
-        <StatsCard header={t('userMenu.users')} data={usersCount}/>
-        <StatsCard header={t('comments.heading')} data={commentsCount}/>
+        <StatsCard header={t('dashboard.sidebar.posts')} data={postCount} icon="post"/>
+        <StatsCard header={t('userMenu.users')} data={usersCount} icon="users"/>
+        <StatsCard header={t('comments.heading')} data={commentsCount} icon="message"/>
       </div>
 
       <NewUsersChart userData={userData}/>

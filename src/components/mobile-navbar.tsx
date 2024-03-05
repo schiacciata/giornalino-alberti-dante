@@ -39,6 +39,7 @@ export function MobileNav({ sections, children }: MobileNavProps) {
                   <Link
                     key={index}
                     href={item.disabled ? "#" : item.href}
+                    target={item._blank ? '_blank': '_self'}
                     className={cn(
                       "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
                       item.disabled && "cursor-not-allowed opacity-60"

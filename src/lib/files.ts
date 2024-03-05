@@ -1,9 +1,9 @@
-import config from "@/config";
+import github from "@/config/github";
 import siteConfig from "@/config/site";
 
 const committer = {
     name: siteConfig.title,
-    email: config.github.email,
+    email: github.email,
 }
 
 type GithubUploadOptions = {
@@ -12,12 +12,12 @@ type GithubUploadOptions = {
 }
 
 export async function uploadToGithub(options: GithubUploadOptions) {
-    const response = await fetch(`https://api.github.com/repos/${config.github.repo}/contents/${options.path}`, {
+    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
         method: 'PUT',
         headers: {
             'X-GitHub-Api-Version': '2022-11-28',
             "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${config.github.token}`,
+            "Authorization": `Bearer ${github.token}`,
         },
         body: JSON.stringify({
             message: `💬 Upload ${options.path}`,
@@ -34,12 +34,12 @@ type GithubGetOptions = {
 }
 
 export async function getFromGithub(options: GithubGetOptions) {
-    const response = await fetch(`https://api.github.com/repos/${config.github.repo}/contents/${options.path}`, {
+    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
         method: 'GET',
         headers: {
             'X-GitHub-Api-Version': '2022-11-28',
             "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${config.github.token}`,
+            "Authorization": `Bearer ${github.token}`,
         },
     });
 
@@ -55,12 +55,12 @@ type GithubDeleteOptions = {
 export async function deleteFromGithub(options: GithubDeleteOptions) {
     const file = await getFromGithub(options);
 
-    const response = await fetch(`https://api.github.com/repos/${config.github.repo}/contents/${options.path}`, {
+    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
         method: 'DELETE',
         headers: {
             'X-GitHub-Api-Version': '2022-11-28',
             "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${config.github.token}`,
+            "Authorization": `Bearer ${github.token}`,
         },
         body: JSON.stringify({
             message: `🔥 Delete ${options.path}`,
