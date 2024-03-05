@@ -3,7 +3,7 @@ import { Page } from "@prisma/client"
 
 import { formatDate } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
-import { PageOperations } from "@/components/page-operations"
+import { PageOperations } from "@/components/page/page-operations"
 
 interface PageItemProps {
   page: Pick<Page, "id" | "number" | "updatedAt" | "content">

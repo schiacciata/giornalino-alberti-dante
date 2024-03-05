@@ -6,7 +6,7 @@ import { isAdmin } from '@/lib/auth/roles';
 import { env } from '@/env.mjs';
 import Link from 'next/link';
 import config from '@/config';
-import { buttonVariants } from './ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Icon } from './icons';
 
 interface GitHashIndicatorProps {

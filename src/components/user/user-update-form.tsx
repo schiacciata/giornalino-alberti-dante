@@ -85,6 +85,7 @@ export function UserUpdateForm({ className, ...props }: UserUpdateFormProps) {
           <form 
             className="space-y-6" 
             onSubmit={form.handleSubmit(onSubmit)}
+            {...props}
           >
             <div className="space-y-4">
               <FormField

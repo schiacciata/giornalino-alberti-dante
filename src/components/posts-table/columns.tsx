@@ -29,7 +29,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { deletePost, editPost } from "@/actions/post"
 import { Post } from "@prisma/client"
 import { Icon } from "../icons"
-import { PostOperations } from "../post-operations"
+import { PostOperations } from "../post/post-operations"
 import { cn, formatDate } from "@/lib/utils"
 import Link from "next/link"
 

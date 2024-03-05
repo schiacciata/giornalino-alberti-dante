@@ -9,7 +9,7 @@ import '@/styles/pdf.css'
 
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
-import { PageSwitcher } from './page-switcher';
+import { PageSwitcher } from './page/page-switcher';
 import { toast } from 'sonner';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;

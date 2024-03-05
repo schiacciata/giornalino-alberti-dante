@@ -1,7 +1,7 @@
-import { PostCard } from "@/components/post-card";
+import { PostCard } from "@/components/post/post-card";
 import { db } from "@/lib/db"
 import { Header } from "@/components/header";
-import { Shell } from "@/components/shell";
+import { Shell } from "@/components/dashboard/shell";
 import { getScopedI18n } from "@/lib/i18n/server";
 
 export default async function IndexPage() {

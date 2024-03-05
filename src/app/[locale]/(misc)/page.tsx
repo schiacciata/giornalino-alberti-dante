@@ -1,5 +1,5 @@
 import { Icon } from "@/components/icons";
-import { PostCard } from "@/components/post-card";
+import { PostCard } from "@/components/post/post-card";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/lib/db"
 import Link from "next/link";

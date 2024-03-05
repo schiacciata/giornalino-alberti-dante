@@ -2,18 +2,16 @@ import { TIcon } from "@/components/icons"
 import { User } from "./api";
 
 type NavItem = {
-    title: string;
+    title: string | React.ReactElement;
     href: string;
     disabled?: boolean;
     icon?: TIcon;
-    show?: () => boolean;
 }
 
 type NavbarSection<TNavItem = NavItem> = {
-    title: string;
+    title: string | React.ReactElement;
     icon?: TIcon;
     items: TNavItem[];
-    show?: () => boolean;
 }
 
 type SidebarNavItem = NavItem & {

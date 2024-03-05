@@ -1,11 +1,11 @@
 import { FC, useState } from 'react';
 
 import { Page } from '@prisma/client'
-import { PageSwitcher } from './page-switcher';
+import { PageSwitcher } from '../page/page-switcher';
 import { Progress } from "@/components/ui/progress";
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Icon } from './icons';
-import EditorContentRender from './editor-content-render';
+import { Icon } from '../icons';
+import EditorContentRender from '../editor-content-render';
 
 interface PostContentRendererProps {
     pages: Pick<Page, 'number' | 'content'>[];

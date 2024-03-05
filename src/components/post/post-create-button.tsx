@@ -11,9 +11,9 @@ import { Icons } from "@/components/icons"
 
 import { newPost } from '@/actions/post'
 import { useI18n } from "@/lib/i18n/client";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface PostCreateButtonProps extends ButtonProps { }
 

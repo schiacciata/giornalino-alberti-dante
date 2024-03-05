@@ -22,7 +22,7 @@ import { pagePatchSchema } from "@/lib/validations/page"
 import { buttonVariants } from "@/components/ui/button"
 import { toast } from "sonner"
 import { Icons } from "@/components/icons"
-import { Badge } from './ui/badge';
+import { Badge } from '@/components/ui/badge';
 import Quill from 'quill';
 import { useSocket } from '@/lib/providers/socket';
 import { useSession } from 'next-auth/react';

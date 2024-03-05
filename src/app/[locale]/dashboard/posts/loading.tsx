@@ -1,6 +1,6 @@
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton"
 import { Header } from "@/components/header"
-import { PostCreateButton } from "@/components/post-create-button"
+import { PostCreateButton } from "@/components/post/post-create-button"
 import { getScopedI18n } from "@/lib/i18n/server"
 
 export default async function DashboardLoading() {

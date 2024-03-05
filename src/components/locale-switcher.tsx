@@ -4,7 +4,7 @@ import * as React from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useChangeLocale, useCurrentLocale } from "@/lib/i18n/client";
 import { emojis, locales } from "@/lib/i18n";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 export function LocaleSwitcher() {
     const changeLocale = useChangeLocale();

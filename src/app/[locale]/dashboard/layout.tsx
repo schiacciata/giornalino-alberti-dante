@@ -1,7 +1,6 @@
 import { getSidebar } from "@/config/dashboard"
 import { SiteHeader } from "@/components/site-header"
-import { DashboardNav } from "@/components/sidebar"
-import { SidebarNavSection } from "@/types/nav";
+import { DashboardNav } from "@/components/dashboard/sidebar"
 
 interface DashboardLayoutProps {
   children?: React.ReactNode
@@ -10,23 +9,7 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
-  const sidebar = await getSidebar();
-  const sections: SidebarNavSection[] = sidebar
-    .filter((s) => !s.show || s.show())
-    .map(s => {
-      return {
-        ...s,
-        items: s.items
-          .filter((i)  => !i.show || i.show())
-          .map((i) => {
-            return {
-              ...i,
-              show: undefined,
-            }
-          }),
-        show: undefined,
-      };
-    });
+  const sections = await getSidebar();
 
   return (
     <>

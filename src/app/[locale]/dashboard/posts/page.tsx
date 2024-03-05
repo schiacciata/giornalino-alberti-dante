@@ -2,7 +2,7 @@ import { SearchParams } from "@/types"
 import { getPosts } from "@/lib/queries/post"
 import { PostTable } from "@/components/posts-table/posts-table"
 import { Header } from "@/components/header"
-import { PostCreateButton } from "@/components/post-create-button"
+import { PostCreateButton } from "@/components/post/post-create-button"
 import { getScopedI18n } from "@/lib/i18n/server"
 
 export const metadata = {

@@ -5,8 +5,8 @@ import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
 import { Header } from "@/components/header"
-import { Shell } from "@/components/shell"
-import { PageCreateButton } from "@/components/page-create-button"
+import { Shell } from "@/components/dashboard/shell"
+import { PageCreateButton } from "@/components/page/page-create-button"
 import Link from "next/link"
 import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
@@ -64,7 +64,6 @@ export default async function UsersPage({ params, searchParams }: UsersPageProps
                         name: user.name,
                         image: user.image,
                         isTwoFactorEnabled: user.isTwoFactorEnabled,
-                        password: user.password,
                         role: user.role,
                     }} disabled={isEditingAdmin} />
                 </CardContent>

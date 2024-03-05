@@ -1,25 +1,25 @@
 'use client'
 
-import { Button, buttonVariants } from "./ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Post, User } from "@prisma/client";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { editPost } from "@/actions/post";
 import { toast } from "sonner";
 import { ChangeEvent, useState } from "react";
 import { cn } from "@/lib/utils";
 // @ts-ignore
 import { useFormStatus } from 'react-dom';
-import { Icons } from "./icons";
-import { Switch } from "./ui/switch";
+import { Icons } from "../icons";
+import { Switch } from "@/components/ui/switch";
 import { isAdmin } from "@/lib/auth/roles";
 import { useSession } from "next-auth/react"
 import { useI18n } from "@/lib/i18n/client";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import PostDeletePDFButton from "./post/delete-pdf-button";
-import { Separator } from "./ui/separator";
-import { UserAvatar } from "./user-avatar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import PostDeletePDFButton from "./delete-pdf-button";
+import { Separator } from "@/components/ui/separator";
+import { UserAvatar } from "../user/user-avatar";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,

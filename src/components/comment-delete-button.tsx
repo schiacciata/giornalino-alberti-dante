@@ -2,7 +2,7 @@
 
 import { Comment } from '@prisma/client'
 import { FC } from 'react'
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 import { Icon } from './icons';
 import { deleteComment } from '@/actions/comment'
 import { toast } from 'sonner'

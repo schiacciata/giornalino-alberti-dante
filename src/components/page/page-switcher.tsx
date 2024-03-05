@@ -2,10 +2,10 @@
 
 import { FC, useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { Icon } from './icons';
+import { Icon } from '../icons';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useI18n, useScopedI18n } from '@/lib/i18n/client';
 
 interface PageSwitcherProps {

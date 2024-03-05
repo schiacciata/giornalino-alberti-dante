@@ -1,6 +1,6 @@
 import { Icon } from "./icons"
-import { Button } from "./ui/button"
-import { UserDialog } from "./user-dialog"
+import { Button } from "@/components/ui/button"
+import { UserDialog } from "./user/user-dialog"
 import Link from "next/link"
 import authOptions from "@/lib/auth/config"
 import { auth } from "@/lib/auth";

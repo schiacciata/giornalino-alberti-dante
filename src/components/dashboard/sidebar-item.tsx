@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { SidebarNavItem } from "@/types/nav";
 import Link from "next/link";
-import { Icon } from "./icons";
+import { Icon } from "../icons";
 import { usePathname } from "next/navigation";
 
 type SidebarItemProps = {
@@ -15,7 +15,7 @@ export function SidebarItem({ item }: SidebarItemProps) {
     return (
         item.href && (
           <Link href={item.disabled ? "/" : item.href}>
-            <span
+            <div
               className={cn(
                 "flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent w-full",
                 path === item.href ? "bg-accent" : "transparent",
@@ -23,8 +23,8 @@ export function SidebarItem({ item }: SidebarItemProps) {
               )}
             >
               <Icon icon={item.icon} />
-              <span>{item.title}</span>
-            </span>
+              <div>{item.title}</div>
+            </div>
           </Link>
         )
     );

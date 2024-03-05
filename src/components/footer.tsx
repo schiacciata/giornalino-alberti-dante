@@ -4,7 +4,7 @@ import linksConfig from "@/config/links"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/icons"
 import Link from "next/link"
-import { buttonVariants } from "./ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {
   return (

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import { Post } from "@prisma/client"
 import { Icon } from "./icons"
 import { useSession } from "next-auth/react"

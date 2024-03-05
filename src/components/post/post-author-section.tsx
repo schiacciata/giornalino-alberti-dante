@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { Post, User } from "@prisma/client"
-import { UserAvatar } from "./user-avatar"
+import { UserAvatar } from "../user/user-avatar"
 import { formatDate } from "@/lib/utils"
 import Link from "next/link"
-import { buttonVariants } from "./ui/button"
-import { Icon } from "./icons"
+import { buttonVariants } from "@/components/ui/button"
+import { Icon } from "../icons"
 
 interface PostAuthorSectionProps {
     author: Pick<User, 'image' | 'name' | 'id'>

@@ -8,7 +8,7 @@ import { newComment } from '@/actions/comment'
 import { toast } from 'sonner'
 import { Post } from '@prisma/client'
 import { useI18n, useScopedI18n } from '@/lib/i18n/client'
-import { Icons } from './icons'
+import { Icons } from '../icons'
 
 interface PostInsertCommentProps {
     post: Pick<Post, 'id'>;

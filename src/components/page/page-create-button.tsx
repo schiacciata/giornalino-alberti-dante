@@ -11,8 +11,8 @@ import { Icons } from "@/components/icons"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { newPage } from "@/actions/page";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n/client";
 
 interface PageCreateButtonProps extends ButtonProps {

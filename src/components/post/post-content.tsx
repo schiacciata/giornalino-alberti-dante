@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 import { Page, Post } from '@prisma/client';
-import { PDFViewer } from './pdf-viewer';
+import { PDFViewer } from '../pdf-viewer';
 import { PostContentRenderer } from './post-content-renderer';
 
 interface PostContentProps {

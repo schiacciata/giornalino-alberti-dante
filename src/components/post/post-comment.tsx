@@ -1,15 +1,15 @@
 import { Comment, Post, User } from '@prisma/client'
 import { FC } from 'react'
 import { Card, CardContent, CardTitle, } from "@/components/ui/card"
-import { UserAvatar } from './user-avatar'
-import { Separator } from './ui/separator'
+import { UserAvatar } from '../user/user-avatar'
+import { Separator } from '@/components/ui/separator'
 import { isAdmin, isEditor } from '@/lib/auth/roles'
 import { getCurrentUser } from '@/lib/auth/user'
-import CommentDeleteButton from './comment-delete-button'
-import { Badge } from './ui/badge'
+import CommentDeleteButton from '../comment-delete-button'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import UserBadge from './user-badge'
+import UserBadge from '../user/user-badge'
 
 interface PostCommentProps {
     comment: Pick<Comment, 'id' | 'content' | 'updatedAt'>

@@ -1,7 +1,7 @@
 import { db } from "@/lib/db"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
-import { PostCreateButton } from "@/components/post-create-button"
-import { PostItem } from "@/components/post-item"
+import { PostCreateButton } from "@/components/post/post-create-button"
+import { PostItem } from "@/components/post/post-item"
 
 export interface IndexPageProps {
 }

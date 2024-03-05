@@ -4,8 +4,8 @@ import { formatDate } from '@/lib/utils'
 import { Comment, Post } from '@prisma/client'
 import Link from 'next/link'
 import { FC } from 'react'
-import { buttonVariants } from './ui/button'
-import { Icon } from './icons'
+import { buttonVariants } from '@/components/ui/button'
+import { Icon } from '../icons'
 import { useI18n } from '@/lib/i18n/client'
 
 interface PostCardProps {

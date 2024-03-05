@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import { Badge } from './ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { getRoleColor } from '@/lib/auth/color'
 import { BadgeRole } from '@/types/badge-role'

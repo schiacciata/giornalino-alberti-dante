@@ -3,7 +3,7 @@ import { Post } from "@prisma/client"
 
 import { formatDate } from "@/lib/utils"
 import { Skeleton } from "@/components/ui/skeleton"
-import { PostOperations } from "@/components/post-operations"
+import { PostOperations } from "@/components/post/post-operations"
 
 interface PostItemProps {
   post: Pick<Post, "id" | "title" | "published" | "createdAt" | "pdfPath">

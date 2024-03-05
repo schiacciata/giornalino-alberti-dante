@@ -1,7 +1,7 @@
 import { db } from "@/lib/db"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
-import { PageCreateButton } from "@/components/page-create-button"
-import { PageItem } from "@/components/page-item"
+import { PageCreateButton } from "@/components/page/page-create-button"
+import { PageItem } from "@/components/page/page-item"
 
 export interface IndexPageProps {
     params: {

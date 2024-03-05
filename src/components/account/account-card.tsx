@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Card, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Account } from '@prisma/client'
 import { toPascalCase } from '@/lib/utils'
 import { Icon } from '../icons'

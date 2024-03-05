@@ -7,38 +7,40 @@ export const getSidebar = async () => {
   const user = await getCurrentUser();
   const scopedT = await getScopedI18n('dashboard.sidebar');
 
+  const mainSection: SidebarNavSection = {
+    title: '',
+    items: [
+      {
+        title: scopedT('overview'),
+        href: '/dashboard',
+        icon: 'home'
+      },
+    ],
+  };
+
+  const menuSection: SidebarNavSection = {
+    title: 'Menu',
+    items: [
+      {
+        title: scopedT('posts'),
+        href: "/dashboard/posts",
+        icon: "post",
+      },
+    ],
+  };
+
+  if (user && isAdmin(user)) {
+    menuSection.items.push({
+      title: scopedT('users'),
+      href: "/dashboard/users",
+      icon: "users",
+    });
+  };
+
   const sections: SidebarNavSection[] = [
-    {
-        title: '',
-        items: [
-            {
-                title: scopedT('overview'),
-                href: '/dashboard',
-                icon: 'home'
-            },
-        ],
-    },
-    {
-        title: 'Menu',
-        items: [
-          {
-            title: scopedT('posts'),
-            href: "/dashboard/posts",
-            icon: "post",
-          },
-          {
-            title: scopedT('users'),
-            href: "/dashboard/users",
-            icon: "users",
-            show: () => {
-              if (!user) return false;
-              
-              return isAdmin(user);
-            }
-          },
-        ],
-    },
-];
+    mainSection,
+    menuSection,
+  ];
 
   return sections;
 }

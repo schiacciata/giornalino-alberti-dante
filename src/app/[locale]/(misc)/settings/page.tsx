@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 
 import authOptions from "@/lib/auth/config"
 import { getCurrentUser } from "@/lib/auth/user"
-import { UserUpdateForm } from "@/components/user-update-form"
+import { UserUpdateForm } from "@/components/user/user-update-form"
 import Social from "@/components/auth/social"
 import { getAccountsByUserId } from "@/lib/queries/account"
 import { Account } from "@prisma/client"
