@@ -13,7 +13,7 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <SiteHeader navbarSections={sections} onlyMobile={true} />
+      <SiteHeader navbarSections={sections} />
       <div className="flex min-h-screen flex-col space-y-6 border-b">
         <div className="container grid flex-1 md:grid-cols-[200px_1fr]">
           <aside className="hidden h-screen md:flex flex-col w-[200px] border-r bg-background fixed inset-y-15 left-0 z-0">

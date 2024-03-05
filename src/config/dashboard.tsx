@@ -35,6 +35,14 @@ export const getSidebar = async () => {
       href: "/dashboard/users",
       icon: "users",
     });
+
+    menuSection.items.push({
+      title: <h2 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+          Instagram
+      </h2>,
+      href: "/dashboard/users",
+      icon: "instagram",
+    });
   };
 
   const sections: SidebarNavSection[] = [

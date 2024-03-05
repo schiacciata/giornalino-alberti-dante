@@ -1,4 +1,4 @@
-import siteConfig from "@/config/site"
+import { getNavbar } from "@/config/navbar"
 import { Navbar } from "@/components/navbar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { SessionIndicator } from "./session-indicator"
@@ -7,18 +7,21 @@ import { LocaleSwitcher } from "./locale-switcher"
 
 type SiteHeaderProps = {
   navbarSections?: NavbarSection[];
-  onlyMobile?: boolean;
 }
 
-export function SiteHeader({ navbarSections, onlyMobile } : SiteHeaderProps) {
+export async function SiteHeader({ navbarSections }: SiteHeaderProps) {
+  const navbar = await getNavbar();
+  
   return (
     <header className="bg-background sticky top-0 z-40 w-full border-b">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-        <Navbar onlyMobile={onlyMobile ?? false} sections={navbarSections ?? [{ title: '', items: siteConfig.navbar }]} />
+        <Navbar
+          sections={navbarSections ?? navbar}
+          navbar={navbar} />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
             <SessionIndicator />
-            <LocaleSwitcher/>
+            <LocaleSwitcher />
             <ThemeToggle />
           </nav>
         </div>

@@ -46,7 +46,10 @@ const NewUsersChart: FC<NewUsersChartProps> = ({ userData }) => {
                             type="number"
                             domain={[0, 'dataMax + 10']}
                         />
-                        <Tooltip />
+                        <Tooltip contentStyle={{
+                            backgroundColor: "hsl(var(--background))",
+                            borderRadius: '5px',
+                        }} />
                         <Bar dataKey="usersCreated" fill='hsl(var(--foreground))' radius={[4, 4, 0, 0]} name="Count" />
                     </BarChart>
                 </ResponsiveContainer>

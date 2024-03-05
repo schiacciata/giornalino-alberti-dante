@@ -12,11 +12,11 @@ import { NavbarItem } from "./navbar-item"
 
 interface MainNavProps {
   sections: NavbarSection[];
+  navbar?: NavbarSection[];
   children?: React.ReactNode;
-  onlyMobile: boolean;
 }
 
-export function Navbar({ sections, children, onlyMobile }: MainNavProps) {
+export function Navbar({ sections, children, navbar }: MainNavProps) {
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
   return (
@@ -29,7 +29,7 @@ export function Navbar({ sections, children, onlyMobile }: MainNavProps) {
           </span>
         </Link>
         <NavSection 
-          sections={onlyMobile ? [{ title: '', items: siteConfig.navbar }] : sections}
+          sections={navbar ?? sections}
           item={NavbarItem}
         />
       </>
