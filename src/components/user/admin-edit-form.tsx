@@ -21,11 +21,10 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { userUpdateSchema } from '@/lib/validations/user'
 import { Role, User } from '@prisma/client'
-import { editUser, } from '@/actions/user'
+import { editUser } from '@/actions/user'
 import { toast } from 'sonner'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { CardContainer } from "@/components/ui/3d-card";
 
 interface AdminEditFormProps extends React.HTMLAttributes<HTMLFormElement> {
     user: Pick<User, 'id' | 'name' | 'role' | 'email' | 'image' | 'isTwoFactorEnabled'>;
@@ -59,12 +58,17 @@ const AdminEditForm: FC<AdminEditFormProps> = ({ user, disabled, ...props }) => 
             if (disabled) return;
             editUser(user.id, values)
                 .then((data) => {
-                    setError(data?.error);
-                    setSuccess(data?.success);
+                    if (data.error) {
+                      toast.error(data.error);
+                    }
+          
+                    if (data.success) {
+                      toast.success(data.success);
+                    }
                 })
-                .catch(setError);
+                .catch(toast.error);
         });
-    }
+    };
 
     return (
         <div>

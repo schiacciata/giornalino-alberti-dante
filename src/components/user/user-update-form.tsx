@@ -36,6 +36,7 @@ import { FormSuccess } from "@/components/form-success";
 import { userUpdateSchema } from "@/lib/validations/user";
 import { updateUser } from "@/actions/user";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface UserUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 }
@@ -66,15 +67,15 @@ export function UserUpdateForm({ className, ...props }: UserUpdateFormProps) {
       updateUser(values)
         .then((data) => {
           if (data.error) {
-            setError(data.error);
+            toast.error(data.error);
           }
 
           if (data.success) {
             update();
-            setSuccess(data.success);
+            toast.success(data.success);
           }
         })
-        .catch(() => setError("Something went wrong!"));
+        .catch(() => toast.error("Something went wrong!"));
     });
   }
 
