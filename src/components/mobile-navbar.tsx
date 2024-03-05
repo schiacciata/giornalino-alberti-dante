@@ -28,8 +28,8 @@ export function MobileNav({ sections, children }: MobileNavProps) {
           <span className="font-bold">{siteConfig.title}</span>
         </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
-          {sections.map((section) => (
-            <div key={section.title}>
+          {sections.map((section, index) => (
+            <div key={index}>
               <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
                 {section.icon && <Icon icon={section.icon} />}
                 {section.title}
