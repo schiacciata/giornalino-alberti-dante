@@ -78,6 +78,7 @@ export default {
             otherUserComment: 'Impossibile eliminare il commento di un altro utente',
             success: 'Commento eliminato con successo',
         },
+        share: 'Leggi il commento di {authorName} su {postName}',
     },
     pageSwitcher: {
         title: 'Vai alla pagina',

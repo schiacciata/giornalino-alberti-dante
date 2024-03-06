@@ -1,6 +1,4 @@
-"use client"
-
-import { Comment, User } from "@prisma/client"
+import { Comment, Post, User } from "@prisma/client"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,13 +9,23 @@ import {
 import { Icon } from "@/components/icons"
 import CommentDelete from "./comment-delete"
 import CommentShare from "./comment-share"
+import { isAdmin } from "@/lib/auth/roles"
+import { getCurrentUser } from "@/lib/auth/user"
 
 interface CommentOperationsProps {
     comment: Pick<Comment, 'id' | 'content' | 'updatedAt'>
     author: Pick<User, 'name' | 'image' | 'id' | 'role'>
+    post: Pick<Post, 'title'>
 }
 
-export function CommentOperations({ comment, author }: CommentOperationsProps) {
+export async function CommentOperations({ comment, author, post }: CommentOperationsProps) {
+    const user = await getCurrentUser();
+
+    const isCommentAuthor = user && user.id === author.id;
+    const canDelete = isCommentAuthor || (user?.role && isAdmin({
+        role: user.role,
+    }));
+    
     return (
         <>
             <DropdownMenu>
@@ -31,17 +39,23 @@ export function CommentOperations({ comment, author }: CommentOperationsProps) {
                             comment={{
                                 id: comment.id,
                             }}
+                            author={{
+                                name: author.name,
+                            }}
+                            post={{
+                                title: post.title,
+                            }}
                         />
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
+                    {canDelete && (<DropdownMenuItem asChild>
                         <CommentDelete
                             comment={{
                                 id: comment.id,
                             }}
 
                         />
-                    </DropdownMenuItem>
+                    </DropdownMenuItem>)}
                 </DropdownMenuContent>
             </DropdownMenu>
 

@@ -15,26 +15,54 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Icon } from '../icons'
-import { Comment } from '@prisma/client'
+import { Comment, Post, User } from '@prisma/client'
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard'
+import site from '@/config/site'
+import useIsMobile from '@/hooks/use-is-mobile'
+import { useI18n } from '@/lib/i18n/client'
 
 interface CommentShareProps {
     comment: Pick<Comment, 'id'>;
+    author: Pick<User, 'name'>;
+    post: Pick<Post, 'title'>;
 }
 
-const CommentShare: FC<CommentShareProps> = ({ comment }) => {
+const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick }) => {
+    return (
+        <Button variant="outline" className='w-full' onClick={onClick}>
+            <Icon icon="share" />
+            Share
+        </Button>
+    )
+}
+
+const CommentShare: FC<CommentShareProps> = ({ comment, author, post }) => {
+    const t = useI18n();
     const [, copyToClipboard] = useCopyToClipboard();
+    const { isMobile } = useIsMobile();
 
     const { origin, pathname } = window.location;
     const commentUrl = `${origin}${pathname}#${comment.id}`;
 
+    const shareData: ShareData = {
+        url: commentUrl,
+        title: site.title,
+        text: t('comments.share', {
+            authorName: author.name,
+            postName: post.title,
+        })
+    };
+
+    if (navigator.canShare(shareData) && isMobile) {
+        return (
+            <ShareButton onClick={() => navigator.share(shareData)}/>
+        )
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className='w-full'>
-                    <Icon icon="share" />
-                    Share
-                </Button>
+                <ShareButton />
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
@@ -54,7 +82,9 @@ const CommentShare: FC<CommentShareProps> = ({ comment }) => {
                             readOnly
                         />
                     </div>
-                    <Button type="submit" size="sm" className="px-3" onClick={() => copyToClipboard(commentUrl)}>
+                    <Button type="submit" size="sm" className="px-3" onClick={() => {
+                        copyToClipboard(commentUrl);
+                    }}>
                         <span className="sr-only">Copy</span>
                         <Icon icon='copy' className='m-0' />
                     </Button>

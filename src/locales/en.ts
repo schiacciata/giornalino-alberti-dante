@@ -78,6 +78,7 @@ export default {
             otherUserComment: 'Can\'t delete other user\'s comment',
             success: 'Comment successfully deleted',
         },
+        share: 'Read {authorName}\'s comment on {postName}',
     },
     pageSwitcher: {
         title: 'Go to Page',

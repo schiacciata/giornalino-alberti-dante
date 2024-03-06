@@ -13,7 +13,7 @@ interface UserBadgeProps {
     };
 }
 
-const UserBadge: FC<UserBadgeProps> = async ({ user }) => {
+const UserBadge: FC<UserBadgeProps> = ({ user }) => {
     const t = useScopedI18n('roles');
 
     return (

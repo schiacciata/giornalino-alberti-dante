@@ -3,8 +3,7 @@ import { FC } from 'react'
 import { Card, CardContent, CardTitle, } from "@/components/ui/card"
 import { UserAvatar } from '../user/user-avatar'
 import { Separator } from '@/components/ui/separator'
-import { isAdmin, isEditor } from '@/lib/auth/roles'
-import { getCurrentUser } from '@/lib/auth/user'
+import { isEditor } from '@/lib/auth/roles'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import UserBadge from '../user/user-badge'
@@ -13,15 +12,10 @@ import { CommentOperations } from '../comment/comment-operations'
 interface PostCommentProps {
     comment: Pick<Comment, 'id' | 'content' | 'updatedAt'>
     author: Pick<User, 'name' | 'image' | 'id' | 'role'>
-    post: Pick<Post, 'authorId'>
+    post: Pick<Post, 'authorId' | 'title'>
 }
 
 const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
-    const user = await getCurrentUser();
-
-    const isCommentAuthor = user && user.id === author.id;
-    const canDelete = isCommentAuthor || (user && isAdmin(user));
-
     const isPostAuthor = author.id === post.authorId;
     const isAuthorEditor = isEditor(author);
 
@@ -45,7 +39,11 @@ const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
                         name: author.name,
                         image: author.image,
                         role: author.role,
-                    }} />
+                    }}
+                    post={{
+                        title: post.title,
+                    }}
+                />
             </div>
             <p className="text-gray-500 text-sm mb-2">{comment.updatedAt.toLocaleString()}</p>
             <Separator />
