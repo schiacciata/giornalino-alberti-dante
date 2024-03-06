@@ -4,7 +4,7 @@ import { Shell } from "@/components/dashboard/shell";
 import { notFound } from "next/navigation";
 import { PostAuthorSection } from "@/components/post/post-author-section";
 import { getScopedI18n } from "@/lib/i18n/server";
-import { LikePostButton } from "@/components/like-post-button";
+import { LikePostButton } from "@/components/post/like-post-button";
 import { PostContent } from "@/components/post/post-content";
 import PostCommentSection from "@/components/post/post-comment-section";
 import { Separator } from "@/components/ui/separator";

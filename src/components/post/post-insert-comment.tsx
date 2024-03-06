@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState } from 'react'
+import { FC, useTransition } from 'react'
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from '@/components/ui/button'
@@ -16,23 +16,23 @@ interface PostInsertCommentProps {
 
 const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
     const t = useI18n();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, startTransition] = useTransition();
     const scopedT = useScopedI18n('comments');
 
     const handleCommentSubmit = async (formData: FormData) => {
-        setIsLoading(true);
+        startTransition(() => {
+            newComment(formData)
+            .then((data) => {
+                if (data.error) {
+                    toast.error(data.error);
+                }
 
-        toast.promise(newComment(formData), {
-            loading: 'Loading...',
-            success: (data) => {
-                return data.message;
-            },
-            error: (error) => {
-                return error.message;
-            },
-        });
-
-        setIsLoading(false);
+                if (data.success) {
+                    toast.success(data.success);
+                }
+            })
+            .catch(() => toast.error(t('errors.general')));
+        })
     };
 
     return (<form

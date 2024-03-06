@@ -70,7 +70,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                         toast.success(data.success);
                     }
                 })
-                .catch(() => toast.error("Something went wrong!"));
+                .catch(() => toast.error(t('errors.general')));
         });
     }
 

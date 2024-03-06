@@ -31,12 +31,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/form/form-error";
+import { FormSuccess } from "@/components/form/form-success";
 import { userUpdateSchema } from "@/lib/validations/user";
 import { updateUser } from "@/actions/user";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useI18n } from '@/lib/i18n/client'
 
 interface UserUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 }
@@ -44,6 +45,7 @@ interface UserUpdateFormProps extends React.HTMLAttributes<HTMLFormElement> {
 type FormData = z.infer<typeof userUpdateSchema>
 
 export function UserUpdateForm({ className, ...props }: UserUpdateFormProps) {
+  const t = useI18n();
   const user = useCurrentUser();
 
   const [error, setError] = useState<string | undefined>();
@@ -75,7 +77,7 @@ export function UserUpdateForm({ className, ...props }: UserUpdateFormProps) {
             toast.success(data.success);
           }
         })
-        .catch(() => toast.error("Something went wrong!"));
+        .catch(() => toast.error(t('errors.general')));
     });
   }
 

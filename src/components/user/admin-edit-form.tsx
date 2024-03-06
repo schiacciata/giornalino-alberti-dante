@@ -17,8 +17,8 @@ import {
     FormDescription,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/form/form-error";
+import { FormSuccess } from "@/components/form/form-success";
 import { userUpdateSchema } from '@/lib/validations/user'
 import { Role, User } from '@prisma/client'
 import { editUser } from '@/actions/user'

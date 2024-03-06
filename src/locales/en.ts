@@ -114,4 +114,10 @@ export default {
         heading: 'Users',
         headingDescription: 'Create and manage users.',
     },
+    likes: {
+        like: 'Like',
+        liked: 'Liked',
+        unliked: 'Unliked',
+        success: 'Successfully {liked} post',
+    },
 } as const

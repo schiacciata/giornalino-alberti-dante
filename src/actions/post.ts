@@ -8,6 +8,7 @@ import { notifications } from '@/lib/notifications';
 import { isAdmin } from '@/lib/auth/roles';
 import { uploadToGithub } from '@/lib/files';
 import { deleteFromGithub } from '@/lib/files';
+import { getI18n } from '@/lib/i18n/server';
 
 export const newPost = async (formData: FormData) => {
     const user = await getCurrentUser();
@@ -34,8 +35,9 @@ export const newPost = async (formData: FormData) => {
 }
 
 export const likePost = async (formData: postLikeFormData) => {
+    const t = await getI18n();
     const user = await getCurrentUser();
-    if (!user) return Promise.reject('Not authenticated');
+    if (!user) return { error: t('errors.unauthenticated') };
 
     const body = postLikeSchema.parse({
         id: formData.id,
@@ -65,10 +67,9 @@ export const likePost = async (formData: postLikeFormData) => {
         })
     }
     
-    return {
-        ...post,
-        liked: body.liked
-    };
+    return { success: t('likes.success', {
+        liked: body.liked ? t('likes.liked') : t('likes.unliked'),
+    }) };
 }
 
 export const editPost = async (formData: FormData) => {

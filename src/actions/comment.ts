@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 export const newComment = async (formData: FormData) => {
     const t = await getI18n();
     const user = await getCurrentUser();
-    if (!user || !user.id) return Promise.reject(t('errors.unauthenticated'));
+    if (!user || !user.id) return { error: t('errors.unauthenticated') };
 
     const data = Object.fromEntries(formData);
     const body = commentCreateSchema.parse(data);
@@ -46,14 +46,14 @@ export const newComment = async (formData: FormData) => {
       body: `${user.name}: "${notificationContent}"`
     })
 
-    return { message: t('comments.insert.success'), };
+    return { success: t('comments.insert.success'), };
 }
 
 export async function deleteComment(commentId: string) {
     const t = await getI18n();
 
     const user = await getCurrentUser();
-    if (!user) return Promise.reject(t('errors.unauthenticated'));
+    if (!user) return { error: t('errors.unauthenticated') };
 
     const comment = await db.comment.findUnique({
       where: {
@@ -66,11 +66,11 @@ export async function deleteComment(commentId: string) {
     });
   
     if (!comment) {
-      return Promise.reject(t('comments.delete.notFound'));
+      return { error: t('comments.delete.notFound') };
     }
   
     if (user.id !== comment.authorId && !isAdmin(user)) {
-      return Promise.reject(t('comments.delete.otherUserComment'));
+      return { error: t('comments.delete.otherUserComment')};
     }
   
     await db.comment.delete({
@@ -82,5 +82,5 @@ export async function deleteComment(commentId: string) {
     revalidatePath(`/blog/${comment.postId}`);
     revalidatePath(`/dashboard/posts/${comment.postId}`);
 
-    return { message: t('comments.delete.success') };
+    return { success: t('comments.delete.success') };
 }

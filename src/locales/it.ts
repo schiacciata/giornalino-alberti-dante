@@ -114,4 +114,10 @@ export default {
         heading: 'Utenti',
         headingDescription: 'Crea e gestisci articoli utenti',
     },
+    likes: {
+        like: 'Mi piace',
+        liked: 'Mi piace',
+        unliked: 'Non mi piace',
+        success: 'Post piaciuto',
+    },
 } as const;

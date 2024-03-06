@@ -51,6 +51,8 @@ import {
     Unlink,
     Users,
     ShieldPlus,
+    Clipboard,
+    Share2,
 } from "lucide-react"
 
 export const Icons = {
@@ -258,6 +260,8 @@ export const Icons = {
             </g>
         </svg>
     ),
+    copy: Clipboard,
+    share: Share2,
 }
 
 export type TIcon = keyof typeof Icons;

@@ -5,11 +5,10 @@ import { UserAvatar } from '../user/user-avatar'
 import { Separator } from '@/components/ui/separator'
 import { isAdmin, isEditor } from '@/lib/auth/roles'
 import { getCurrentUser } from '@/lib/auth/user'
-import CommentDeleteButton from '../comment-delete-button'
-import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import UserBadge from '../user/user-badge'
+import { CommentOperations } from '../comment/comment-operations'
 
 interface PostCommentProps {
     comment: Pick<Comment, 'id' | 'content' | 'updatedAt'>
@@ -35,9 +34,18 @@ const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
                     {isPostAuthor && <UserBadge user={{ role: 'AUTHOR' }} />}
                     {author.role !== 'USER' && <UserBadge user={{ role: author.role }} />}
                 </Link>
-                {canDelete && (
-                    <CommentDeleteButton comment={{ id: comment.id }} />
-                )}
+                <CommentOperations
+                    comment={{
+                        id: comment.id,
+                        content: comment.content,
+                        updatedAt: comment.updatedAt,
+                    }}
+                    author={{
+                        id: author.id,
+                        name: author.name,
+                        image: author.image,
+                        role: author.role,
+                    }} />
             </div>
             <p className="text-gray-500 text-sm mb-2">{comment.updatedAt.toLocaleString()}</p>
             <Separator />

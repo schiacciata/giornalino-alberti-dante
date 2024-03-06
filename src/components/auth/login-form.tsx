@@ -20,8 +20,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { login } from "@/actions/auth";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+import { FormError } from "@/components/form/form-error";
+import { FormSuccess } from "@/components/form/form-success";
 import Social from "./social"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }

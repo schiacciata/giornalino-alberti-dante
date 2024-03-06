@@ -4,7 +4,7 @@ import { Page } from "@prisma/client"
 import authOptions from "@/lib/auth/config"
 import { db } from "@/lib/db"
 import { getCurrentUser } from "@/lib/auth/user"
-import { Editor } from "@/components/editor"
+import { Editor } from "@/components/editor/editor"
 import { unstable_noStore as noStore } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
