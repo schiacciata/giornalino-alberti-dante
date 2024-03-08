@@ -8,7 +8,7 @@ const variants = {
 
 export default function Template({ children }: { children: React.ReactNode }) {
     return (
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
