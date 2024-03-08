@@ -59,8 +59,8 @@ export function LikePostButton({ post }: LikePostButtonProps) {
 
   return (
     <form action={handleAction}>
-      <Button variant="link" size="icon" type="submit" disabled={isLoading} className={cn('m-0', isLiked ? 'fill-red-500' : '')}>
-        <Icon icon={getIcon()} />
+      <Button variant="link" size="icon" type="submit" disabled={isLoading} className={cn('', isLiked ? 'fill-red-500' : '')}>
+        <Icon icon={getIcon()} className='m-0' />
       </Button>
     </form>
   )
