@@ -11,9 +11,9 @@ import { Separator } from "@/components/ui/separator";
 import PostShare from "@/components/post/post-share"
 
 type BlogPostPageProps = {
-    params: {
-        postId: string;
-    }
+  params: {
+    postId: string;
+  }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -65,15 +65,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <Shell className="gap-1">
       <Header heading={post.title} text={scopedT('headingDescription')}>
         <div>
-        <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }}/>
-        <PostShare
+          <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }} />
+          <PostShare
             author={{
-                name: post.author.name,
+              name: post.author.name,
             }}
             post={{
-                title: post.title,
+              title: post.title,
             }}
-        />
+          />
         </div>
       </Header>
 
@@ -82,9 +82,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           author={{ image: author.image, name: author.name, id: author.id }}
           post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
         />
-        <PostContent pages={pages} post={{ pdfPath: post.pdfPath }}/>
-        <Separator/>
-        <PostCommentSection post={{ id: post.id, authorId: post.authorId, title: post.title }} comments={post.comments}/>
+        <PostContent pages={pages} post={{ pdfPath: post.pdfPath }} />
+        <Separator />
+        <PostCommentSection post={{ id: post.id, authorId: post.authorId, title: post.title }} comments={post.comments} />
       </div>
     </Shell>
   )

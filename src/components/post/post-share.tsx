@@ -34,7 +34,7 @@ const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick 
     )
 }
 
-const PostShare: FC<PostShareProps> = ({ post, author, post }) => {
+const PostShare: FC<PostShareProps> = ({ post, author, }) => {
     const t = useI18n();
     const [, copyToClipboard] = useCopyToClipboard();
     const { isMobile } = useIsMobile();
