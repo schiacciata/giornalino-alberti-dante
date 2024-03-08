@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import { Post } from "@prisma/client"
-import { Icon } from "../icons"
+import { Icon, TIcon } from "../icons"
 import { useSession } from "next-auth/react"
 import { likePost } from "@/actions/post"
 import { toast } from "sonner"
@@ -51,26 +51,16 @@ export function LikePostButton({ post }: LikePostButtonProps) {
     })
   }
 
+  const getIcon = (): TIcon => {
+    if (isLoading) return 'spinner';
+
+    return 'heart';
+  }
+
   return (
     <form action={handleAction}>
-      <Button variant="outline" size="icon" type="submit" disabled={isLoading} className={cn('m-0', isLiked ? 'fill-red-500' : '')}>
-        {isLoading ?
-          <>
-            <Icon icon="spinner" />
-          </>
-          :
-          <>
-            {isLiked ?
-              <>
-                <Icon icon="heart" />
-              </>
-              :
-              <>
-                <Icon icon="heart" />
-              </>
-            }
-          </>
-        }
+      <Button variant="link" size="icon" type="submit" disabled={isLoading} className={cn('m-0', isLiked ? 'fill-red-500' : '')}>
+        <Icon icon={getIcon()} />
       </Button>
     </form>
   )

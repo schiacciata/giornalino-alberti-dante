@@ -29,7 +29,7 @@ interface PostShareProps {
 const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick }) => {
     return (
         <Button variant="outline" size="icon" onClick={onClick}>
-            <Icon icon="share" className='m-0' />
+            <Icon icon="link" className='m-0' />
         </Button>
     )
 }

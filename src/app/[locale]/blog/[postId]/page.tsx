@@ -64,7 +64,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <Shell className="gap-1">
       <Header heading={post.title} text={scopedT('headingDescription')}>
-        <div>
+        <div className="inline-grid grid-rows-1 gap-2">
           <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }} />
           <PostShare
             author={{
