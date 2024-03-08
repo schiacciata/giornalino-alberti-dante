@@ -67,9 +67,7 @@ export const likePost = async (formData: postLikeFormData) => {
         })
     }
     
-    return { success: t('likes.success', {
-        liked: body.liked ? t('likes.liked') : t('likes.unliked'),
-    }) };
+    return { success: body.liked ? t('likes.successLiked') : t('likes.successUnliked') };
 }
 
 export const editPost = async (formData: FormData) => {

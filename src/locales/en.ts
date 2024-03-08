@@ -120,6 +120,7 @@ export default {
         like: 'Like',
         liked: 'Liked',
         unliked: 'Unliked',
-        success: 'Successfully {liked} post',
+        successLike: 'Successfully liked post',
+        successUnike: 'Successfully unliked post',
     },
 } as const
