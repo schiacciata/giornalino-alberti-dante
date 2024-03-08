@@ -28,7 +28,7 @@ interface PostShareProps {
 
 const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick }) => {
     return (
-        <Button Button variant="outline" size="icon" onClick={onClick}>
+        <Button variant="outline" size="icon" onClick={onClick}>
             <Icon icon="share" className='m-0' />
         </Button>
     )
@@ -53,7 +53,7 @@ const PostShare: FC<PostShareProps> = ({ post, author, }) => {
 
     if (navigator.canShare(shareData) && isMobile) {
         return (
-            <ShareButton onClick={() => navigator.share(shareData)}/>
+            <ShareButton onClick={() => navigator.share(shareData)} />
         )
     }
 
