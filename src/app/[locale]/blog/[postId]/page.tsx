@@ -8,7 +8,7 @@ import { LikePostButton } from "@/components/post/like-post-button";
 import { PostContent } from "@/components/post/post-content";
 import PostCommentSection from "@/components/post/post-comment-section";
 import { Separator } from "@/components/ui/separator";
-import CommentShare from "./comment-share"
+import PostShare from "@/components/post/post-share"
 
 type BlogPostPageProps = {
     params: {
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <Header heading={post.title} text={scopedT('headingDescription')}>
         <div>
         <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }}/>
-        <CommentShare
+        <PostShare
             author={{
                 name: post.author.name,
             }}
