@@ -121,6 +121,6 @@ export default {
         liked: 'Mi piace',
         unliked: 'Non mi piace',
         successLiked: 'Post piaciuto',
-        successUniked: 'Rimosso mi piace con successo',
+        successUnliked: 'Rimosso mi piace con successo',
     },
 } as const;
