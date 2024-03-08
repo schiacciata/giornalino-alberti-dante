@@ -39,7 +39,7 @@ const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
         className="mx-auto w-[50%] mt-10 grid gap-y-4 grid-cols-1"
         action={handleCommentSubmit}
     >
-        <Label htmlFor="message">{scopedT('insert.label')}</Label>
+        <Label htmlFor="content">{scopedT('insert.label')}</Label>
         <Textarea placeholder={scopedT('insert.placeholder')} id="content" name='content' />
 
         <input
