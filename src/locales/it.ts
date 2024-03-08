@@ -120,7 +120,7 @@ export default {
         like: 'Mi piace',
         liked: 'Mi piace',
         unliked: 'Non mi piace',
-        successLike: 'Post piaciuto',
-        successUnike: 'Rimosso mi piace con successo',
+        successLiked: 'Post piaciuto',
+        successUniked: 'Rimosso mi piace con successo',
     },
 } as const;
