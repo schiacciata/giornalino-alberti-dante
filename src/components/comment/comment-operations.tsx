@@ -25,7 +25,7 @@ export async function CommentOperations({ comment, author, post }: CommentOperat
     const canDelete = isCommentAuthor || (user?.role && isAdmin({
         role: user.role,
     }));
-    
+
     return (
         <>
             <DropdownMenu>
@@ -47,15 +47,18 @@ export async function CommentOperations({ comment, author, post }: CommentOperat
                             }}
                         />
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    {canDelete && (<DropdownMenuItem asChild>
-                        <CommentDelete
-                            comment={{
-                                id: comment.id,
-                            }}
+                    {canDelete && (<>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                            <CommentDelete
+                                comment={{
+                                    id: comment.id,
+                                }}
 
-                        />
-                    </DropdownMenuItem>)}
+                            />
+                        </DropdownMenuItem>
+                    </>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
 
