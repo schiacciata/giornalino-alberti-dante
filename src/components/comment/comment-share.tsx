@@ -30,7 +30,7 @@ interface CommentShareProps {
 const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick }) => {
     return (
         <Button variant="outline" className='w-full' onClick={onClick}>
-            <Icon icon="share" />
+            <Icon icon="share2" />
             Share
         </Button>
     )

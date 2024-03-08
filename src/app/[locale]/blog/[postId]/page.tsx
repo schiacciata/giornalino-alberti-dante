@@ -8,6 +8,7 @@ import { LikePostButton } from "@/components/post/like-post-button";
 import { PostContent } from "@/components/post/post-content";
 import PostCommentSection from "@/components/post/post-comment-section";
 import { Separator } from "@/components/ui/separator";
+import CommentShare from "./comment-share"
 
 type BlogPostPageProps = {
     params: {
@@ -63,7 +64,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <Shell className="gap-1">
       <Header heading={post.title} text={scopedT('headingDescription')}>
+        <div>
         <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }}/>
+        <CommentShare
+            author={{
+                name: post.author.name,
+            }}
+            post={{
+                title: post.title,
+            }}
+        />
+        </div>
       </Header>
 
       <div className="grid grid-cols-1 gap-y-4">

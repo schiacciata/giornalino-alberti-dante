@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react"
 import { likePost } from "@/actions/post"
 import { toast } from "sonner"
 import { useI18n } from "@/lib/i18n/client"
+import { cn } from "@/lib/utils";
 
 interface LikePostButtonProps {
   post: Pick<Post, 'id' | 'likesUserIDs'>
@@ -52,23 +53,20 @@ export function LikePostButton({ post }: LikePostButtonProps) {
 
   return (
     <form action={handleAction}>
-      <Button type="submit" disabled={isLoading} className={isLiked ? 'bg-red-500' : ''}>
+      <Button variant="outline" size="icon" type="submit" disabled={isLoading} className={cn('m-0', isLiked ? 'fill-red-500' : '')}>
         {isLoading ?
           <>
             <Icon icon="spinner" />
-            Loading
           </>
           :
           <>
             {isLiked ?
               <>
                 <Icon icon="heart" />
-                Liked
               </>
               :
               <>
                 <Icon icon="heart" />
-                Like
               </>
             }
           </>

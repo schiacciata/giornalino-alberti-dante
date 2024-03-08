@@ -110,6 +110,7 @@ export default {
     posts: {
         heading: 'Articoli',
         headingDescription: 'Crea e gestisci articoli.',
+        share: 'Leggi {postName}, scritto da {authorName}',
     },
     users: {
         heading: 'Utenti',

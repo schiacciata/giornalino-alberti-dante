@@ -110,6 +110,7 @@ export default {
     posts: {
         heading: 'Posts',
         headingDescription: 'Create and manage posts.',
+        share: 'Read {postName}, by {authorName}',
     },
     users: {
         heading: 'Users',
