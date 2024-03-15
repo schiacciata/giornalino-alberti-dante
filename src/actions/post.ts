@@ -79,7 +79,7 @@ export const editPost = async (formData: FormData) => {
 
     if (!body.id) return { error: 'No post id' };
     
-    const protectedFields: (keyof typeof body | string & {})[] = ['pdfPath', 'authorId'];
+    const protectedFields: (keyof typeof body | string & {})[] = ['authorId'];
     const updatedFields = Object
         .keys(body)
         .filter((k) => protectedFields.includes(k));
