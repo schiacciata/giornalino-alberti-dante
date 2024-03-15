@@ -19,8 +19,8 @@ import { useI18n } from "@/lib/i18n/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PostDeletePDFButton from "./delete-pdf-button";
 import { Separator } from "@/components/ui/separator";
-import { UserAvatar } from "../user/user-avatar";
 import { uploadToGithub } from "@/lib/files";
+import filesConfig from "@/config/files";
 
 type PostEditDialogProps = {
     post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
@@ -39,7 +39,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
 
     const onSubmit = async (formData: FormData) => {
         if (file && file.size > 0 && file.type === 'application/pdf') {
-            const pdfPath = `/pdfs/${file.name}`;
+            const pdfPath = `/${filesConfig.pdfPath}/${file.name}`;
 
             const uploadResult = await uploadToGithub({
                 path: `public${pdfPath}`,

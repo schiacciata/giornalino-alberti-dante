@@ -19,7 +19,10 @@ export const postPatchSchema = z.object({
     //.refine((file) => file.size <= 4 * 1024 * 1024, 'File size must be less than 4MB')
     //.refine((file) => file.type === 'application/pdf', 'File type must be pdf')
     .optional(),
-  pdfPath: z.string().optional(),
+  pdfPath: z
+    .string()
+    .regex(/^\/pdfs\/(?:gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)_(?:\d{4})\.pdf$/)
+    .optional(),
   published: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
   authorId: z.string().optional(),
 })
