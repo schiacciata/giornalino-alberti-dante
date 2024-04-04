@@ -36,6 +36,8 @@ const ShareButton: FC<ButtonProps> = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 });
 
+ShareButton.displayName = 'ShareButton';
+
 const PostShare: FC<PostShareProps> = ({ post, author, }) => {
     const t = useI18n();
     const [, copyToClipboard] = useCopyToClipboard();
