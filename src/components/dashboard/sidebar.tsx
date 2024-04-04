@@ -5,6 +5,7 @@ import { SidebarItem } from "@/components/dashboard/sidebar-item"
 import { NavSection } from "../nav-section";
 import React from "react";
 import { cn } from "@/lib/utils";
+import { AnimatePresence } from "framer-motion";
 
 interface DashboardNavProps {
   sections: SidebarNavSection[];
@@ -13,44 +14,27 @@ interface DashboardNavProps {
 export const DashboardNav = React.memo(({ sections }: DashboardNavProps) => {
   const Nav = (NavSection);
   const [showSidebar, setShowSidebar] = React.useState<boolean>(true);
-  const [hoverSidebar, setHoverSidebar] = React.useState<boolean>(true);
 
   const handleMouse = (enter: boolean) => {
-    if (showSidebar) return;
-
-    setHoverSidebar(enter);
+    setShowSidebar(enter);
   }
-
-  const show = showSidebar// || hoverSidebar;
 
   return (
     <aside
       className={cn(
         "hidden h-screen md:flex flex-col w-fit border-r bg-background fixed left-0",
-        show ? 'w-[200px]' : '',
+        showSidebar ? 'w-[200px]' : '',
       )}
       onMouseEnter={() => handleMouse(true)}
       onMouseLeave={() => handleMouse(false)}
     >
-      {show && (
+      <AnimatePresence mode="wait">
         <Nav
           sections={sections}
           item={SidebarItem}
+          iconsOnly={!showSidebar}
         />
-      )}
-
-      {/*<SidebarItem
-        item={{
-          title: '',
-          icon: 'arrowRight',
-          href: '#',
-        }}
-        onClick={() => {
-          setShowSidebar(prev => !prev);
-          setHoverSidebar(false);
-        }}
-        className="place-items-center"
-      />*/}
+      </AnimatePresence>
     </aside>
   )
 })

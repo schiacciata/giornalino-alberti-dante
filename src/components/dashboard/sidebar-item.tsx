@@ -9,9 +9,10 @@ import React from "react";
 
 type SidebarItemProps = {
   item: SidebarNavItem;
+  iconsOnly?: boolean;
 } & React.HtmlHTMLAttributes<HTMLDivElement>;
 
-export function SidebarItem({ item, ...props }: SidebarItemProps) {
+export function SidebarItem({ item, iconsOnly, ...props }: SidebarItemProps) {
   const path = usePathname();
   return (
     <div {...props}>
@@ -27,8 +28,10 @@ export function SidebarItem({ item, ...props }: SidebarItemProps) {
               item.disabled && "cursor-not-allowed opacity-80"
             )}
           >
-            <Icon icon={item.icon} />
-            <div>{item.title}</div>
+            <Icon icon={item.icon} className={cn(iconsOnly ? 'm-0' : '')} />
+            <div>
+              {!iconsOnly ? item.title : ''}
+            </div>
           </div>
         </Link>
       )}
