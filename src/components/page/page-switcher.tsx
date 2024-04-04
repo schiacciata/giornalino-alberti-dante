@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Icon } from '../icons';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
@@ -14,7 +14,7 @@ interface PageSwitcherProps {
   onPageChange: (increment: number) => void;
 }
 
-export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPageChange }) => {
+export const PageSwitcher: FC<PageSwitcherProps> = React.memo(({ pageIndex, pageCount, onPageChange }) => {
   const t = useI18n();
   const scopedT = useScopedI18n('pageSwitcher');
 
@@ -26,7 +26,7 @@ export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPa
 
   const handlePageChange = () => {
     if (selectedPage > 0 && selectedPage <= pageCount) {
-      onPageChange(selectedPage - 1);
+      onPageChange((selectedPage-pageIndex)-1);
       closeDialog();
     }
   };
@@ -81,4 +81,4 @@ export const PageSwitcher: FC<PageSwitcherProps> = ({ pageIndex, pageCount, onPa
       </Dialog>
     </>
   );
-};
+});

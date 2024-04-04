@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import { FC, forwardRef } from 'react'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -26,13 +26,15 @@ interface PostShareProps {
     author: Pick<User, 'name'>;
 }
 
-const ShareButton: FC<React.HtmlHTMLAttributes<HTMLButtonElement>> = ({ onClick }) => {
+type ButtonProps = React.HtmlHTMLAttributes<HTMLButtonElement>
+
+const ShareButton: FC<ButtonProps> = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
     return (
-        <Button variant="link" size="icon" onClick={onClick}>
+        <Button ref={ref} variant="link" size="icon" {...props}>
             <Icon icon="share" className='m-0' />
         </Button>
-    )
-}
+    );
+});
 
 const PostShare: FC<PostShareProps> = ({ post, author, }) => {
     const t = useI18n();

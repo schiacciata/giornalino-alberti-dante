@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { pdfjs, Document, Page } from 'react-pdf';
 import { Progress } from "@/components/ui/progress"
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -31,14 +31,19 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
   const [numPages, setNumPages] = useState<number>(0);
   const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>();
-
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const [renderedPageIndex, setRenderedPageIndex] = useState<number | null>(null);
+
+  const isLoading = renderedPageIndex !== pageIndex;
 
   const handlePageChange = (increment: number) => {
-    const newPageIndex = pageIndex + increment;
-    if (newPageIndex >= 0 && newPageIndex < numPages) {
-      setPageIndex(newPageIndex);
-    }
+    setPageIndex((prevPageIndex) => {
+      const newPageIndex = prevPageIndex + increment;
+      if (newPageIndex >= 0 && newPageIndex < numPages) {
+        return newPageIndex;
+      }
+      return prevPageIndex;
+    });
   };
 
   const onResize = useCallback<ResizeObserverCallback>((entries) => {
@@ -56,7 +61,6 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
   }
 
   function onError(error: Error): void {
-    console.log('h')
     toast.error(error.message);
   }
 
@@ -66,15 +70,32 @@ export const PDFViewer: FC<PDFViewerProps> = ({ path }) => {
 
   return (
     <div className="Example__container__document" ref={setContainerRef}>
-      <Progress value={(pageIndex+1)/numPages*100} />
+      <Progress value={(pageIndex + 1) / numPages * 100} />
       <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
-      <Document loading={loadingDiv} file={file} onLoadSuccess={onDocumentLoadSuccess} onSourceError={onError} onLoadError={onError} options={options}>
+      <Document
+        loading={loadingDiv}
+        file={file}
+        onLoadSuccess={onDocumentLoadSuccess}
+        onSourceError={onError}
+        onLoadError={onError}
+        options={options}
+        className={'h-fit'}
+      >
+        {isLoading && renderedPageIndex ? (
           <Page
-            key={`page_${pageIndex + 1}`}
-            pageNumber={pageIndex + 1}
+            key={`page_${renderedPageIndex + 1}`}
+            pageNumber={renderedPageIndex + 1}
+            className="prevPage rounded-md"
             width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
-            className='rounded-md'
           />
+        ) : null}
+        <Page
+          key={`page_${pageIndex + 1}`}
+          pageNumber={pageIndex + 1}
+          onRenderSuccess={() => setRenderedPageIndex(pageIndex)}
+          className='rounded-md'
+          width={containerWidth ? Math.min(containerWidth, maxWidth) : maxWidth}
+        />
       </Document>
       <PageSwitcher pageIndex={pageIndex} pageCount={numPages} onPageChange={handlePageChange} />
     </div>

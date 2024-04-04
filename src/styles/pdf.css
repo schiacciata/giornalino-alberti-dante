@@ -58,3 +58,8 @@ body {
     padding: 20px;
     color: white;
 }
+
+.react-pdf__Page.prevPage {
+    position: absolute !important;
+    z-index: 1;
+}
