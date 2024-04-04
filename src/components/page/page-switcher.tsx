@@ -82,3 +82,5 @@ export const PageSwitcher: FC<PageSwitcherProps> = React.memo(({ pageIndex, page
     </>
   );
 });
+
+PageSwitcher.displayName = 'PageSwitcher';

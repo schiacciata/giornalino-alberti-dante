@@ -38,3 +38,5 @@ export const DashboardNav = React.memo(({ sections }: DashboardNavProps) => {
     </aside>
   )
 })
+
+DashboardNav.displayName = 'DashboardNav';
