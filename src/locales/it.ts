@@ -123,4 +123,10 @@ export default {
         successLiked: 'Post piaciuto',
         successUnliked: 'Rimosso mi piace con successo',
     },
+    theme: {
+        light: 'Chiaro',
+        dark: 'Scuro',
+        system: 'Sistema',
+        toggle: 'Cambia tema',
+    },
 } as const;

@@ -123,4 +123,10 @@ export default {
         successLiked: 'Successfully liked post',
         successUnliked: 'Successfully unliked post',
     },
+    theme: {
+        light: 'Light',
+        dark: 'Dark',
+        system: 'System',
+        toggle: 'Toggle theme',
+    },
 } as const
