@@ -3,6 +3,10 @@ import { PostItem } from "@/components/post/post-item"
 import { Shell } from "@/components/dashboard/shell"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server";
 import { buttonVariants } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
+import { PageSwitcher } from '@/components/page/page-switcher';
+import { Separator } from "@/components/ui/separator";
+import PostInsertComment from '@/components/post/post-insert-comment';
 
 export default async function BlogLoading() {
   const t = await getI18n();
@@ -10,17 +14,8 @@ export default async function BlogLoading() {
 
   return (
     <Shell className="gap-1">
-      <Header heading={post.title} text={scopedT('headingDescription')}>
+      <Header heading={<Skeleton className="px-4 h-4 w-[250px]" />} text={scopedT('headingDescription')}>
         <div className="flex">
-          <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }} />
-          <PostShare
-            author={{
-              name: post.author.name,
-            }}
-            post={{
-              title: post.title,
-            }}
-          />
         </div>
       </Header>
 
@@ -43,7 +38,7 @@ export default async function BlogLoading() {
         <Separator />
         <div>
           <center className="font-bold px-4 text-lg">{t('comments.heading')}</center>
-          <PostInsertComment post={{ id: post.id }} disabled />
+          <PostInsertComment post={{ id: '0' }} disabled />
         </div>
       </div>
     </Shell>

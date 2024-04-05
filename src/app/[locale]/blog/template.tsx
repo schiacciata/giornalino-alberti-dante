@@ -1,5 +1,7 @@
 "use client"
+
 import { motion, AnimatePresence } from "framer-motion"
+import * as React from "react"
 
 const variants = {
     hidden: { opacity: 0, x: -200, y: 0 },
@@ -7,7 +9,7 @@ const variants = {
 }
 
 export default function Template({ children }: { children: React.ReactNode }) {
-    useEffect(() => {
+    React.useEffect(() => {
         if (!window) return;
         // Check if URL contains a hash (#) and scroll to the target element
         if (window.location.hash) {
