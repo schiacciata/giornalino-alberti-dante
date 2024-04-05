@@ -12,9 +12,10 @@ import { Icons } from '../icons'
 
 interface PostInsertCommentProps {
     post: Pick<Post, 'id'>;
+    disabled?: boolean;
 }
 
-const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
+const PostInsertComment: FC<PostInsertCommentProps> = ({ post, disabled }) => {
     const t = useI18n();
     const [isLoading, startTransition] = useTransition();
     const scopedT = useScopedI18n('comments');
@@ -36,11 +37,11 @@ const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
     };
 
     return (<form
-        className="mx-auto w-[50%] mt-10 grid gap-y-4 grid-cols-1"
+        className="mx-auto w-[50%] my-5 grid gap-y-4 grid-cols-1"
         action={handleCommentSubmit}
     >
         <Label htmlFor="content">{scopedT('insert.label')}</Label>
-        <Textarea placeholder={scopedT('insert.placeholder')} id="content" name='content' />
+        <Textarea placeholder={scopedT('insert.placeholder')} id="content" name='content' disabled={disabled} />
 
         <input
             id="postId"
@@ -48,8 +49,9 @@ const PostInsertComment: FC<PostInsertCommentProps> = ({ post }) => {
             value={post.id}
             hidden
             readOnly
+            disabled={disabled}
         />
-        <Button type='submit' disabled={isLoading}>
+        <Button type='submit' disabled={disabled || isLoading}>
             {isLoading && (
                 <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
