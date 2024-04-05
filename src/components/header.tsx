@@ -1,4 +1,6 @@
-import React from 'react';
+'use client'
+
+import * as React from 'react';
 
 interface HeaderProps {
   heading: string | React.ReactNode;
@@ -7,6 +9,17 @@ interface HeaderProps {
 }
 
 export function Header({ heading, text, children }: HeaderProps) {
+  React.useEffect(() => {
+    if (!window) return;
+    // Check if URL contains a hash (#) and scroll to the target element
+    if (window.location.hash) {
+      const element = document.querySelector(window.location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, []);
+
   return (
     <div className="flex items-center md:justify-between px-2 py-4">
       <div className="grid gap-3">

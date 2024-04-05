@@ -9,17 +9,6 @@ const variants = {
 }
 
 export default function Template({ children }: { children: React.ReactNode }) {
-    React.useEffect(() => {
-        if (!window) return;
-        // Check if URL contains a hash (#) and scroll to the target element
-        if (window.location.hash) {
-            const element = document.querySelector(window.location.hash);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    }, [window]);
-
     return (
         <AnimatePresence mode="wait">
             <motion.div
