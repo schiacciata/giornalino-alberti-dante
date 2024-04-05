@@ -11,7 +11,7 @@ import { useI18n, useScopedI18n } from '@/lib/i18n/client';
 interface PageSwitcherProps {
   pageIndex: number;
   pageCount: number;
-  onPageChange: (increment: number) => void;
+  onPageChange?: (increment: number) => void;
 }
 
 export const PageSwitcher: FC<PageSwitcherProps> = React.memo(({ pageIndex, pageCount, onPageChange }) => {
@@ -24,9 +24,11 @@ export const PageSwitcher: FC<PageSwitcherProps> = React.memo(({ pageIndex, page
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
 
+  const onChange = onPageChange || ((increment: number) => {});
+
   const handlePageChange = () => {
     if (selectedPage > 0 && selectedPage <= pageCount) {
-      onPageChange((selectedPage-pageIndex)-1);
+      onChange((selectedPage-pageIndex)-1);
       closeDialog();
     }
   };
@@ -34,13 +36,13 @@ export const PageSwitcher: FC<PageSwitcherProps> = React.memo(({ pageIndex, page
   return (
     <>
       <center className='content-center justify-items-center grid grid-cols-3 py-6'>
-        <Button onClick={() => onPageChange(-1)} disabled={pageIndex === 0}>
+        <Button onClick={() => onChange(-1)} disabled={pageIndex === 0}>
           <Icon icon='chevronLeft' className='mr-0'/>
         </Button>
         <p className={buttonVariants({ variant: 'outline' })} onClick={openDialog} style={{ cursor: 'pointer' }}>
           {pageIndex + 1} of {pageCount}
         </p>
-        <Button onClick={() => onPageChange(1)} disabled={pageIndex >= pageCount - 1}>
+        <Button onClick={() => onChange(1)} disabled={pageIndex >= pageCount - 1}>
           <Icon icon='chevronRight' className='mr-0'/>
         </Button>
       </center>

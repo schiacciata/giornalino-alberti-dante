@@ -31,9 +31,9 @@ export default async function BlogLoading() {
         </div>
         <div>
           <Skeleton className="h-4 w-full" />
-          <PageSwitcher pageIndex={0} pageCount={0} onPageChange={() => { }} />
+          <PageSwitcher pageIndex={0} pageCount={0} />
           <Skeleton className="h-[400px] md:h-[1100px] w-[300px] md:w-[800px] rounded-xl" />
-          <PageSwitcher pageIndex={0} pageCount={0} onPageChange={() => { }} />
+          <PageSwitcher pageIndex={0} pageCount={0} />
         </div>
         <Separator />
         <div>
