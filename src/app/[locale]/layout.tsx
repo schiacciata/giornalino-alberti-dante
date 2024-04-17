@@ -8,6 +8,7 @@ import { RootLayoutProps } from '@/types/layout'
 import { Toaster } from "sonner"
 import GitHashIndicator from '@/components/git-hash-indicator'
 import { absoluteUrl } from '@/lib/utils'
+import { ViewTransitions } from 'next-view-transitions'
 
 export const metadata: Metadata = {
   metadataBase: new URL(absoluteUrl('')),
@@ -72,22 +73,24 @@ export function generateViewport(): Viewport {
 
 export default function RootLayout({ params, children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className="min-h-screen bg-background font-sans antialiased relative flex flex-col"
-      >
-        <div className="min-h-screen h-full w-full dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
-          <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
+    <ViewTransitions>
+      <html lang="en" suppressHydrationWarning>
+        <head />
+        <body
+          className="min-h-screen bg-background font-sans antialiased relative flex flex-col"
+        >
+          <div className="min-h-screen h-full w-full dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
+            <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
 
-          <Providers params={params}>
-            {children}
-          </Providers>
+            <Providers params={params}>
+              {children}
+            </Providers>
 
-          <Toaster richColors={true} />
-          <GitHashIndicator />
-        </div>
-      </body>
-    </html>
+            <Toaster richColors={true} />
+            <GitHashIndicator />
+          </div>
+        </body>
+      </html>
+    </ViewTransitions>
   )
 }

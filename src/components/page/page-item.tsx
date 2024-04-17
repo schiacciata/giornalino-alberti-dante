@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { Page } from "@prisma/client"
 
 import { formatDate } from "@/lib/utils"

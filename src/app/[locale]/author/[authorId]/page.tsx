@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import { cn, formatDate } from "@/lib/utils";
 import { getI18n, getScopedI18n } from "@/lib/i18n/server";
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
-import Link from "next/link";
+import { Link } from 'next-view-transitions';
 import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "@/components/icons";
 

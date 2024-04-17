@@ -31,7 +31,7 @@ import { Page } from "@prisma/client"
 import { Icon } from "../icons"
 import { PageOperations } from "../page/page-operations"
 import { cn, formatDate } from "@/lib/utils"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 
 export function fetchPageTableColumnDefs(
   isPending: boolean,

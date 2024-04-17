@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 
 import { buttonVariants } from "@/components/ui/button"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/dashboard/shell"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { getCurrentUser } from "@/lib/auth/user"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server"
 import NewUsersChart from "@/components/dashboard/new-users-chart"

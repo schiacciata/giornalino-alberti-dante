@@ -7,7 +7,7 @@ import { EmptyPlaceholder } from "@/components/empty-placeholder"
 import { Header } from "@/components/header"
 import { Shell } from "@/components/dashboard/shell"
 import { PageCreateButton } from "@/components/page/page-create-button"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { buttonVariants } from "@/components/ui/button"
 import { Icon } from "@/components/icons"
 import { isAdmin } from "@/lib/auth/roles"

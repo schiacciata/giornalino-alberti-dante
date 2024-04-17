@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { toast } from "sonner"
 import { Icon, Icons } from "@/components/icons"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { deletePost } from "@/actions/post"
 
 interface PostOperationsProps {

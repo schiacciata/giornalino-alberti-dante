@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import 'quill/dist/quill.snow.css';
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Page, Post } from "@prisma/client"

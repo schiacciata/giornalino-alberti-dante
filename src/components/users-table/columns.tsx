@@ -51,7 +51,7 @@ import { DataTableColumnHeader } from "@/components/data-table/data-table-column
 import { deleteUser, updateUserRole } from "@/actions/user"
 import { Role, User } from "@prisma/client"
 import UserBadge from "../user/user-badge"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { Icon } from "../icons"
 
 export function fetchUsersTableColumnDefs(): ColumnDef<User, unknown>[] {

@@ -3,7 +3,7 @@ import * as React from "react"
 import links from "@/config/links"
 import { cn } from "@/lib/utils"
 import { Icon } from "@/components/icons"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { buttonVariants } from "@/components/ui/button"
 
 export function Footer({ className }: React.HTMLAttributes<HTMLElement>) {

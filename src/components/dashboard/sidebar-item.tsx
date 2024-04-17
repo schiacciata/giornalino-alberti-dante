@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { SidebarNavItem } from "@/types/nav";
-import Link from "next/link";
+import { Link } from 'next-view-transitions';
 import { Icon } from "../icons";
 import { usePathname } from "next/navigation";
 import React from "react";

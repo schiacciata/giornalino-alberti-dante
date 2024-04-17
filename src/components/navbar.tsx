@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 
 import siteConfig from "@/config/site"
 import { MobileNav } from "@/components/mobile-navbar"

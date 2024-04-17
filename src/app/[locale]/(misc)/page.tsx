@@ -2,7 +2,7 @@ import { Icon } from "@/components/icons";
 import { PostCard } from "@/components/post/post-card";
 import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/lib/db"
-import Link from "next/link";
+import { Link } from 'next-view-transitions';
 import config from "@/config/site"
 import { getI18n, getScopedI18n } from "@/lib/i18n/server";
 import { BackgroundBeams } from "@/components/ui/background-beams";

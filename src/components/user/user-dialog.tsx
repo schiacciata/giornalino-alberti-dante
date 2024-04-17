@@ -1,7 +1,7 @@
 'use client'
 
 import { signOut } from "next-auth/react"
-import Link from "next/link"
+import { Link } from 'next-view-transitions'
 import { UserAvatar } from "./user-avatar"
 import { DropdownMenuContent, DropdownMenuSeparator, DropdownMenuItem, DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { isEditor } from "@/lib/auth/roles"

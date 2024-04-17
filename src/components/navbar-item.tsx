@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/nav";
-import Link from "next/link";
+import { Link } from 'next-view-transitions';
 import { useSelectedLayoutSegment } from "next/navigation";
 import { Icon } from "./icons";
 
