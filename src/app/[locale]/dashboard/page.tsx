@@ -30,9 +30,12 @@ export default async function DashboardPage() {
 
   return (
     <Shell className="gap-13">
-      <Header heading="Dashboard" text={scopedT('homeGreetings', {
-        name: user.name
-      })}/>
+      <Header
+        heading="Dashboard"
+        text={scopedT('homeGreetings', {
+          name: user.name
+        })}
+      />
       <p className="max-w-[700px] text-lg text-muted-foreground italic">
         {scopedT('createNew')} <Link className="underline font-bold" href={'/dashboard/posts'}>
           {t('dashboard.sidebar.posts')}
@@ -40,12 +43,12 @@ export default async function DashboardPage() {
       </p>
 
       <div className="grid md:grid-cols-3 gap-4 py-4">
-        <StatsCard header={t('dashboard.sidebar.posts')} data={postCount} icon="post"/>
-        <StatsCard header={t('userMenu.users')} data={usersCount} icon="users"/>
-        <StatsCard header={t('comments.heading')} data={commentsCount} icon="message"/>
+        <StatsCard header={t('dashboard.sidebar.posts')} data={postCount} icon="post" />
+        <StatsCard header={t('userMenu.users')} data={usersCount} icon="users" />
+        <StatsCard header={t('comments.heading')} data={commentsCount} icon="message" />
       </div>
 
-      <NewUsersChart userData={userData}/>
+      <NewUsersChart userData={userData} />
     </Shell>
   )
 }
