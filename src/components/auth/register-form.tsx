@@ -22,7 +22,7 @@ import { register } from "@/actions/auth";
 import { FormError } from "@/components/form/form-error";
 import { FormSuccess } from "@/components/form/form-success";
 import Social from "./social"
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
