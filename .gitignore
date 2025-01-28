@@ -43,7 +43,8 @@ public/workbox-*.js*
 public/sw.js*
 public/worker-*.js*
 **/public/serwist**
-**/public/sw**
+**/public/sw*
+**/public/swe-worker*
 **/public/worker**
 **/public/fallback**
 **/public/precache**

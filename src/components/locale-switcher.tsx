@@ -35,7 +35,10 @@ export function LocaleSwitcher(props: LocaleSwitcherProps) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                className={cn(
+                    "min-w-56 rounded-lg",
+                    isDashboard && 'w-[--radix-dropdown-menu-trigger-width]',
+                )}
                 side={isMobile || !isDashboard ? "bottom" : "right"}
                 align="end"
                 sideOffset={4}

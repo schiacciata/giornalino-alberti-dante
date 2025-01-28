@@ -1,9 +1,10 @@
 import './src/env.mjs'
 import withSerwistInit from "@serwist/next";
-      
+
 const withSerwist = withSerwistInit({
     swSrc: "src/worker/index.ts",
     swDest: "public/sw.js",
+    cacheOnNavigation: true,
 });
 
 /** @type {import('next').NextConfig} */
@@ -20,9 +21,16 @@ const nextConfig = {
         ]
     },
     webpack: (config) => {
-        config.resolve.alias.canvas = false;
-        
-        return config;
+        return {
+            ...config,
+            resolve: {
+                ...config.resolve,
+                alias: {
+                    ...config.resolve.alias,
+                    canvas: false,
+                },
+            },
+        };
     },
 }
 

@@ -31,9 +31,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.1.7",
-    "@serwist/next": "^8.4.4",
-    "@serwist/precaching": "^8.4.4",
-    "@serwist/sw": "^8.4.4",
+    "@serwist/next": "^9.0.11",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/react-table": "^8.11.7",
     "@vercel/og": "^0.5.20",
@@ -73,6 +71,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@serwist/build": "^9.0.11",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
@@ -86,6 +85,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "postcss": "^8",
     "prisma": "^5.10.2",
+    "serwist": "^9.0.11",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

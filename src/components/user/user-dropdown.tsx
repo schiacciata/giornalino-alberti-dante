@@ -14,6 +14,7 @@ import { useServiceWorker } from "@/lib/providers/sw"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { ArrowDownToLine, Bell, CogIcon, LayoutDashboard, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { cn } from "@/lib/utils"
 
 interface UserDropdownProps {
     user: AuthUser,
@@ -25,6 +26,8 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
     const isMobile = useIsMobile();
     const path = usePathname();
 
+    const isDashboard = path?.startsWith('/dashboard')
+
     const onInstallClick = () => {
         if (!sw?.promptInstall) return;
         sw.promptInstall.prompt();
@@ -32,14 +35,17 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
 
     return (
         <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile || !path?.startsWith('/dashboard') ? "bottom" : "right"}
+            className={cn(
+                "min-w-56 rounded-lg",
+                isDashboard && 'w-[--radix-dropdown-menu-trigger-width]',
+            )}
+            side={isMobile || !isDashboard ? "bottom" : "right"}
             align="end"
             sideOffset={4}
         >
             <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm relative">
-                    <UserAvatar  user={user} />
+                    <UserAvatar user={user} />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">{user.name}</span>
                         <span className="truncate text-xs">{user.email}</span>
