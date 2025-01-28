@@ -6,7 +6,6 @@ import { db } from "@/lib/db"
 import { getCurrentUser } from '@/lib/auth/user'
 import { notifications } from '@/lib/notifications';
 import { isAdmin } from '@/lib/auth/roles';
-import { uploadToGithub } from '@/lib/files';
 import { deleteFromGithub } from '@/lib/files';
 import { getI18n } from '@/lib/i18n/server';
 

@@ -12,7 +12,6 @@ import { FC } from "react"
 import { useScopedI18n } from "@/lib/i18n/client"
 import { useServiceWorker } from "@/lib/providers/sw"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { ArrowDownToLine, Bell, CogIcon, LayoutDashboard, LogOut } from "lucide-react"
 import { usePathname } from "next/navigation"
 
@@ -40,10 +39,7 @@ const UserDropdown: FC<UserDropdownProps> = ({ user }) => {
         >
             <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm relative">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarImage src={user.image || ''} alt={user.name || ''} />
-                        <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                    </Avatar>
+                    <UserAvatar  user={user} />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">{user.name}</span>
                         <span className="truncate text-xs">{user.email}</span>

@@ -22,7 +22,8 @@ export const postPatchSchema = z.object({
   pdfPath: z
     .string()
     .regex(/^\/pdfs\/(?:gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)_(?:\d{4})\.pdf$/)
-    .optional(),
+    .optional()
+    .nullable(),
   published: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
   authorId: z.string().optional(),
 })

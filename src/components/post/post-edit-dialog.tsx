@@ -40,37 +40,69 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
     const onSubmit = async (formData: FormData) => {
         if (file && file.size > 0 && file.type === 'application/pdf') {
             const pdfPath = `/${filesConfig.pdfPath}/${file.name}`;
+            const id = toast.loading(`Uploading "${file.name}"...`);
 
             const uploadResult = await uploadToGithub({
                 path: `public${pdfPath}`,
                 content: await file.arrayBuffer(),
-            })
+            });
 
-            if (!uploadResult) {
-                return toast.error(`Could not upload "${file.name}"`);
+            if (!uploadResult.ok) {
+                return toast.error(`Could not upload "${file.name}" (${uploadResult.status})`, {
+                    id,
+                });
             }
 
-            toast.success(`"${file.name}" uploaded`);
+            toast.success(`"${file.name}" uploaded`, {
+                id,
+            });
             
             formData.set('pdfPath', pdfPath);
             formData.delete('pdfFile');
+
+            /*toast.promise(file.arrayBuffer(), {
+                loading: 'Converting file...',
+                success(data) {
+                    toast.promise(uploadToGithub({
+                        path: `public${pdfPath}`,
+                        content: data,
+                    }), {
+                        success(uploadResult) {
+                            if (!uploadResult.ok) {
+                                return `Could not upload "${file.name} (${uploadResult.statusText})"`;
+                            }
+        
+                            formData.set('pdfPath', pdfPath);
+                            formData.delete('pdfFile');
+        
+                            return `"${file.name}" uploaded`;
+                        },
+                        error(err) {
+                            return err.response ? `Could not upload "${file.name} (${err.response.status})"`  : `Could not upload "${file.name} (${err.message})"`;
+                        },
+                    })
+                    return 'File converted'
+                },
+                error(err) {
+                    return `Could not convert "${file.name} (${err.message})"`;
+                },
+            })*/ 
         }
 
         startTransition(() => {
             formData.set('published', isPublished.toString());
 
-            editPost(formData)
-                .then((data) => {
-                    if (data.error) {
-                        toast.error(data.error);
-                    }
+            toast.promise(editPost(formData), {
+                error(data) {
+                    return data.message ?? t('errors.general');
+                },
+                success(data) {
+                    if (data.error) throw new Error(data.error);
 
-                    if (data.success) {
-                        setIsOpen(false);
-                        toast.success(data.success);
-                    }
-                })
-                .catch(() => toast.error(t('errors.general')));
+                    setIsOpen(false);
+                    return data.success
+                },
+            })
         });
     }
 
@@ -123,6 +155,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                     defaultValue={post.title}
                                     form="editPost"
                                     className="col-span-3"
+                                    disabled={isLoading}
                                 />
                             </div>
                             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
@@ -132,6 +165,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
 
                                 <Switch
                                     checked={isPublished}
+                                    disabled={isLoading}
                                     onCheckedChange={setIsPublished}
                                 />
                             </div>
@@ -161,6 +195,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                         form="editPost"
                                         className="col-span-3"
                                         onChange={handleFileChange}
+                                        disabled={isLoading}
                                     />
                                 </div>
                             )}
@@ -181,6 +216,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                                 id="pdfPath"
                                                 name="pdfPath"
                                                 defaultValue={post.pdfPath || undefined}
+                                                disabled={isLoading}
                                                 form="editPost"
                                                 className="col-span-3"
                                             />
@@ -192,6 +228,7 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                                             <Select
                                                 name="authorId"
                                                 defaultValue={post.authorId || undefined}
+                                                disabled={isLoading}
                                             >
                                                 <SelectTrigger className="w-[180px]">
                                                     <SelectValue placeholder="Select Author" />
@@ -222,8 +259,15 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                 </form>
 
                 <DialogFooter className="gap-y-4">
-                    {post.pdfPath && <PostDeletePDFButton post={{ id: post.id }} />}
-                    <Button form="editPost" type="submit">Save changes</Button>
+                    {post.pdfPath && <PostDeletePDFButton disabled={isLoading} post={{ id: post.id }} />}
+                    <Button form="editPost" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <Icons.edit className="mr-2 h-4 w-4" />
+                        )}
+                        Save changes
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

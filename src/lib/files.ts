@@ -26,7 +26,7 @@ export async function uploadToGithub(options: GithubUploadOptions) {
         }),
     });
 
-    return response.ok;
+    return response;
 }
 
 type GithubGetOptions = {

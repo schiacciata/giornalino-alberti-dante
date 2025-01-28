@@ -22,16 +22,18 @@ const DashboardBreadcrumbs: FC<DashboardBreadcrumbsProps> = ({ }) => {
 
                     return (
                         <Fragment key={href}>
-                            {index === 0 ? (
-                                <BreadcrumbItem>
-                                    <BreadcrumbLink href={href}>{title}</BreadcrumbLink>
-                                </BreadcrumbItem>
-                            ) : (
+                            {index === segments.length - 1 ? (
                                 <>
-                                    <BreadcrumbSeparator />
                                     <BreadcrumbItem>
                                         <BreadcrumbPage>{title}</BreadcrumbPage>
                                     </BreadcrumbItem>
+                                </>
+                            ) : (
+                                <>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink href={href}>{title}</BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
                                 </>
                             )}
                         </Fragment>

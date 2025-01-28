@@ -8,11 +8,11 @@ import { deletePostPDF } from '@/actions/post'
 import { toast } from 'sonner'
 import { useI18n } from '@/lib/i18n/client';
 
-interface PostDeleteButtonProps {
+interface PostDeleteButtonProps extends React.ComponentProps<typeof Button> {
     post: Pick<Post, 'id'>;
 }
 
-const PostDeletePDFButton: FC<PostDeleteButtonProps> = ({ post }) => {
+const PostDeletePDFButton: FC<PostDeleteButtonProps> = ({ post, ...props }) => {
     const t = useI18n();
     
     const handlePostDelete = async () => {
@@ -37,7 +37,7 @@ const PostDeletePDFButton: FC<PostDeleteButtonProps> = ({ post }) => {
                 readOnly
                 form='deletePostPDF'
             />
-            <Button type='submit' form='deletePostPDF' variant="destructive">
+            <Button type='submit' form='deletePostPDF' variant="destructive" {...props}>
                 <Icon icon='trash' className='mr-0' />
                 Elimina PDF
             </Button>

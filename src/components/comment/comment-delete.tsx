@@ -48,7 +48,7 @@ const CommentDelete: FC<CommentDeleteProps> = ({ comment }) => {
     return (
         <Dialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
             <DialogTrigger asChild>
-                <Button variant="destructive" className='w-full'>
+                <Button variant="destructive" size={'sm'} className='w-full'>
                     <Icon icon="trash" />
                     Delete
                 </Button>

@@ -1,12 +1,13 @@
 'use client'
 
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { Comment, Post } from '@prisma/client'
 import Link from 'next/link'
 import { FC } from 'react'
 import { buttonVariants } from '@/components/ui/button'
 import { Icon } from '../icons'
 import { useI18n } from '@/lib/i18n/client'
+import { backdrop } from '@/styles/backdrop'
 
 interface PostCardProps {
   post: Pick<Post, "id" | "title" | "createdAt" | "likesUserIDs">;
@@ -17,7 +18,7 @@ export const PostCard: FC<PostCardProps> = ({ post, comments }) => {
   const t = useI18n();
 
   return (
-    <div className="flex items-center justify-between p-4">
+    <div className={cn("flex items-center justify-between p-4", 'bg-background/80 backdrop-blur-md')}>
       <div className="grid gap-1">
         <Link
           href={`/blog/${post.id}`}

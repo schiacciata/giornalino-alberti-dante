@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { Post } from '@prisma/client'
 import { useI18n, useScopedI18n } from '@/lib/i18n/client'
 import { Icons } from '../icons'
+import { useSession } from 'next-auth/react'
 
 interface PostInsertCommentProps {
     post: Pick<Post, 'id'>;
@@ -19,20 +20,28 @@ const PostInsertComment: FC<PostInsertCommentProps> = ({ post, disabled }) => {
     const t = useI18n();
     const [isLoading, startTransition] = useTransition();
     const scopedT = useScopedI18n('comments');
+    const { status }  = useSession();
 
     const handleCommentSubmit = async (formData: FormData) => {
         startTransition(() => {
-            newComment(formData)
-            .then((data) => {
-                if (data.error) {
-                    toast.error(data.error);
-                }
+            if (status != 'authenticated') {
+                toast.error(t('errors.unauthenticated'));
+                return;
+            }
+            
+            if (!formData.get('content')) {
+                toast.error(t('errors.general'));
+                return;
+            }
 
-                if (data.success) {
-                    toast.success(data.success);
-                }
+            toast.promise(newComment(formData), {
+                success(data) {
+                    return data.success
+                },
+                error(data) {
+                    return data.message ?? t('errors.general')
+                },
             })
-            .catch(() => toast.error(t('errors.general')));
         })
     };
 

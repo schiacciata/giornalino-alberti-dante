@@ -1,1 +1,2 @@
-export const backdrop = 'border-[1.5px] border-[#ffffff0d] bg-[#0000001a] p-[15px] backdrop-blur-[10px] px-5';
+export const backdrop =
+	"border-[1.5px] border-[#ffffff0d] p-[15px] bg-background/80 backdrop-blur-md px-5";

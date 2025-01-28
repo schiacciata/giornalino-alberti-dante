@@ -4,6 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { SessionIndicator } from "./session-indicator"
 import { NavbarSection } from "@/types/nav"
 import { LocaleSwitcher } from "./locale-switcher"
+import HeaderWrapper from "./navigation/header-wrapper"
 
 type SiteHeaderProps = {
   navbarSections?: NavbarSection[];
@@ -13,7 +14,7 @@ export async function SiteHeader({ navbarSections }: SiteHeaderProps) {
   const navbar = await getNavbar();
   
   return (
-    <header className="bg-background sticky top-0 z-40 w-full border-b">
+    <HeaderWrapper>
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <Navbar
           sections={navbarSections ?? navbar}
@@ -26,6 +27,6 @@ export async function SiteHeader({ navbarSections }: SiteHeaderProps) {
           </nav>
         </div>
       </div>
-    </header>
+    </HeaderWrapper>
   )
 }

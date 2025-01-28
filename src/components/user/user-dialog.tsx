@@ -18,13 +18,10 @@ export function UserDialog({ user }: UserDialogProps) {
   return (
     <AlertDialog>
       <DropdownMenu>
-        <DropdownMenuTrigger>
-          <UserAvatar
-            user={{ name: user.name || null, image: user.image || null }}
-            className="h-8 w-8"
-          />
+        <DropdownMenuTrigger >
+          <UserAvatar user={user} className="rounded-2xl" />
         </DropdownMenuTrigger>
-        <UserDropdown user={user}/>
+        <UserDropdown user={user} />
       </DropdownMenu>
       {sw ? <NotificationsDialog sw={sw} /> : null}
     </AlertDialog>

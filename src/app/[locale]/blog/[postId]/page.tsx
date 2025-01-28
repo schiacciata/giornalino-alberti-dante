@@ -3,12 +3,13 @@ import { Header } from "@/components/header";
 import { Shell } from "@/components/dashboard/shell";
 import { notFound } from "next/navigation";
 import { PostAuthorSection } from "@/components/post/post-author-section";
-import { getScopedI18n } from "@/lib/i18n/server";
 import { LikePostButton } from "@/components/post/like-post-button";
 import { PostContent } from "@/components/post/post-content";
 import PostCommentSection from "@/components/post/post-comment-section";
 import { Separator } from "@/components/ui/separator";
 import PostShare from "@/components/post/post-share"
+import { Link } from "next-view-transitions";
+import AuthorCard from "@/components/post/author-card";
 
 type BlogPostPageProps = {
   params: {
@@ -17,7 +18,6 @@ type BlogPostPageProps = {
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const scopedT = await getScopedI18n('post');
   const post = await db.post.findFirst({
     where: {
       id: params.postId,
@@ -63,24 +63,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <Shell className="gap-1">
-      <Header heading={post.title} text={scopedT('headingDescription')}>
-        <div className="flex">
-          <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }} />
-          <PostShare
-            author={{
-              name: post.author.name,
-            }}
-            post={{
-              title: post.title,
-            }}
-          />
-        </div>
+      <Header heading={post.title}>
+        <AuthorCard
+          author={{ id:  author.id, image: author.image, name: author.name }}
+          publishDate={post.updatedAt}
+        />
       </Header>
 
       <div className="grid grid-cols-1 gap-y-4">
         <PostAuthorSection
-          author={{ image: author.image, name: author.name, id: author.id }}
-          post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs }}
+          author={{ name: author.name }}
+          post={{ updatedAt: post.updatedAt, likesUserIDs: post.likesUserIDs, id: post.id, title: post.title }}
         />
         <PostContent pages={pages} post={{ pdfPath: post.pdfPath }} />
         <Separator />

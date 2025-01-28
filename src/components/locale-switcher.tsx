@@ -7,6 +7,7 @@ import { emojis, locales } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface LocaleSwitcherProps extends React.ComponentProps<typeof DropdownMenu> { }
 
@@ -16,17 +17,26 @@ export function LocaleSwitcher(props: LocaleSwitcherProps) {
     const isMobile = useIsMobile();
     const path = usePathname();
 
+    const isDashboard = path?.startsWith('/dashboard');
+
     return (
         <DropdownMenu {...props}>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 px-0 w-full">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    className={cn(
+                        "h-8 w-8 px-0",
+                        isDashboard && 'w-full',
+                    )}
+                >
                     {emojis[currentLocale]}
                     <span className="sr-only">Switch language</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
                 className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side={isMobile || !path?.startsWith('/dashboard') ? "bottom" : "right"}
+                side={isMobile || !isDashboard ? "bottom" : "right"}
                 align="end"
                 sideOffset={4}
             >

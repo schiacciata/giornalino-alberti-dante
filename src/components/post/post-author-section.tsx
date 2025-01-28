@@ -2,30 +2,44 @@
 
 import * as React from "react"
 import { Post, User } from "@prisma/client"
-import { UserAvatar } from "../user/user-avatar"
-import { formatDate } from "@/lib/utils"
 import { Link } from 'next-view-transitions'
-import { buttonVariants } from "@/components/ui/button"
-import { Icon } from "../icons"
+import { useI18n } from "@/lib/i18n/client"
+import PostShare from "./post-share"
+import { LikePostButton } from "./like-post-button"
+import { cn } from "@/lib/utils"
+import { backdrop } from "@/styles/backdrop"
 
 interface PostAuthorSectionProps {
-    author: Pick<User, 'image' | 'name' | 'id'>
-    post: Pick<Post, 'updatedAt' | 'likesUserIDs'>
+    author: Pick<User, 'name'>
+    post: Pick<Post, 'updatedAt' | 'likesUserIDs' | 'id' | 'title'>
 }
 
-export function PostAuthorSection({ author, post }: PostAuthorSectionProps) {
+export function PostAuthorSection({ author , post }: PostAuthorSectionProps) {
+    const t = useI18n()
 
-  return (
-    <div className="divide-y divide-border rounded-md border px-4 py-4">
-        <Link  className={buttonVariants({ variant: 'link' })} href={`/author/${author.id}`}>
-            <UserAvatar
-                user={{ name: author.name, image: author.image }}
-                className="h-8 w-8" />  
-            <p className="font-bold px-4 text-lg">{author.name}</p>
-        </Link>
-        <p className="px-4 py-2 text-muted-foreground italic">
-            {formatDate(post.updatedAt?.toDateString())} ∘ <b>{post.likesUserIDs.length || 0} <Icon icon='heart' className='inline-flex'/></b>
-        </p>
-    </div>
-  )
+    return (
+        <div className="flex gap-3 text-md text-muted-foreground items-center justify-between">
+            <Link href={`/blog`} rel="prev" prefetch={false} className={cn("flex items-center gap-2 hover:underline rounded-md", backdrop, 'p-1 px-3')}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    className="lucide lucide-arrow-left w-4 h-4">
+                    <path d="m12 19-7-7 7-7"></path>
+                    <path d="M19 12H5"></path>
+                </svg>
+                <span className="hidden md:block">{t('back')}</span>
+            </Link>
+            <div className={cn("flex items-center rounded-md", backdrop, 'p-0')}>
+                <LikePostButton post={{ id: post.id, likesUserIDs: post.likesUserIDs }} />
+                <PostShare
+                    author={{
+                        name: author.name,
+                    }}
+                    post={{
+                        title: post.title,
+                    }}
+                />
+            </div>
+        </div>
+    )
 }
