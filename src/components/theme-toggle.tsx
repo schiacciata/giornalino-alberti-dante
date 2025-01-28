@@ -12,21 +12,30 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Icons } from "@/components/icons"
 import { useScopedI18n } from '@/lib/i18n/client'
+import { useIsMobile } from "@/hooks/use-mobile"
+import { usePathname } from "next/navigation"
 
 export function ThemeToggle() {
   const { setTheme } = useTheme();
   const scopedT = useScopedI18n('theme');
+  const isMobile = useIsMobile();
+  const path = usePathname();
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 px-0 w-full">
           <Icons.sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Icons.moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">{scopedT('toggle')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+        side={isMobile || !path?.startsWith('/dashboard') ? "bottom" : "right"}
+        align="end"
+        sideOffset={4}
+      >
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Icons.sun className="mr-2 h-4 w-4" />
           <span>{scopedT('light')}</span>

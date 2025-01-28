@@ -15,7 +15,7 @@ export function Providers({
       <SessionProvider>
         <I18nProviderClient locale={params.locale}>
           <ServiceWorkerProvider>
-            {children}
+              {children}
           </ServiceWorkerProvider>
         </I18nProviderClient>
       </SessionProvider>

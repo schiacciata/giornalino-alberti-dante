@@ -15,9 +15,14 @@ export const getSidebar = async () => {
     title: '',
     items: [
       {
+        title: scopedT('home'),
+        href: '/',
+        icon: 'back'
+      },
+      {
         title: scopedT('overview'),
         href: '/dashboard',
-        icon: 'home'
+        icon: 'dashboard'
       },
     ],
   };
@@ -42,7 +47,7 @@ export const getSidebar = async () => {
   };
 
   const helpSection: SidebarNavSection = {
-    title: '',
+    title: scopedT('support'),
     items: [
       {
         title: <h2 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">

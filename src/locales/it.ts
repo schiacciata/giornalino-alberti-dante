@@ -53,9 +53,11 @@ export default {
         changeUser: 'o cambia',
         settings: 'Impostazioni',
         sidebar: {
+            home: 'Pagina principale',
             overview: 'Panoramica',
             posts: 'Articoli',
             users: 'Utenti',
+            support: 'Supporto',
         },
     },
     settings: {
