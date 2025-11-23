@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -11,39 +12,28 @@ datasource db {
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @db.ObjectId
-  
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  accountId             String
-  providerId            String
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  //@@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map("account")
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
   userId       String   @db.ObjectId
+  expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiresAt    DateTime
-  token        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  ipAddress    String?
-  userAgent    String?
-
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
 }
 
 model Page {
@@ -97,8 +87,6 @@ model User {
   updatedAt             DateTime               @updatedAt @map(name: "updated_at")
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
-
-  @@map("user")
 }
 
 model PushSubscription {
@@ -151,16 +139,4 @@ model TwoFactorConfirmation {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId])
-}
-
-model Verification {
-  id         String   @id @map("_id")
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
 }
