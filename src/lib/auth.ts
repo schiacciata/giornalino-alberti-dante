@@ -63,11 +63,6 @@ export const auth = betterAuth({
 			updateEmailWithoutVerification: true,
 		},
 		additionalFields: {
-			password: {
-				type: "string",
-				required: false,
-				input: false,
-			},
 			role: {
 				type: "string",
 				default: "USER",

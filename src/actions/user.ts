@@ -63,19 +63,27 @@ export const updateUser = async (values: z.infer<typeof userUpdateSchema>) => {
 		values.newPassword = undefined;
 	}
 
+	const { password, newPassword: _, ...data } = values;
 	const updatedUser = await db.user.update({
 		where: { id: dbUser.id },
-		data: {
-			...values,
-		},
+		data: data,
 	});
 
-	auth.api.updateUser({
+	await auth.api.updateUser({
 		body: {
 			image: updatedUser.image || undefined,
 			name: updatedUser.name || undefined,
 		},
 	});
+
+	if (values.password && password) {
+		await auth.api.changePassword({
+			body: {
+				newPassword: password,
+				currentPassword: values.password,
+			},
+		});
+	}
 
 	return { success: "Settings Updated!" };
 };
