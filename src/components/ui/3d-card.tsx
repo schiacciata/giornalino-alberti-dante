@@ -5,7 +5,7 @@ import Image from "next/image";
 import React, {
   createContext,
   useState,
-  useContext,
+  use,
   useRef,
   useEffect,
 } from "react";
@@ -46,7 +46,7 @@ export const CardContainer = ({
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   };
   return (
-    <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
+    (<MouseEnterContext value={[isMouseEntered, setIsMouseEntered]}>
       <div
         className={cn(
           "py-20 flex items-center justify-center",
@@ -72,7 +72,7 @@ export const CardContainer = ({
           {children}
         </div>
       </div>
-    </MouseEnterContext.Provider>
+    </MouseEnterContext>)
   );
 };
 
@@ -86,7 +86,7 @@ export const CardBody = ({
   return (
     <div
       className={cn(
-        "h-96 w-96 [transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
+        "h-96 w-96 transform-3d  *:transform-3d",
         className
       )}
     >
@@ -146,7 +146,7 @@ export const CardItem = ({
 
 // Create a hook to use the context
 export const useMouseEnter = () => {
-  const context = useContext(MouseEnterContext);
+  const context = use(MouseEnterContext);
   if (context === undefined) {
     throw new Error("useMouseEnter must be used within a MouseEnterProvider");
   }

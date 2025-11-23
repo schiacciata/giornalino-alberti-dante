@@ -1,55 +1,46 @@
-import * as React from "react"
-import { unstable_noStore as noStore } from "next/cache"
-import { SelectTrigger } from "@radix-ui/react-select"
-import { type Table } from "@tanstack/react-table"
-import { toast } from "sonner"
-
-import { catchError } from "@/lib/catch-error"
-import { Button } from "@/components/ui/button"
+import { SelectTrigger } from "@radix-ui/react-select";
+import type { Table } from "@tanstack/react-table";
+import { unstable_noStore as noStore } from "next/cache";
+import type * as React from "react";
+import { toast } from "sonner";
+import { deletePage, editPage } from "@/actions/page";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-} from "@/components/ui/select"
-
-import {
-  deletePage,
-  editPage,
-} from "@/actions/page"
-import { Page } from "@prisma/client"
-import { Icon } from "../icons"
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+} from "@/components/ui/select";
+import type { Page } from "@/generated/prisma/client";
+import { catchError } from "@/lib/catch-error";
+import { Icon } from "../icons";
 
 export function deleteSelectedRows(
-  table: Table<Page>,
-  event?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	table: Table<Page>,
+	event?: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 ) {
-  event?.preventDefault()
-  const selectedRows = table.getFilteredSelectedRowModel().rows as {
-    original: Page
-  }[]
+	event?.preventDefault();
+	const selectedRows = table.getFilteredSelectedRowModel().rows as {
+		original: Page;
+	}[];
 
-  noStore()
-  toast.promise(
-    Promise.all(
-      selectedRows.map(async (row) =>
-        deletePage(row.original.id)
-      )
-    ),
-    {
-      loading: "Deleting...",
-      success: () => {
-        return "Page deleted successfully."
-      },
-      error: (err: unknown) => {
-        return catchError(err)
-      },
-    }
-  )
+	noStore();
+	toast.promise(
+		Promise.all(selectedRows.map(async (row) => deletePage(row.original.id))),
+		{
+			loading: "Deleting...",
+			success: () => {
+				return "Page deleted successfully.";
+			},
+			error: (err: unknown) => {
+				return catchError(err);
+			},
+		},
+	);
 }
 
 export function updatePageStatus(table: Table<Page>, status: string) {
-  /*const selectedRows = table.getFilteredSelectedRowModel().rows as unknown as {
+	/*const selectedRows = table.getFilteredSelectedRowModel().rows as unknown as {
     original: Page
   }[]
 
@@ -76,7 +67,7 @@ export function updatePageStatus(table: Table<Page>, status: string) {
 }
 
 export function updatePagePriority(table: Table<Page>, priority: string) {
-/*const selectedRows = table.getFilteredSelectedRowModel().rows as unknown as {
+	/*const selectedRows = table.getFilteredSelectedRowModel().rows as unknown as {
     original: Page
   }[]
 
@@ -153,21 +144,21 @@ export function updatePagePriority(table: Table<Page>, priority: string) {
 */
 
 export function PageTableFloatingBarContent(table: Table<Page>) {
-  return (
-    <div className="justify-between gap-2 align-middle">
-      <Button
-        title="Delete"
-        variant="destructive"
-        size="icon"
-        className="size-7"
-        onClick={(event) => {
-          table.toggleAllPageRowsSelected(false)
-          deleteSelectedRows?.(table, event)
-        }}
-      >
-        <Icon icon="trash" className="size-4" aria-hidden="true" />
-        <span className="sr-only">Delete</span>
-      </Button>
-    </div>
-  )
+	return (
+		<div className="justify-between gap-2 align-middle">
+			<Button
+				title="Delete"
+				variant="destructive"
+				size="icon"
+				className="size-7"
+				onClick={(event) => {
+					table.toggleAllPageRowsSelected(false);
+					deleteSelectedRows?.(table, event);
+				}}
+			>
+				<Icon icon="trash" className="size-4" aria-hidden="true" />
+				<span className="sr-only">Delete</span>
+			</Button>
+		</div>
+	);
 }

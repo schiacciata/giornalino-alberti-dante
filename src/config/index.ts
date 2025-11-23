@@ -1,8 +1,8 @@
-import { env } from "@/env.mjs";
+import { env } from "@/lib/env/server";
 
 const config = {
-    debug: env.NODE_ENV !== "production",
-    admin: 'pietro.padovani06@gmail.com',
-};
+	debug: env.NODE_ENV !== "production",
+	admin: env.ADMIN_EMAIL,
+} as const;
 
 export default config;

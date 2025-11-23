@@ -1,66 +1,81 @@
-'use client'
+"use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Post, User } from "@prisma/client";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { editPost } from "@/actions/post";
+import { type ChangeEvent, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { ChangeEvent, useState, useTransition } from "react";
-import { cn } from "@/lib/utils";
-// @ts-ignore
-import { useFormStatus } from 'react-dom';
-import { Icons } from "../icons";
-import { Switch } from "@/components/ui/switch";
-import { isAdmin } from "@/lib/auth/roles";
-import { useSession } from "next-auth/react"
-import { useI18n } from "@/lib/i18n/client";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import PostDeletePDFButton from "./delete-pdf-button";
+import { editPost } from "@/actions/post";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { uploadToGithub } from "@/lib/files";
+import { Switch } from "@/components/ui/switch";
 import filesConfig from "@/config/files";
+import type { Post, User } from "@/generated/prisma/client";
+import { authClient } from "@/lib/auth/client";
+import { isAdmin } from "@/lib/auth/roles";
+import { uploadToGithub } from "@/lib/files";
+import { useI18n } from "@/lib/i18n/client";
+import { cn } from "@/lib/utils";
+import { Icons } from "../icons";
+import PostDeletePDFButton from "./delete-pdf-button";
 
 type PostEditDialogProps = {
-    post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">,
-    users: Pick<User, 'id' | 'email' | 'name' | 'image'>[],
-}
+	post: Pick<Post, "id" | "title" | "published" | "pdfPath" | "authorId">;
+	users: Pick<User, "id" | "email" | "name" | "image">[];
+};
 
 export function PostEditDialog({ post, users }: PostEditDialogProps) {
-    const t = useI18n();
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [isPublished, setIsPublished] = useState<boolean>(post.published);
-    const [file, setFile] = useState<File | null>(null);
-    const { data: session } = useSession();
-    const [isLoading, startTransition] = useTransition();
+	const t = useI18n();
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isPublished, setIsPublished] = useState<boolean>(post.published);
+	const [file, setFile] = useState<File | null>(null);
+	const { data: session } = authClient.useSession();
+	const [isLoading, startTransition] = useTransition();
 
-    const isUserAdmin = session && isAdmin(session.user);
+	const isUserAdmin = session && isAdmin(session.user);
 
-    const onSubmit = async (formData: FormData) => {
-        if (file && file.size > 0 && file.type === 'application/pdf') {
-            const pdfPath = `/${filesConfig.pdfPath}/${file.name}`;
-            const id = toast.loading(`Uploading "${file.name}"...`);
+	const onSubmit = async (formData: FormData) => {
+		if (file && file.size > 0 && file.type === "application/pdf") {
+			const pdfPath = `/${filesConfig.pdfPath}/${file.name}`;
+			const id = toast.loading(`Uploading "${file.name}"...`);
 
-            const uploadResult = await uploadToGithub({
-                path: `public${pdfPath}`,
-                content: await file.arrayBuffer(),
-            });
+			const uploadResult = await uploadToGithub({
+				path: `public${pdfPath}`,
+				content: await file.arrayBuffer(),
+			});
 
-            if (!uploadResult.ok) {
-                return toast.error(`Could not upload "${file.name}" (${uploadResult.status})`, {
-                    id,
-                });
-            }
+			if (!uploadResult.ok) {
+				return toast.error(
+					`Could not upload "${file.name}" (${uploadResult.status})`,
+					{
+						id,
+					},
+				);
+			}
 
-            toast.success(`"${file.name}" uploaded`, {
-                id,
-            });
-            
-            formData.set('pdfPath', pdfPath);
-            formData.delete('pdfFile');
+			toast.success(`"${file.name}" uploaded`, {
+				id,
+			});
 
-            /*toast.promise(file.arrayBuffer(), {
+			formData.set("pdfPath", pdfPath);
+			formData.delete("pdfFile");
+
+			/*toast.promise(file.arrayBuffer(), {
                 loading: 'Converting file...',
                 success(data) {
                     toast.promise(uploadToGithub({
@@ -86,190 +101,180 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
                 error(err) {
                     return `Could not convert "${file.name} (${err.message})"`;
                 },
-            })*/ 
-        }
+            })*/
+		}
 
-        startTransition(() => {
-            formData.set('published', isPublished.toString());
+		startTransition(() => {
+			formData.set("published", isPublished.toString());
 
-            toast.promise(editPost(formData), {
-                error(data) {
-                    return data.message ?? t('errors.general');
-                },
-                success(data) {
-                    if (data.error) throw new Error(data.error);
+			toast.promise(editPost(formData), {
+				error(data) {
+					return data.message ?? t("errors.general");
+				},
+				success(data) {
+					if (data.error) throw new Error(data.error);
 
-                    setIsOpen(false);
-                    return data.success
-                },
-            })
-        });
-    }
+					setIsOpen(false);
+					return data.success;
+				},
+			});
+		});
+	};
 
-    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) return;
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files) return;
 
-        const file = event.target.files[0];
-        if (file.size === 0 || file.type !== 'application/pdf') return;
+		const file = event.target.files[0];
+		if (file.size === 0 || file.type !== "application/pdf") return;
 
-        setFile(file);
-    }
+		setFile(file);
+	};
 
-    return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                <button
-                    className={cn(
-                        buttonVariants({ variant: 'default' }),
-                        {
-                            "cursor-not-allowed opacity-60": isLoading,
-                        },
-                    )}
-                    disabled={isLoading}
-                >
-                    {isLoading ? (
-                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                        <Icons.edit className="mr-2 h-4 w-4" />
-                    )}
-                    Edit post
-                </button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Edit post</DialogTitle>
-                    <DialogDescription>
-                    </DialogDescription>
-                </DialogHeader>
-                <form action={onSubmit} id="editPost" className="space-y-8">
-                    <div className="grid gap-2">
-                        <div className="flex flex-col gap-y-4 py-4">
-                            <div>
-                                <Label htmlFor="title">
-                                    Title
-                                </Label>
-                                <Input
-                                    id="title"
-                                    name="title"
-                                    required
-                                    defaultValue={post.title}
-                                    form="editPost"
-                                    className="col-span-3"
-                                    disabled={isLoading}
-                                />
-                            </div>
-                            <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                <Label htmlFor="title" className={isPublished ? `text-green-500` : 'text-orange-500'}>
-                                    {isPublished ? 'Published' : 'Not published'}
-                                </Label>
+	return (
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
+			<DialogTrigger asChild>
+				<button
+					type="button"
+					className={cn(buttonVariants({ variant: "default" }), {
+						"cursor-not-allowed opacity-60": isLoading,
+					})}
+					disabled={isLoading}
+				>
+					{isLoading ? (
+						<Icons.spinner className="mr-2 size-4 animate-spin" />
+					) : (
+						<Icons.edit className="mr-2 size-4" />
+					)}
+					Edit post
+				</button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Edit post</DialogTitle>
+					<DialogDescription></DialogDescription>
+				</DialogHeader>
+				<form action={onSubmit} id="editPost" className="space-y-8">
+					<div className="grid gap-2">
+						<div className="flex flex-col gap-y-4 py-4">
+							<div>
+								<Label htmlFor="title">Title</Label>
+								<Input
+									id="title"
+									name="title"
+									required
+									defaultValue={post.title}
+									form="editPost"
+									className="col-span-3"
+									disabled={isLoading}
+								/>
+							</div>
+							<div className="flex flex-row items-center justify-between rounded-lg border p-4">
+								<Label
+									htmlFor="title"
+									className={isPublished ? `text-green-500` : "text-orange-500"}
+								>
+									{isPublished ? "Published" : "Not published"}
+								</Label>
 
-                                <Switch
-                                    checked={isPublished}
-                                    disabled={isLoading}
-                                    onCheckedChange={setIsPublished}
-                                />
-                            </div>
-                            {post.pdfPath ? (
-                                <div>
-                                    <Label htmlFor="pdfFile">
-                                        PDF caricato
-                                    </Label>
+								<Switch
+									checked={isPublished}
+									disabled={isLoading}
+									onCheckedChange={setIsPublished}
+								/>
+							</div>
+							{post.pdfPath ? (
+								<div>
+									<Label htmlFor="pdfFile">PDF caricato</Label>
 
-                                    <Input
-                                        id="pdfFile"
-                                        disabled
-                                        value={post.pdfPath.split('/').pop()}
-                                        className="col-span-3 text-red-500"
-                                    />
-                                </div>
-                            ) : (
-                                <div>
-                                    <Label htmlFor="pdfFile">
-                                        Carica PDF
-                                    </Label>
-                                    <Input
-                                        type="file"
-                                        name="pdfFile"
-                                        id={`pdfFile`}
-                                        accept=".pdf"
-                                        form="editPost"
-                                        className="col-span-3"
-                                        onChange={handleFileChange}
-                                        disabled={isLoading}
-                                    />
-                                </div>
-                            )}
+									<Input
+										id="pdfFile"
+										disabled
+										value={post.pdfPath.split("/").pop()}
+										className="col-span-3 text-red-500"
+									/>
+								</div>
+							) : (
+								<div>
+									<Label htmlFor="pdfFile">Carica PDF</Label>
+									<Input
+										type="file"
+										name="pdfFile"
+										id={`pdfFile`}
+										accept=".pdf"
+										form="editPost"
+										className="col-span-3"
+										onChange={handleFileChange}
+										disabled={isLoading}
+									/>
+								</div>
+							)}
 
-                            {isUserAdmin && (
-                                <>
-                                    <Separator />
+							{isUserAdmin && (
+								<>
+									<Separator />
 
-                                    <div className="flex flex-col gap-y-4 p-4 border-2 border-red-500 rounded-md">
-                                        <h1 className="font-bold italic">
-                                            Admin
-                                        </h1>
-                                        <div>
-                                            <Label htmlFor="pdfPath">
-                                                PDF path
-                                            </Label>
-                                            <Input
-                                                id="pdfPath"
-                                                name="pdfPath"
-                                                defaultValue={post.pdfPath || undefined}
-                                                disabled={isLoading}
-                                                form="editPost"
-                                                className="col-span-3"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label htmlFor="authorId">
-                                                Author
-                                            </Label>
-                                            <Select
-                                                name="authorId"
-                                                defaultValue={post.authorId || undefined}
-                                                disabled={isLoading}
-                                            >
-                                                <SelectTrigger className="w-[180px]">
-                                                    <SelectValue placeholder="Select Author" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {users.map((user) => (
-                                                        <SelectItem key={user.id} value={user.id}>
-                                                            {user.name} ({user.email})
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+									<div className="flex flex-col gap-y-4 p-4 border-2 border-red-500 rounded-md">
+										<h1 className="font-bold italic">Admin</h1>
+										<div>
+											<Label htmlFor="pdfPath">PDF path</Label>
+											<Input
+												id="pdfPath"
+												name="pdfPath"
+												defaultValue={post.pdfPath || undefined}
+												disabled={isLoading}
+												form="editPost"
+												className="col-span-3"
+											/>
+										</div>
+										<div>
+											<Label htmlFor="authorId">Author</Label>
+											<Select
+												name="authorId"
+												defaultValue={post.authorId || undefined}
+												disabled={isLoading}
+											>
+												<SelectTrigger className="w-[180px]">
+													<SelectValue placeholder="Select Author" />
+												</SelectTrigger>
+												<SelectContent>
+													{users.map((user) => (
+														<SelectItem key={user.id} value={user.id}>
+															{user.name} ({user.email})
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										</div>
+									</div>
+								</>
+							)}
 
-                            <input
-                                id="id"
-                                name="id"
-                                value={post.id}
-                                form="editPost"
-                                hidden
-                                readOnly
-                            />
-                        </div>
-                    </div>
-                </form>
+							<input
+								id="id"
+								name="id"
+								value={post.id}
+								form="editPost"
+								hidden
+								readOnly
+							/>
+						</div>
+					</div>
+				</form>
 
-                <DialogFooter className="gap-y-4">
-                    {post.pdfPath && <PostDeletePDFButton disabled={isLoading} post={{ id: post.id }} />}
-                    <Button form="editPost" type="submit" disabled={isLoading}>
-                        {isLoading ? (
-                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                            <Icons.edit className="mr-2 h-4 w-4" />
-                        )}
-                        Save changes
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
+				<DialogFooter className="gap-y-4">
+					{post.pdfPath && (
+						<PostDeletePDFButton disabled={isLoading} post={{ id: post.id }} />
+					)}
+					<Button form="editPost" type="submit" disabled={isLoading}>
+						{isLoading ? (
+							<Icons.spinner className="mr-2 size-4 animate-spin" />
+						) : (
+							<Icons.edit className="mr-2 size-4" />
+						)}
+						Save changes
+					</Button>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
+	);
 }

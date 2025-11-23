@@ -1,30 +1,33 @@
-import 'server-only'
+import "server-only";
 
-import { FC } from 'react'
-import { getCurrentUser } from '@/lib/auth/user'
-import { isAdmin } from '@/lib/auth/roles';
-import { env } from '@/env.mjs';
-import Link from 'next/link';
-import github from '@/config/github';
-import { buttonVariants } from '@/components/ui/button';
-import { Icon } from './icons';
+import Link from "next/link";
+import type { FC } from "react";
+import { buttonVariants } from "@/components/ui/button";
+import github from "@/config/github";
+import { isAdmin } from "@/lib/auth/roles";
+import { getCurrentUser } from "@/lib/auth/user";
+import { env } from "@/lib/env/server";
+import { Icon } from "./icons";
 
-interface GitHashIndicatorProps {
-  
-}
+type GitHashIndicatorProps = {};
 
 const GitHashIndicator: FC<GitHashIndicatorProps> = async ({}) => {
-    const user = await getCurrentUser();
-    if (!user || !isAdmin(user)) return;
+	const user = await getCurrentUser();
+	if (!user || !isAdmin(user)) return;
 
-    const hash = env.VERCEL_GIT_COMMIT_SHA;
+	const hash = env.VERCEL_GIT_COMMIT_SHA;
 
-    return <center>
-            <Link href={`https://github.com/${github.repo}/commit/${hash}`} className={buttonVariants({ variant: 'link', className: 'italic' })}>
-                <Icon icon='github'/>
-                <kbd>{hash}</kbd>
-            </Link>
-        </center>
-}
+	return (
+		<center>
+			<Link
+				href={`https://github.com/${github.repo}/commit/${hash}`}
+				className={buttonVariants({ variant: "link", className: "italic" })}
+			>
+				<Icon icon="github" />
+				<kbd>{hash}</kbd>
+			</Link>
+		</center>
+	);
+};
 
-export default GitHashIndicator
+export default GitHashIndicator;

@@ -1,9 +1,12 @@
-import { CLEAR_NOTIFICATIONS, clearAppBadge } from "../utils/badge"
+import { CLEAR_NOTIFICATIONS, clearAppBadge } from "../utils/badge";
 
-const handle = async (sw: ServiceWorkerGlobalScope, event?: ExtendableMessageEvent) => {
-    if (!event) return;
+const handle = async (
+	sw: ServiceWorkerGlobalScope,
+	event?: ExtendableMessageEvent,
+) => {
+	if (!event) return;
 
-    /*if (event.data.action === 'STORE_SUBSCRIPTION') {
+	/*if (event.data.action === 'STORE_SUBSCRIPTION') {
         messageChannelPort?.postMessage({ message: '[sw:message] storing subscription in IndexedDB', context: { endpoint: event.data.subscription.endpoint } })
         return event.waitUntil(storage.setItem('subscription', { ...event.data.subscription, swVersion: 2 }))
       }
@@ -15,23 +18,25 @@ const handle = async (sw: ServiceWorkerGlobalScope, event?: ExtendableMessageEve
       }
       */
 
-    switch (event.data.action) {
-        case CLEAR_NOTIFICATIONS:
-        return event.waitUntil((async () => {
-            let notifications: any[] = []
-            try {
-              notifications = await sw.registration.getNotifications()
-            } catch (err) {
-              console.error('failed to get notifications')
-            }
-            notifications.forEach(notification => notification.close())
-            //activeCount = 0
-            return await clearAppBadge(sw)
-          })());
-    
-        default:
-            break;
-    }
+	switch (event.data.action) {
+		case CLEAR_NOTIFICATIONS:
+			return event.waitUntil(
+				(async () => {
+					let notifications: Notification[] = [];
+					try {
+						notifications = await sw.registration.getNotifications();
+					} catch (_) {
+						console.error("failed to get notifications");
+					}
+					notifications.map((notification) => notification.close());
+					//activeCount = 0
+					return await clearAppBadge(sw);
+				})(),
+			);
+
+		default:
+			break;
+	}
 };
 
 export default handle;

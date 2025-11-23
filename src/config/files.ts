@@ -1,5 +1,5 @@
 const filesConfig = {
-    pdfPath: 'pdfs',
-};
+	pdfPath: "pdfs",
+} as const;
 
 export default filesConfig;

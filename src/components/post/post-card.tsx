@@ -38,7 +38,7 @@ export const PostCard: FC<PostCardProps> = ({ post, comments }) => {
       </div>
         <Link
             href={`/blog/${post.id}`}
-            className={buttonVariants({ className: 'bg-none bg-gradient-to-r from-bg-primary via-bg-secondary to-bg-primary' })}
+            className={buttonVariants({ className: 'bg-none bg-linear-to-r from-bg-primary via-bg-secondary to-bg-primary' })}
             >
               <Icon icon="read"/>
               {t('read')}

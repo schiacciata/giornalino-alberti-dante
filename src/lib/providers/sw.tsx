@@ -1,159 +1,189 @@
-'use client'
+"use client";
 
-import { env } from '@/env.mjs'
-import { createContext, useContext, useEffect, useState, useCallback, ReactElement, useMemo } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import {
+	createContext,
+	type ReactElement,
+	use,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
+import { useLocalStorage } from "usehooks-ts";
+import { env } from "@/lib/env/client";
+import { SerwistProvider } from "../serwist";
 
 type SubscriptionVariables = {
-  endpoint: string;
-  p256dh: ArrayBuffer | null;
-  auth: ArrayBuffer | null;
-}
+	endpoint: string;
+	p256dh: ArrayBuffer | null;
+	auth: ArrayBuffer | null;
+};
 
 export type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
+	prompt: () => Promise<void>;
+	userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
 
 export type SWContext = {
-  registration?: ServiceWorkerRegistration
-  support: Record<string, boolean>
-  permission: NotificationPermission
-  promptInstall: BeforeInstallPromptEvent | null;
-  requestNotificationPermission: () => Promise<void>
-  togglePushSubscription: () => Promise<void>
-}
+	registration?: ServiceWorkerRegistration;
+	support: Record<string, boolean>;
+	permission: NotificationPermission;
+	promptInstall: BeforeInstallPromptEvent | null;
+	requestNotificationPermission: () => Promise<void>;
+	togglePushSubscription: () => Promise<void>;
+};
 
-const applicationServerKey = env.NEXT_PUBLIC_VAPID_PUBKEY
-const ServiceWorkerContext = createContext<SWContext | null>(null)
+const applicationServerKey = env.NEXT_PUBLIC_VAPID_PUBKEY;
+const ServiceWorkerContext = createContext<SWContext | null>(null);
 
 type ServiceWorkerProviderProps = {
-  children: ReactElement<any>;
-}
+	children: ReactElement<any>;
+};
 
-export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) => {
-  const [registration, setRegistration] = useState<ServiceWorkerRegistration | undefined>()
-  const [support, setSupport] = useState<Record<string, boolean>>({ serviceWorker: false, pushManager: false })
-  const [permission, setPermission] = useState<NotificationPermission>("denied");
-  const [promptInstall, setPromptInstall] = useState<BeforeInstallPromptEvent | null>(null);
-  const [, setInstalled] = useLocalStorage('installed', false);
+export const ServiceWorkerProvider = ({
+	children,
+}: ServiceWorkerProviderProps) => {
+	const [registration, setRegistration] = useState<
+		ServiceWorkerRegistration | undefined
+	>();
+	const [support, setSupport] = useState<Record<string, boolean>>({
+		serviceWorker: false,
+		pushManager: false,
+	});
+	const [permission, setPermission] =
+		useState<NotificationPermission>("denied");
+	const [promptInstall, setPromptInstall] =
+		useState<BeforeInstallPromptEvent | null>(null);
+	const [, setInstalled] = useLocalStorage("installed", false);
 
-  useEffect(() => {
-    if (!navigator) return;
+	useEffect(() => {
+		if (!navigator) return;
 
-    const supportsSW = 'serviceWorker' in navigator;
-    const supportsNotifications = 'Notification' in window;
-    
-    if (!supportsSW) {
-      console.error('device does not support service worker')
-      return
-    }
+		const supportsSW = "serviceWorker" in navigator;
+		const supportsNotifications = "Notification" in window;
 
-    if ("serviceWorker" in navigator && window.serwist !== undefined) {
-      window.serwist.register()
-        .then(registration => {
-          console.info('service worker registration successful')
-          setRegistration(registration)
-        });
-    }
+		if (!supportsSW) {
+			console.error("device does not support service worker");
+			return;
+		}
 
-    setSupport({
-      serviceWorker: supportsSW,
-      notification: supportsNotifications,
-      pushManager: 'PushManager' in window
-    });
-    setPermission(supportsNotifications ? window.Notification.permission : 'denied' );
+		if ("serviceWorker" in navigator && window.serwist !== undefined) {
+			window.serwist
+				.register()
+				.catch()
+				.then((registration) => {
+					console.info("service worker registration successful");
+					setRegistration(registration);
+				});
+		}
 
-    
-    const appInstalledHandler = (e: Event) => {
-      e.preventDefault();
-      setInstalled(true);
-    };
+		setSupport({
+			serviceWorker: supportsSW,
+			notification: supportsNotifications,
+			pushManager: "PushManager" in window,
+		});
+		setPermission(
+			supportsNotifications ? window.Notification.permission : "denied",
+		);
 
-    const beforeInstallPromptHandler = (e: Event) => {
-      e.preventDefault();
-      setPromptInstall(e as any);
-    };
+		const appInstalledHandler = (e: Event) => {
+			e.preventDefault();
+			setInstalled(true);
+		};
 
-    window.addEventListener("appinstalled", appInstalledHandler);
-    window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
+		const beforeInstallPromptHandler = (e: Event) => {
+			e.preventDefault();
+			setPromptInstall(e as any);
+		};
 
-    return () => window.removeEventListener("transitionend", beforeInstallPromptHandler);
-  }, []);
+		window.addEventListener("appinstalled", appInstalledHandler);
+		window.addEventListener("beforeinstallprompt", beforeInstallPromptHandler);
 
-  const savePushSubscription = async (vars: SubscriptionVariables) => {
-    return (await fetch('/api/subscriptions', {
-      method: 'POST',
-      body: JSON.stringify(vars),
-    })).ok;
-  }
+		return () =>
+			window.removeEventListener("transitionend", beforeInstallPromptHandler);
+	}, []);
 
-  const requestNotificationPermission = async () => {
-    if (!registration) return;
+	const savePushSubscription = async (vars: SubscriptionVariables) => {
+		return (
+			await fetch("/api/subscriptions", {
+				method: "POST",
+				body: JSON.stringify(vars),
+			})
+		).ok;
+	};
 
-    const permission = await window.Notification.requestPermission();
-    setPermission(permission);
+	const requestNotificationPermission = async () => {
+		if (!registration) return;
 
-    if (permission === 'granted') return await subscribeToPushNotifications()
-  };
+		const permission = await window.Notification.requestPermission();
+		setPermission(permission);
 
-  const subscribeToPushNotifications = async () => {
-    const subscribeOptions = { userVisibleOnly: true, applicationServerKey }
-    // Brave users must enable a flag in brave://settings/privacy first
-    if (!registration) return;
+		if (permission === "granted") return await subscribeToPushNotifications();
+	};
 
-    let pushSubscription: any = await registration.pushManager.subscribe(subscribeOptions)
-    
-    // convert keys from ArrayBuffer to string
-    pushSubscription = JSON.parse(JSON.stringify(pushSubscription))
-    
-    const variables: SubscriptionVariables = {
-      endpoint: pushSubscription.endpoint,
-      p256dh: pushSubscription.keys.p256dh,
-      auth: pushSubscription.keys.auth,
-    }
+	const subscribeToPushNotifications = async () => {
+		const subscribeOptions = { userVisibleOnly: true, applicationServerKey };
+		// Brave users must enable a flag in brave://settings/privacy first
+		if (!registration) return;
 
-    await savePushSubscription(variables)
-  }
+		let pushSubscription: any =
+			await registration.pushManager.subscribe(subscribeOptions);
 
-  const unsubscribeFromPushNotifications = async (subscription: PushSubscription) => {
-    await subscription.unsubscribe()
-    const { endpoint } = subscription
-    /*logger.info('unsubscribed from push notifications', { endpoint })
+		// convert keys from ArrayBuffer to string
+		pushSubscription = JSON.parse(JSON.stringify(pushSubscription));
+
+		const variables: SubscriptionVariables = {
+			endpoint: pushSubscription.endpoint,
+			p256dh: pushSubscription.keys.p256dh,
+			auth: pushSubscription.keys.auth,
+		};
+
+		await savePushSubscription(variables);
+	};
+
+	const unsubscribeFromPushNotifications = async (
+		subscription: PushSubscription,
+	) => {
+		await subscription.unsubscribe();
+		const { endpoint } = subscription;
+		/*logger.info('unsubscribed from push notifications', { endpoint })
     await deletePushSubscription({ variables: { endpoint } })*/
-    
-    // also delete push subscription in IndexedDB so we can tell if the user disabled push subscriptions
-    // or we lost the push subscription due to a bug
-    /*navigator.serviceWorker.controller.postMessage({ action: 'DELETE_SUBSCRIPTION' })
+
+		// also delete push subscription in IndexedDB so we can tell if the user disabled push subscriptions
+		// or we lost the push subscription due to a bug
+		/*navigator.serviceWorker.controller.postMessage({ action: 'DELETE_SUBSCRIPTION' })
     logger.info('deleted push subscription from server', { endpoint })*/
-  }
+	};
 
-  const togglePushSubscription = useCallback(async () => {
-    if (!registration) return;
+	const togglePushSubscription = useCallback(async () => {
+		if (!registration) return;
 
-    const pushSubscription = await registration.pushManager.getSubscription()
-    if (pushSubscription) {
-      return unsubscribeFromPushNotifications(pushSubscription)
-    }
-    return subscribeToPushNotifications()
-  }, [])  
+		const pushSubscription = await registration.pushManager.getSubscription();
+		if (pushSubscription) {
+			return unsubscribeFromPushNotifications(pushSubscription);
+		}
+		return subscribeToPushNotifications();
+	}, []);
 
-  const contextValue = useMemo<SWContext>(() => ({
-    registration,
-    support,
-    permission,
-    promptInstall,
-    requestNotificationPermission,
-    togglePushSubscription
-  }), [registration, support, permission, promptInstall, requestNotificationPermission, togglePushSubscription])
+	const contextValue = useMemo<SWContext>(
+		() => ({
+			registration,
+			support,
+			permission,
+			promptInstall,
+			requestNotificationPermission,
+			togglePushSubscription,
+		}),
+		[registration, support, permission, promptInstall, togglePushSubscription],
+	);
 
-  return (
-    <ServiceWorkerContext.Provider value={contextValue}>
-      {children}
-    </ServiceWorkerContext.Provider>
-  )
-}
+	return (
+		<ServiceWorkerContext value={contextValue}>
+			<SerwistProvider swUrl="/sw.js">{children}</SerwistProvider>
+		</ServiceWorkerContext>
+	);
+};
 
-export function useServiceWorker () {
-  return useContext(ServiceWorkerContext)
+export function useServiceWorker() {
+	return use(ServiceWorkerContext);
 }

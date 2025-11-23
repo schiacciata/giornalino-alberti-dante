@@ -1,4 +1,6 @@
-import { Role } from "@prisma/client";
+import type { auth } from "../auth";
 
-export const isAdmin = (user: { role: Role }) => user.role === "ADMIN";
-export const isEditor = (user: { role: Role }) => isAdmin(user) || user.role === "EDITOR";
+export const isAdmin = (user: Pick<typeof auth.$Infer.Session.user, "role">) =>
+	user.role === "ADMIN";
+export const isEditor = (user: Pick<typeof auth.$Infer.Session.user, "role">) =>
+	isAdmin(user) || user.role === "EDITOR";

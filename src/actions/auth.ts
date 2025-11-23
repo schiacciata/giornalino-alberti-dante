@@ -1,157 +1,144 @@
 "use server";
 
-import * as z from "zod";
-import { AuthError } from "next-auth";
-
+import bcrypt from "bcryptjs";
+import type * as z from "zod";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { signIn } from "@/lib/auth";
-import { loginSchema, registerSchema } from "@/lib/validations/auth";
-import { getUserByEmail } from "@/lib/queries/user";
+import { getTwoFactorConfirmationByUserId } from "@/lib/queries/two-factor-confirmation";
 import { getTwoFactorTokenByEmail } from "@/lib/queries/two-factor-token";
+import { getUserByEmail } from "@/lib/queries/user";
 /*import { 
   sendVerificationEmail,
   sendTwoFactorTokenEmail,
-} from "@/lib/mail";*/
-import { 
-  //generateVerificationToken,
-  generateTwoFactorToken
-} from "@/lib/tokens";
-import { 
-  getTwoFactorConfirmationByUserId
-} from "@/lib/queries/two-factor-confirmation";
-import bcrypt from 'bcryptjs';
+} from "@/lib/mail";
+import {
+	generateVerificationToken,
+	generateTwoFactorToken,
+} from "@/lib/tokens";*/
+import { loginSchema, registerSchema } from "@/lib/validations/auth";
 
 export const login = async (
-  values: z.infer<typeof loginSchema>,
-  callbackUrl?: string | null,
+	values: z.infer<typeof loginSchema>,
+	callbackUrl?: string | null,
 ) => {
-  const validatedFields = loginSchema.safeParse(values);
+	const validatedFields = loginSchema.safeParse(values);
 
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-  }
+	if (!validatedFields.success) {
+		return { error: "Invalid fields!" };
+	}
 
-  const { email, password, code } = validatedFields.data;
+	const { email, password, code } = validatedFields.data;
 
-  const existingUser = await getUserByEmail(email);
+	const existingUser = await getUserByEmail(email);
 
-  if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: "Email does not exist!" }
-  }
+	if (!existingUser || !existingUser.email || !existingUser.password) {
+		return { error: "Email does not exist!" };
+	}
 
-  if (!existingUser.emailVerified && false) {
-    /*const verificationToken = await generateVerificationToken(
+	/*if (!existingUser.emailVerified) {
+		const verificationToken = await generateVerificationToken(
       existingUser.email,
     );
 
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token,
-    );*/
+    );
 
-    return { success: "Confirmation email sent!" };
-  }
+		return { success: "Confirmation email sent!" };
+	}*/
 
-  if (existingUser.isTwoFactorEnabled && existingUser.email) {
-    if (code) {
-      const twoFactorToken = await getTwoFactorTokenByEmail(
-        existingUser.email
-      );
+	if (existingUser.isTwoFactorEnabled && existingUser.email) {
+		if (code) {
+			const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
-      if (!twoFactorToken) {
-        return { error: "Invalid code!" };
-      }
+			if (!twoFactorToken) {
+				return { error: "Invalid code!" };
+			}
 
-      if (twoFactorToken.token !== code) {
-        return { error: "Invalid code!" };
-      }
+			if (twoFactorToken.token !== code) {
+				return { error: "Invalid code!" };
+			}
 
-      const hasExpired = new Date(twoFactorToken.expires) < new Date();
+			const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
-      if (hasExpired) {
-        return { error: "Code expired!" };
-      }
+			if (hasExpired) {
+				return { error: "Code expired!" };
+			}
 
-      await db.twoFactorToken.delete({
-        where: { id: twoFactorToken.id }
-      });
+			await db.twoFactorToken.delete({
+				where: { id: twoFactorToken.id },
+			});
 
-      const existingConfirmation = await getTwoFactorConfirmationByUserId(
-        existingUser.id
-      );
+			const existingConfirmation = await getTwoFactorConfirmationByUserId(
+				existingUser.id,
+			);
 
-      if (existingConfirmation) {
-        await db.twoFactorConfirmation.delete({
-          where: { id: existingConfirmation.id }
-        });
-      }
+			if (existingConfirmation) {
+				await db.twoFactorConfirmation.delete({
+					where: { id: existingConfirmation.id },
+				});
+			}
 
-      await db.twoFactorConfirmation.create({
-        data: {
-          userId: existingUser.id,
-        }
-      });
-    } else {
-      const twoFactorToken = await generateTwoFactorToken(existingUser.email)
-      /*await sendTwoFactorTokenEmail(
+			await db.twoFactorConfirmation.create({
+				data: {
+					userId: existingUser.id,
+				},
+			});
+		} else {
+			/*const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+			await sendTwoFactorTokenEmail(
         twoFactorToken.email,
         twoFactorToken.token,
       );*/
 
-      return { twoFactor: true };
-    }
-  }
+			return { twoFactor: true };
+		}
+	}
 
-  try {
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: callbackUrl || '/',
-    })
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials!" }
-        default:
-          return { error: "Something went wrong!" }
-      }
-    }
-
-    throw error;
-  }
+	try {
+		await auth.api.signInEmail({
+			body: {
+				email,
+				password,
+				callbackURL: callbackUrl || "/",
+			},
+		});
+	} catch (error) {
+		return { error: error?.message || "Invalid credentials!" };
+	}
 };
 
 export const register = async (values: z.infer<typeof registerSchema>) => {
-  const validatedFields = registerSchema.safeParse(values);
+	const validatedFields = registerSchema.safeParse(values);
 
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
-  }
+	if (!validatedFields.success) {
+		return { error: "Invalid fields!" };
+	}
 
-  const { email, password, name } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
+	const { email, password, name } = validatedFields.data;
+	const hashedPassword = await bcrypt.hash(password, 10);
 
-  const existingUser = await getUserByEmail(email);
+	const existingUser = await getUserByEmail(email);
 
-  if (existingUser) {
-    return { error: "Email already in use!" };
-  }
+	if (existingUser) {
+		return { error: "Email already in use!" };
+	}
 
-  await db.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
+	await db.user.create({
+		data: {
+			name,
+			email,
+			password: hashedPassword,
+		},
+	});
 
-  /*const verificationToken = await generateVerificationToken(email);
+	/*const verificationToken = await generateVerificationToken(email);
   await sendVerificationEmail(
     verificationToken.email,
     verificationToken.token,
   );
 
   return { success: "Confirmation email sent!" };*/
-  return { success: "Account created" };
+	return { success: "Account created" };
 };

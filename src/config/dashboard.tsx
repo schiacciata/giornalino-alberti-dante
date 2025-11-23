@@ -50,7 +50,7 @@ export const getSidebar = async () => {
     title: scopedT('support'),
     items: [
       {
-        title: <h2 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+        title: <h2 className="font-extrabold text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-600">
             Instagram
         </h2>,
         href: links.instagram,
@@ -58,7 +58,7 @@ export const getSidebar = async () => {
         _blank: true,
       },
       {
-        title: <h2 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-cyan-500 via-[#ffff00] to-cyan-500">
+        title: <h2 className="font-extrabold text-transparent bg-clip-text bg-linear-to-b from-cyan-500 via-[#ffff00] to-cyan-500">
             {t('help')}
         </h2>,
         href: `mailto:${config.admin}`,

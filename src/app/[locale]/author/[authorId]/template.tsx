@@ -1,5 +1,5 @@
 "use client"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 
 const variants = {
     hidden: { opacity: 0, x: -200, y: 0 },

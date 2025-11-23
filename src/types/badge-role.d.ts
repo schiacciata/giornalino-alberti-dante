@@ -1,7 +1,3 @@
-import { Role } from "@prisma/client";
+import type { Role } from "@/generated/prisma/client";
 
-type BadgeRole = Role | 'AUTHOR';
-
-export type {
-    BadgeRole,
-}
+export type BadgeRole = Role | "AUTHOR";

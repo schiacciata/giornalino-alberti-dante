@@ -1,61 +1,60 @@
-import { notFound, redirect } from "next/navigation"
-import { Page } from "@prisma/client"
+import { unstable_noStore as noStore } from "next/cache";
+import { notFound, redirect } from "next/navigation";
+import { Editor } from "@/components/editor/editor";
+import type { Page } from "@/generated/prisma/client";
+import { authPages } from "@/lib/auth/config";
+import { getCurrentUser } from "@/lib/auth/user";
+import { db } from "@/lib/db";
 
-import authOptions from "@/lib/auth/config"
-import { db } from "@/lib/db"
-import { getCurrentUser } from "@/lib/auth/user"
-import { Editor } from "@/components/editor/editor"
-import { unstable_noStore as noStore } from 'next/cache';
-
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 //export const revalidate = 0;
-export const fetchCache = 'force-no-store';
+export const fetchCache = "force-no-store";
 
 async function getPageForUser(pageId: Page["id"]) {
-  noStore();
-  return await db.page.findFirst({
-    where: {
-      id: pageId,
-    },
-    select: {
-      id: true,
-      post: true,
-      number: true,
-      content: true,
-    }
-  })
+	noStore();
+	return await db.page.findFirst({
+		where: {
+			id: pageId,
+		},
+		select: {
+			id: true,
+			post: true,
+			number: true,
+			content: true,
+		},
+	});
 }
 
 interface EditorPageProps {
-  params: Promise<{ pageId: string }>
+	params: Promise<{ pageId: string }>;
 }
 
 export default async function EditorPage(props: EditorPageProps) {
-  const params = await props.params;
-  noStore();
-  const user = await getCurrentUser()
+	const params = await props.params;
+	noStore();
+	const user = await getCurrentUser();
 
-  if (!user) {
-    redirect(authOptions?.pages?.signIn)
-  }
+	if (!user) {
+		redirect(authPages.signIn);
+	}
 
-  const page = await getPageForUser(params.pageId)
+	const page = await getPageForUser(params.pageId);
 
-  if (!page) {
-    notFound()
-  }
+	if (!page) {
+		notFound();
+	}
 
-  return (
-    <Editor
-      page={{
-        id: page.id,
-        number: page.number,
-        content: page.content,
-      }}
-      post={{
-        title: page.post.title,
-        id: page.post.id,
-      }}
-    />
-  )
+	return (
+		<Editor
+			page={{
+				id: page.id,
+				number: page.number,
+				content: page.content,
+			}}
+			post={{
+				title: page.post.title,
+				id: page.post.id,
+			}}
+		/>
+	);
 }

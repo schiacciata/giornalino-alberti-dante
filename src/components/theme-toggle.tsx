@@ -1,67 +1,63 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useTheme } from "next-themes"
-
-import { Button } from "@/components/ui/button"
+import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import * as React from "react";
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Icons } from "@/components/icons"
-import { useScopedI18n } from '@/lib/i18n/client'
-import { useIsMobile } from "@/hooks/use-mobile"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useScopedI18n } from "@/lib/i18n/client";
+import { cn } from "@/lib/utils";
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme();
-  const scopedT = useScopedI18n('theme');
-  const isMobile = useIsMobile();
-  const path = usePathname();
+	const { setTheme } = useTheme();
+	const scopedT = useScopedI18n("theme");
+	const isMobile = useIsMobile();
+	const path = usePathname();
 
-  const isDashboard = path?.startsWith('/dashboard');
+	const isDashboard = path?.startsWith("/dashboard");
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "h-8 w-8 px-0",
-            isDashboard && 'w-full',
-          )}
-        >
-          <Icons.sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Icons.moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">{scopedT('toggle')}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className={cn(
-          "min-w-56 rounded-lg",
-          isDashboard && 'w-[--radix-dropdown-menu-trigger-width]',
-        )}
-        side={isMobile || !isDashboard ? "bottom" : "right"}
-        align="end"
-        sideOffset={4}
-      >
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          <Icons.sun className="mr-2 h-4 w-4" />
-          <span>{scopedT('light')}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <Icons.moon className="mr-2 h-4 w-4" />
-          <span>{scopedT('dark')}</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          <Icons.laptop className="mr-2 h-4 w-4" />
-          <span>{scopedT('system')}</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button
+					variant="ghost"
+					size="sm"
+					className={cn("h-8 w-8 px-0", isDashboard && "w-full")}
+				>
+					<Icons.sun className="rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+					<Icons.moon className="absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+					<span className="sr-only">{scopedT("toggle")}</span>
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent
+				className={cn(
+					"min-w-56 rounded-lg",
+					isDashboard && "w-(--radix-dropdown-menu-trigger-width)",
+				)}
+				side={isMobile || !isDashboard ? "bottom" : "right"}
+				align="end"
+				sideOffset={4}
+			>
+				<DropdownMenuItem onClick={() => setTheme("light")}>
+					<Icons.sun className="mr-2 size-4" />
+					<span>{scopedT("light")}</span>
+				</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => setTheme("dark")}>
+					<Icons.moon className="mr-2 size-4" />
+					<span>{scopedT("dark")}</span>
+				</DropdownMenuItem>
+				<DropdownMenuItem onClick={() => setTheme("system")}>
+					<Icons.laptop className="mr-2 size-4" />
+					<span>{scopedT("system")}</span>
+				</DropdownMenuItem>
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 }

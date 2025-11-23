@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, type FC } from 'react'
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 interface HeaderWrapperProps {
     children: React.ReactNode

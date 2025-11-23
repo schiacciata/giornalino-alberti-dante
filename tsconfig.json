@@ -1,32 +1,39 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": ["./src/*"],
-      "contentlayer/generated": ["./.contentlayer/generated"]
-    },
-    "types": [
-      "@serwist/next/typings",
-    ]
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.d.ts", "**/*.tsx", ".next/types/**/*.ts", ".contentlayer/generated"],
-  "exclude": ["node_modules"]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"target": "esnext",
+		"lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"strict": true,
+		"noEmit": true,
+		"esModuleInterop": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"jsx": "react-jsx",
+		"incremental": true,
+		"plugins": [
+			{
+				"name": "next"
+			}
+		],
+		"paths": {
+			"@/*": ["./src/*"],
+			"contentlayer/generated": ["./.contentlayer/generated"],
+			"@/generated/*": ["./generated/*"]
+		},
+		"types": ["@serwist/next/typings"]
+	},
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.d.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		".contentlayer/generated",
+		".next/dev/types/**/*.ts"
+	],
+	"exclude": ["node_modules"]
 }

@@ -5,7 +5,7 @@ import { SidebarItem } from "@/components/dashboard/sidebar-item"
 import { NavSection } from "../nav-section";
 import React from "react";
 import { cn } from "@/lib/utils";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 
 interface DashboardNavProps {
   sections: SidebarNavSection[];

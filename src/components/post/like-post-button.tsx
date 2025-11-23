@@ -1,67 +1,67 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useTransition } from "react"
-import { Button } from "@/components/ui/button"
-import { Post } from "@prisma/client"
-import { Icon, TIcon } from "../icons"
-import { useSession } from "next-auth/react"
-import { likePost } from "@/actions/post"
-import { toast } from "sonner"
-import { useI18n } from "@/lib/i18n/client"
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "sonner";
+import { likePost } from "@/actions/post";
+import { Button } from "@/components/ui/button";
+import type { Post } from "@/generated/prisma/client";
+import { authClient } from "@/lib/auth/client";
+import { useI18n } from "@/lib/i18n/client";
 import { cn } from "@/lib/utils";
+import { Icon, type TIcon } from "../icons";
 
 interface LikePostButtonProps {
-  post: Pick<Post, 'id' | 'likesUserIDs'>
+	post: Pick<Post, "id" | "likesUserIDs">;
 }
 
 export function LikePostButton({ post }: LikePostButtonProps) {
-  const t = useI18n();
+	const t = useI18n();
 
-  const [isPending, startTransition] = useTransition();
-  const [isLiked, setIsLiked] = useState<boolean>(false);
+	const [isPending, startTransition] = useTransition();
+	const [isLiked, setIsLiked] = useState<boolean>(false);
 
-  const { data: session, status } = useSession();
-  const isLoading = status === 'loading' || isPending;
+	const { data: session, isPending: isLoading } = authClient.useSession();
+	useEffect(() => {
+		if (!session) return;
+		const { id } = session.user;
 
-  useEffect(() => {
-    if (!session) return;
-    const { id } = session.user;
+		setIsLiked(post.likesUserIDs.some((userId) => userId === id));
+	}, [session?.user]);
 
-    setIsLiked(post.likesUserIDs.some(userId => userId === id));
-  }, [status])
+	async function handleAction() {
+		startTransition(() => {
+			likePost({
+				id: post.id,
+				liked: !isLiked,
+			})
+				.then((data) => {
+					if (data.error) {
+						toast.error(data.error);
+					}
 
-  async function handleAction() {
-    startTransition(() => {
-      likePost({
-        id: post.id,
-        liked: !isLiked
-      })
-        .then((data) => {
-          if (data.error) {
-            toast.error(data.error);
-          }
+					if (data.success) {
+						toast.success(data.success);
+						setIsLiked(!isLiked);
+					}
+				})
+				.catch(() => toast.error(t("errors.general")));
+		});
+	}
 
-          if (data.success) {
-            toast.success(data.success);
-            setIsLiked(!isLiked);
+	const getIcon = (): TIcon => {
+		if (isLoading || isPending) return "spinner";
 
-          }
-        })
-        .catch(() => toast.error(t('errors.general')));
-    })
-  }
+		return "heart";
+	};
 
-  const getIcon = (): TIcon => {
-    if (isLoading) return 'spinner';
-
-    return 'heart';
-  }
-
-  return (
-    <form action={handleAction}>
-      <Button variant="link" size="icon" type="submit" disabled={isLoading}>
-        <Icon icon={getIcon()} className={cn('m-0', isLiked ? 'fill-red-500' : '')} />
-      </Button>
-    </form>
-  )
+	return (
+		<form action={handleAction}>
+			<Button variant="link" size="icon" type="submit" disabled={isLoading}>
+				<Icon
+					icon={getIcon()}
+					className={cn("m-0", isLiked ? "fill-red-500" : "")}
+				/>
+			</Button>
+		</form>
+	);
 }

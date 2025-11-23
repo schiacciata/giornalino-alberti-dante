@@ -1,7 +1,7 @@
-import { useSession } from "next-auth/react";
+import { authClient } from "@/lib/auth/client";
 
 export const useCurrentUser = () => {
-  const session = useSession();
+	const session = authClient.useSession();
 
-  return session.data?.user;
+	return session.data?.user;
 };
