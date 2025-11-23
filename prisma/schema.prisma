@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -33,7 +32,6 @@ model Account {
   @@unique([provider, providerAccountId])
   @@index([userId])
   @@map("account")
-  @@index([userId])
 }
 
 model Session {
@@ -49,7 +47,6 @@ model Session {
 
   @@index([userId])
   @@map("session")
-  @@index([userId])
 }
 
 model Page {
@@ -60,6 +57,8 @@ model Page {
   updatedAt DateTime @updatedAt @map(name: "updated_at")
   postId    String   @db.ObjectId
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
 }
 
 model Post {
@@ -76,6 +75,8 @@ model Post {
   authorId     String    @db.ObjectId
   author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments     Comment[] @relation("PostComments")
+
+  @@index([authorId])
 }
 
 enum Role {
@@ -130,6 +131,9 @@ model Comment {
 
   author User @relation("PostComments", fields: [authorId], references: [id], onDelete: Cascade)
   post   Post @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([authorId])
+  @@index([postId])
 }
 
 model PasswordResetToken {
@@ -169,5 +173,4 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
-  @@index([identifier])
 }
