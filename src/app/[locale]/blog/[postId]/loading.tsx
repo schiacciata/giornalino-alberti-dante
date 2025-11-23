@@ -2,7 +2,6 @@ import { Shell } from "@/components/dashboard/shell";
 import { Header } from "@/components/header";
 import { PageSwitcher } from "@/components/page/page-switcher";
 import PostInsertComment from "@/components/post/post-insert-comment";
-import { PostItem } from "@/components/post/post-item";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -31,10 +30,10 @@ export default async function BlogLoading() {
 						<Skeleton className="h-4 w-[200px]" />
 					</div>
 				</div>
-				<div>
+				<div className="flex-row items-center justify-center">
 					<Skeleton className="h-4 w-full" />
 					<PageSwitcher pageIndex={0} pageCount={0} />
-					<Skeleton className="h-[400px] md:h-[1100px] w-[300px] md:w-[800px] rounded-xl" />
+					<Skeleton className="h-[400px] md:h-[1100px] w-[300px] md:w-[800px] rounded-xl mx-auto" />
 					<PageSwitcher pageIndex={0} pageCount={0} />
 				</div>
 				<Separator />

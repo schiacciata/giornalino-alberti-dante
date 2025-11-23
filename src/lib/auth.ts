@@ -10,12 +10,6 @@ export const auth = betterAuth({
 		provider: "mongodb",
 	}),
 	experimental: { joins: true },
-	session: {
-		cookieCache: {
-			enabled: true,
-			maxAge: 5 * 60, // Cache duration in seconds
-		},
-	},
 	emailAndPassword: {
 		enabled: true,
 	},
@@ -33,13 +27,34 @@ export const auth = betterAuth({
 			clientSecret: env.SPOTIFY_CLIENT_SECRET,
 		},
 	},
+	session: {
+		cookieCache: {
+			enabled: true,
+			maxAge: 5 * 60, // Cache duration in seconds
+		},
+		fields: {
+			expiresAt: "expires",
+			token: "sessionToken",
+		},
+	},
 	account: {
 		accountLinking: {
 			enabled: true,
 			updateUserInfoOnLink: true,
 		},
+		fields: {
+			providerId: "provider",
+			accountId: "providerAccountId",
+			refreshToken: "refresh_token",
+			accessToken: "access_token",
+			accessTokenExpiresAt: "expires_at", // or "access_token_expires"
+			idToken: "id_token",
+		},
 	},
 	user: {
+		fields: {
+			emailVerified: "emailVerified",
+		},
 		deleteUser: {
 			enabled: true,
 		},

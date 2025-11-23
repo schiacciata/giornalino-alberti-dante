@@ -9,10 +9,6 @@ export const serverEnv = createEnv({
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
-		NEXTAUTH_SECRET:
-			process.env.NODE_ENV === "production"
-				? z.string()
-				: z.string().optional(),
 		GOOGLE_CLIENT_ID: z.string().min(1),
 		GOOGLE_CLIENT_SECRET: z.string().min(1),
 		DATABASE_URL: z.string().min(1),
@@ -26,6 +22,8 @@ export const serverEnv = createEnv({
 		DISCORD_CLIENT_ID: z.string().min(1),
 		DISCORD_CLIENT_SECRET: z.string().min(1),
 		ADMIN_EMAIL: z.email().optional(),
+		BETTER_AUTH_SECRET: z.string().min(1),
+		BETTER_AUTH_URL: z.string().min(1),
 	},
 	experimental__runtimeEnv: process.env,
 });
