@@ -17,7 +17,8 @@ export async function PATCH(
 ) {
   try {
     // Validate the route context.
-    const { params } = routeContextSchema.parse(context)
+    const { params } = routeContextSchema.parse(/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    context)
 
     // Ensure user is authentication and has access to this user.
     const user = await getCurrentUser();

@@ -11,12 +11,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "@/components/icons";
 
 type AuthorPostPageProps = {
-    params: {
+    params: Promise<{
         authorId: string;
-    }
+    }>
 }
 
-export default async function AuthorPostPage({ params }: AuthorPostPageProps) {
+export default async function AuthorPostPage(props: AuthorPostPageProps) {
+    const params = await props.params;
     const t = await getI18n();
     const scopedT = await getScopedI18n('author');
 

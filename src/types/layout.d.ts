@@ -2,7 +2,7 @@ interface RootLayoutProps  {
     params: {
         locale: string
     }
-    children: ReactElement
+    children: ReactElement<any>
 }
 
 export {

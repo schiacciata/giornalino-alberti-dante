@@ -9,10 +9,11 @@ export const metadata = {
 }
 
 export interface IndexPageProps {
-  searchParams: SearchParams
+  searchParams: Promise<SearchParams>
 }
 
-export default async function UsersPage({ searchParams }: IndexPageProps) {
+export default async function UsersPage(props: IndexPageProps) {
+  const searchParams = await props.searchParams;
   const t = await getScopedI18n('users');
   const usersPromise = getUsers(searchParams)
 

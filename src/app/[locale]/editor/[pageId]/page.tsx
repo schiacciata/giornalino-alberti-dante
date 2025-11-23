@@ -27,10 +27,11 @@ async function getPageForUser(pageId: Page["id"]) {
 }
 
 interface EditorPageProps {
-  params: { pageId: string }
+  params: Promise<{ pageId: string }>
 }
 
-export default async function EditorPage({ params }: EditorPageProps) {
+export default async function EditorPage(props: EditorPageProps) {
+  const params = await props.params;
   noStore();
   const user = await getCurrentUser()
 

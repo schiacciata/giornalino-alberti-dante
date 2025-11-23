@@ -28,7 +28,7 @@ const applicationServerKey = env.NEXT_PUBLIC_VAPID_PUBKEY
 const ServiceWorkerContext = createContext<SWContext | null>(null)
 
 type ServiceWorkerProviderProps = {
-  children: ReactElement;
+  children: ReactElement<any>;
 }
 
 export const ServiceWorkerProvider = ({ children }: ServiceWorkerProviderProps) => {

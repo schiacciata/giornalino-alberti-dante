@@ -17,7 +17,8 @@ export async function GET(
 ) {
   try {
     // Validate the route params.
-    const { params } = routeContextSchema.parse(context)
+    const { params } = routeContextSchema.parse(/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    context)
     const user = await getCurrentUser();
 
     if (!user || !isEditor(user)) {
@@ -48,7 +49,8 @@ export async function POST(
 ) {
   try {
     // Validate the route params.
-    const { params } = routeContextSchema.parse(context)
+    const { params } = routeContextSchema.parse(/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    context)
 
     const user = await getCurrentUser();
 

@@ -25,13 +25,14 @@ export const metadata = {
 }
 
 type UsersPageProps = {
-    params: {
+    params: Promise<{
         userId: string;
-    }
+    }>
     searchParams: SearchParams;
 }
 
-export default async function UsersPage({ params, searchParams }: UsersPageProps) {
+export default async function UsersPage(props: UsersPageProps) {
+    const params = await props.params;
     const currentUser = await getCurrentUser();
     const locale = await getCurrentLocale();
     const t = await getI18n();

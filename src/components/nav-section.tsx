@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface MobileNavProps extends React.HTMLAttributes<HTMLElement> {
   sections: NavbarSection[];
-  item: (props: any) => "" | React.ReactElement;
+  item: (props: any) => "" | React.ReactElement<any>;
   iconsOnly?: boolean;
 }
 

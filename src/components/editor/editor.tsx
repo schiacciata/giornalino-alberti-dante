@@ -64,7 +64,7 @@ export function Editor({ page, post }: EditorProps) {
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(pagePatchSchema),
   })
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const router = useRouter()
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [collaborators, setCollaborators] = useState<

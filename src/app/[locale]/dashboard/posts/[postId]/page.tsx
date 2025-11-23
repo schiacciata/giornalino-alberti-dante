@@ -24,13 +24,15 @@ export const metadata = {
 }
 
 type PostsPageProps = {
-  params: {
+  params: Promise<{
     postId: string;
-  }
+  }>
   searchParams: SearchParams;
 }
 
-export default async function PostsPage({ params, searchParams }: PostsPageProps) {
+export default async function PostsPage(props: PostsPageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const user = await getCurrentUser();
   const locale = await getCurrentLocale();
   const t = await getI18n();
@@ -74,7 +76,7 @@ export default async function PostsPage({ params, searchParams }: PostsPageProps
     }
   }) : [];
 
-  const getPagesComponent = async (): Promise<ReactElement> => {
+  const getPagesComponent = async (): Promise<ReactElement<any>> => {
     if (post.pdfPath) {
       return (
         <EmptyPlaceholder>

@@ -12,12 +12,13 @@ import { Link } from "next-view-transitions";
 import AuthorCard from "@/components/post/author-card";
 
 type BlogPostPageProps = {
-  params: {
+  params: Promise<{
     postId: string;
-  }
+  }>
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage(props: BlogPostPageProps) {
+  const params = await props.params;
   const post = await db.post.findFirst({
     where: {
       id: params.postId,

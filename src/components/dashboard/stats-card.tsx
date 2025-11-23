@@ -6,7 +6,7 @@ import { Icon, TIcon } from '@/components/icons';
 import Counter from '../animata/text/counter';
 
 interface StatsCardProps {
-    header: string | number | React.ReactElement;
+    header: string | number | React.ReactElement<any>;
     data: number;
     icon?: TIcon;
 }

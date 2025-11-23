@@ -71,7 +71,13 @@ export function generateViewport(): Viewport {
   }
 }
 
-export default function RootLayout({ params, children }: RootLayoutProps) {
+export default async function RootLayout(props: RootLayoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
     <ViewTransitions>
       <html lang="en" suppressHydrationWarning>

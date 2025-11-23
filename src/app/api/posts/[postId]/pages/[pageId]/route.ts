@@ -18,7 +18,8 @@ export async function DELETE(
 ) {
   try {
     // Validate the route params.
-    const { params } = routeContextSchema.parse(context)
+    const { params } = routeContextSchema.parse(/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    context)
 
     // Check if the user has access to this page.
     if (!(await verifyCurrentUserHasAccessToPage(params.pageId))) {
@@ -48,7 +49,8 @@ export async function PATCH(
 ) {
   try {
     // Validate route params.
-    const { params } = routeContextSchema.parse(context)
+    const { params } = routeContextSchema.parse(/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
+    context)
 
     // Check if the user has access to this page.
     if (!(await verifyCurrentUserHasAccessToPage(params.pageId))) {
