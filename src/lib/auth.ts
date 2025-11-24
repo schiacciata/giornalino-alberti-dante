@@ -9,6 +9,11 @@ export const auth = betterAuth({
 	database: prismaAdapter(db, {
 		provider: "mongodb",
 	}),
+	advanced: {
+		database: {
+			generateId: false,
+		},
+	},
 	experimental: { joins: true },
 	emailAndPassword: {
 		enabled: true,
@@ -32,29 +37,14 @@ export const auth = betterAuth({
 			enabled: true,
 			maxAge: 5 * 60, // Cache duration in seconds
 		},
-		fields: {
-			expiresAt: "expires",
-			token: "sessionToken",
-		},
 	},
 	account: {
 		accountLinking: {
 			enabled: true,
 			updateUserInfoOnLink: true,
 		},
-		fields: {
-			providerId: "provider",
-			accountId: "providerAccountId",
-			refreshToken: "refresh_token",
-			accessToken: "access_token",
-			accessTokenExpiresAt: "expires_at",
-			idToken: "id_token",
-		},
 	},
 	user: {
-		fields: {
-			emailVerified: "emailVerified",
-		},
 		deleteUser: {
 			enabled: true,
 		},

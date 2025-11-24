@@ -1,7 +1,7 @@
 import "server-only";
 
-import type { PushSubscription } from "@prisma/client";
 import webPush from "web-push";
+import type { PushSubscription } from "@/generated/prisma/client";
 import { env } from "@/lib/env/server";
 import { db } from "./db";
 

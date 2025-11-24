@@ -52,6 +52,7 @@ export function fetchPostTableColumnDefs(
 				<Checkbox
 					checked={row.getIsSelected()}
 					onCheckedChange={(value) => {
+						console.log("hey", value);
 						row.toggleSelected(!!value);
 					}}
 					aria-label="Select row"

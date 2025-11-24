@@ -30,7 +30,6 @@ interface PostOperationsProps {
 }
 
 export function PostOperations({ post }: PostOperationsProps) {
-	const router = useRouter();
 	const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
 	const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
@@ -104,7 +103,13 @@ export function PostOperations({ post }: PostOperationsProps) {
 							) : (
 								<Icons.trash className="mr-2 size-4" />
 							)}
-							<span>Delete</span>
+							<form
+								action={async () => {
+									handleDeletePost();
+								}}
+							>
+								<span>Delete</span>
+							</form>
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

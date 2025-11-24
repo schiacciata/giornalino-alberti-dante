@@ -1,6 +1,5 @@
 "use client";
 
-import type { Post, User } from "@prisma/client";
 import type { FC } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import site from "@/config/site";
+import type { Post, User } from "@/generated/prisma/client";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import useIsMobile from "@/hooks/use-is-mobile";
 import { useI18n } from "@/lib/i18n/client";

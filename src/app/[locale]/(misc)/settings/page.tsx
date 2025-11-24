@@ -26,12 +26,12 @@ export default async function SettingsPage() {
 	}
 
 	const accounts = await getAccountsByUserId(user.id);
-	const formattedAccounts: Pick<Account, "provider" | "providerAccountId">[] = (
+	const formattedAccounts: Pick<Account, "providerId" | "accountId">[] = (
 		accounts || []
 	).map((account) => {
 		return {
-			provider: account.provider,
-			providerAccountId: account.providerAccountId,
+			providerId: account.providerId,
+			accountId: account.accountId,
 		};
 	});
 
@@ -48,7 +48,7 @@ export default async function SettingsPage() {
 			header: (
 				<div className="grid justify-center grid-cols-auto gap-2 w-full">
 					{formattedAccounts.map((account) => (
-						<AccountCard account={account} key={account.provider} />
+						<AccountCard account={account} key={account.providerId} />
 					))}
 					<Social linkedAccounts={formattedAccounts} />
 				</div>

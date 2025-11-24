@@ -1,21 +1,21 @@
 "use client";
 
-import type { Account } from "@prisma/client";
 import type { FC } from "react";
 import { Icon } from "@/components/icons";
 import { buttonVariants } from "@/components/ui/button";
+import type { Account } from "@/generated/prisma/client";
 import { authClient } from "@/lib/auth/client";
 import { cn, toPascalCase } from "@/lib/utils";
 
 interface SocialProps {
-	linkedAccounts?: Pick<Account, "provider" | "providerAccountId">[];
+	linkedAccounts?: Pick<Account, "providerId" | "accountId">[];
 	className?: string;
 }
 
 const Social: FC<SocialProps> = ({ linkedAccounts, className }) => {
 	const socialsProviders = ["google", "spotify", "discord"] as const;
 	const filteredProviders = socialsProviders.filter(
-		(p) => !linkedAccounts?.find((l) => l.provider === p),
+		(p) => !linkedAccounts?.find((l) => l.providerId === p),
 	);
 
 	return (

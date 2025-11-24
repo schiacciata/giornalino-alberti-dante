@@ -1,8 +1,8 @@
 "use client";
 
-import type { Page, Post } from "@prisma/client";
 import dynamic from "next/dynamic";
 import type { FC } from "react";
+import type { Page, Post } from "@/generated/prisma/client";
 import { PostContentRenderer } from "./post-content-renderer";
 
 interface PostContentProps {

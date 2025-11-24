@@ -9,52 +9,49 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId             String
+  providerId            String
+  userId                String    @db.ObjectId
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
+  scope                 String?
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  @@unique([provider, providerAccountId])
+  @@unique([providerId, accountId])
   @@index([userId])
-  @@map("account")
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String   @db.ObjectId
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  ipAddress    String?
-  userAgent    String?
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
+  expiresAt DateTime
+  token     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
   @@index([userId])
-  @@map("session")
 }
 
 model Page {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   number    Int
   content   Json?
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   postId    String   @db.ObjectId
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
 
@@ -63,13 +60,13 @@ model Page {
 
 model Post {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  title        String    @db.String
+  title        String
   image        String?
   pdfPath      String?
   pages        Page[]
   published    Boolean   @default(false)
-  createdAt    DateTime  @default(now()) @map(name: "created_at")
-  updatedAt    DateTime  @updatedAt @map(name: "updated_at")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   likesUserIDs String[]  @db.ObjectId
   likes        User[]    @relation("LikedPosts", fields: [likesUserIDs], references: [id])
   authorId     String    @db.ObjectId
@@ -86,12 +83,14 @@ enum Role {
 }
 
 model User {
-  id                    String                 @id @default(auto()) @map("_id") @db.ObjectId
-  name                  String?                @db.String
-  email                 String?                @unique @db.String
-  emailVerified         DateTime?
-  image                 String?                @db.String
-  password              String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  email         String
+  emailVerified Boolean  @default(false)
+  image         String?
+
   accounts              Account[]
   sessions              Session[]
   posts                 Post[]
@@ -100,12 +99,10 @@ model User {
   likedPosts            Post[]                 @relation("LikedPosts", fields: [likedPostsIDs], references: [id])
   PushSubscriptions     PushSubscription[]
   comments              Comment[]              @relation("PostComments")
-  createdAt             DateTime               @default(now()) @map(name: "created_at")
-  updatedAt             DateTime               @updatedAt @map(name: "updated_at")
   isTwoFactorEnabled    Boolean                @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
 
-  @@map("user")
+  @@unique([email])
 }
 
 model PushSubscription {
@@ -114,18 +111,18 @@ model PushSubscription {
   endpoint  String
   p256dh    String
   auth      String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId], map: "PushSubscription.userId_index")
+  @@index([userId])
 }
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   content   String
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @updatedAt @map(name: "updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   authorId  String   @db.ObjectId
   postId    String   @db.ObjectId
 
@@ -164,7 +161,7 @@ model TwoFactorConfirmation {
 }
 
 model Verification {
-  id         String   @id @map("_id")
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
   value      String
   expiresAt  DateTime
@@ -172,5 +169,4 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@index([identifier])
-  @@map("verification")
 }
