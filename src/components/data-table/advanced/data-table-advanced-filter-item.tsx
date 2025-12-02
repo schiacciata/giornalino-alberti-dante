@@ -1,5 +1,5 @@
-import { TrashIcon } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
+import { TrashIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";

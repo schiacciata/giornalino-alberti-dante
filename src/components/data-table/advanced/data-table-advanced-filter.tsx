@@ -1,11 +1,11 @@
 "use client";
 
 import {
-	CaretSortIcon,
+	ChevronsUpDown as CaretSortIcon,
 	ChevronDownIcon,
 	PlusIcon,
 	TextIcon,
-} from "@radix-ui/react-icons";
+} from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";

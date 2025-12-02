@@ -1,6 +1,6 @@
 "use client";
 
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import type * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -36,7 +36,7 @@ const ScrollBar = ({
 	typeof ScrollAreaPrimitive.ScrollAreaScrollbar
 > & {
 	ref?: React.RefObject<
-		ComponentRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+		React.ComponentRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
 	>;
 }) => (
 	<ScrollAreaPrimitive.ScrollAreaScrollbar

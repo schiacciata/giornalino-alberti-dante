@@ -1,10 +1,10 @@
+import type { Table } from "@tanstack/react-table";
 import {
 	CopyIcon,
-	DotsHorizontalIcon,
+	Ellipsis as DotsHorizontalIcon,
 	TextAlignCenterIcon,
 	TrashIcon,
-} from "@radix-ui/react-icons";
-import type { Table } from "@tanstack/react-table";
+} from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";

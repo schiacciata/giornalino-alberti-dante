@@ -1,8 +1,8 @@
 "use client";
 
-import { CaretSortIcon, PlusIcon } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { ChevronsUpDown as CaretSortIcon, PlusIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { DataTableAdvancedFilter } from "@/components/data-table/advanced/data-table-advanced-filter";
 import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,7 @@ export function DataTableAdvancedToolbar<TData>({
 		}
 	}, [selectedOptions]);
 
-	const options: DataTableFilterOption<TData>[] = React.useMemo(() => {
+	const options: DataTableFilterOption<TData>[] = useMemo(() => {
 		const searchableOptions = searchableColumns.map((column) => ({
 			id: crypto.randomUUID(),
 			label: String(column.id),

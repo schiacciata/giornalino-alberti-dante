@@ -1,23 +1,12 @@
 "use client";
 
-import {
-	ArrowDownIcon,
-	ArrowRightIcon,
-	ArrowUpIcon,
-	CheckCircledIcon,
-	CircleIcon,
-	CrossCircledIcon,
-	DotsHorizontalIcon,
-	QuestionMarkCircledIcon,
-	StopwatchIcon,
-} from "@radix-ui/react-icons";
 import type { ColumnDef, Row } from "@tanstack/react-table";
+import { Ellipsis } from "lucide-react";
 import { Link } from "next-view-transitions";
 import * as React from "react";
 import { toast } from "sonner";
 import { deleteUser, updateUserRole } from "@/actions/user";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -138,7 +127,7 @@ function ActionsCell({ row }: { row: Row<User> }) {
 						variant="ghost"
 						className="flex size-8 p-0 data-[state=open]:bg-muted"
 					>
-						<DotsHorizontalIcon className="size-4" aria-hidden="true" />
+						<Ellipsis className="size-4" aria-hidden="true" />
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end" className="w-[160px]">

@@ -1,13 +1,9 @@
 "use client";
 
-import {
-	ArrowUpIcon,
-	CheckCircledIcon,
-	TrashIcon,
-} from "@radix-ui/react-icons";
-import { SelectTrigger } from "@radix-ui/react-select";
 import type { Table } from "@tanstack/react-table";
+import { TrashIcon } from "lucide-react";
 import { unstable_noStore as noStore } from "next/cache";
+import { Select as SelectPrimitive } from "radix-ui";
 import type * as React from "react";
 import { toast } from "sonner";
 import { deleteUser, updateUserRole } from "@/actions/user";
@@ -81,7 +77,7 @@ export function UserTableFloatingBarContent(table: Table<User>) {
 			<Select
 				onValueChange={(value) => updateUserRoleAction({ table, role: value })}
 			>
-				<SelectTrigger asChild>
+				<SelectPrimitive.Trigger asChild>
 					<Button
 						aria-label="Delete selected rows"
 						title="Role"
@@ -91,7 +87,7 @@ export function UserTableFloatingBarContent(table: Table<User>) {
 					>
 						<Icon icon="role" className="size-4 m-0" aria-hidden="true" />
 					</Button>
-				</SelectTrigger>
+				</SelectPrimitive.Trigger>
 				<SelectContent align="center">
 					<SelectGroup>
 						{Object.values(Role).map((role) => (

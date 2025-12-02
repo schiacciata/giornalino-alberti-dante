@@ -1,7 +1,7 @@
 "use client";
 
-import { Cross2Icon } from "@radix-ui/react-icons";
 import type { Table } from "@tanstack/react-table";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ export function DataTableFloatingBar<TData>({
 				className="h-auto bg-transparent p-1 text-white hover:bg-zinc-700"
 				onClick={() => table.toggleAllRowsSelected(false)}
 			>
-				<Cross2Icon className="size-4" aria-hidden="true" />
+				<X className="size-4" aria-hidden="true" />
 			</Button>
 			{table.getFilteredSelectedRowModel().rows.length} row(s) selected
 			{children}

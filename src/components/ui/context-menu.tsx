@@ -1,7 +1,7 @@
 "use client";
 
-import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
+import { ContextMenu as ContextMenuPrimitive } from "radix-ui";
 import type * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -24,6 +24,11 @@ const ContextMenuSubTrigger = ({
 	inset,
 	children,
 	...props
+}: React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.SubTrigger> & {
+	inset?: boolean;
+	ref?: React.RefObject<
+		React.ComponentRef<typeof ContextMenuPrimitive.SubTrigger>
+	>;
 }) => (
 	<ContextMenuPrimitive.SubTrigger
 		ref={ref}
@@ -82,7 +87,15 @@ const ContextMenuContent = ({
 );
 ContextMenuContent.displayName = ContextMenuPrimitive.Content.displayName;
 
-const ContextMenuItem = ({ ref, className, inset, ...props }) => (
+const ContextMenuItem = ({
+	ref,
+	className,
+	inset,
+	...props
+}: React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Item> & {
+	inset?: boolean;
+	ref?: React.RefObject<React.ComponentRef<typeof ContextMenuPrimitive.Item>>;
+}) => (
 	<ContextMenuPrimitive.Item
 		ref={ref}
 		className={cn(
@@ -154,7 +167,15 @@ const ContextMenuRadioItem = ({
 );
 ContextMenuRadioItem.displayName = ContextMenuPrimitive.RadioItem.displayName;
 
-const ContextMenuLabel = ({ ref, className, inset, ...props }) => (
+const ContextMenuLabel = ({
+	ref,
+	className,
+	inset,
+	...props
+}: React.ComponentPropsWithoutRef<typeof ContextMenuPrimitive.Label> & {
+	inset?: boolean;
+	ref?: React.RefObject<React.ComponentRef<typeof ContextMenuPrimitive.Label>>;
+}) => (
 	<ContextMenuPrimitive.Label
 		ref={ref}
 		className={cn(
