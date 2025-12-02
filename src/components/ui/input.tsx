@@ -1,3 +1,4 @@
+import type { RefCallBack } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
 const Input = ({
@@ -6,7 +7,7 @@ const Input = ({
 	type,
 	...props
 }: React.ComponentProps<"input"> & {
-	ref?: React.RefObject<HTMLInputElement>;
+	ref?: React.RefObject<HTMLInputElement> | RefCallBack;
 }) => {
 	return (
 		<input
