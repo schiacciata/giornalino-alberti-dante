@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 // @ts-expect-error
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
@@ -33,8 +33,8 @@ export function PostCreateButton({
 	...props
 }: PostCreateButtonProps) {
 	const t = useI18n();
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
-	const [isOpen, setIsOpen] = React.useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	async function onCreate(formData: FormData) {
 		setIsLoading(true);

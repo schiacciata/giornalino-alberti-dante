@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 // @ts-expect-error
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
@@ -35,7 +35,7 @@ export function PageCreateButton({
 	...props
 }: PageCreateButtonProps) {
 	const t = useI18n();
-	const [isLoading, setIsLoading] = React.useState<boolean>(false);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const onSubmit = async (formData: FormData) => {
 		setIsLoading(true);

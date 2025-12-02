@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import type { FC } from "react";
+import filesConfig from "@/config/files";
+import githubConfig from "@/config/github";
 import type { Page, Post } from "@/generated/prisma/client";
 import { PostContentRenderer } from "./post-content-renderer";
 
@@ -19,5 +21,9 @@ export const PostContent: FC<PostContentProps> = ({ pages, post }) => {
 		return <PostContentRenderer pages={pages} />;
 	}
 
-	return <PDFViewer path={post.pdfPath} />;
+	const path = filesConfig.raw
+		? `${githubConfig.rawUrl(githubConfig.repo)}${post.pdfPath}`
+		: post.pdfPath;
+
+	return <PDFViewer path={path} />;
 };

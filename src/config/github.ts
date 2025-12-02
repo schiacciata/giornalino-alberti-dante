@@ -1,7 +1,8 @@
 const githubConfig = {
-	repo: "schiacciata/next-blog",
-	email: "62028267+47PADO47@users.noreply.github.com",
-	rawUrl: "https://raw.githubusercontent.com",
+	repo: "schiacciata/giornalino-alberti-dante",
+	botEmail: "github-actions[bot]@users.noreply.github.com",
+	rawUrl: <R extends string>(repo: R, branch = "main") =>
+		`https://raw.githubusercontent.com/${repo}/refs/heads/${branch}/` as const,
 } as const;
 
 export default githubConfig;

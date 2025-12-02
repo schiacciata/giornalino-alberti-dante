@@ -1,16 +1,9 @@
-import { SelectTrigger } from "@radix-ui/react-select";
 import type { Table } from "@tanstack/react-table";
 import { unstable_noStore as noStore } from "next/cache";
 import type * as React from "react";
 import { toast } from "sonner";
-import { deletePage, editPage } from "@/actions/page";
+import { deletePage } from "@/actions/page";
 import { Button } from "@/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-} from "@/components/ui/select";
 import type { Page } from "@/generated/prisma/client";
 import { catchError } from "@/lib/catch-error";
 import { Icon } from "../icons";

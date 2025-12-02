@@ -4,7 +4,7 @@ import { env } from "./env/client";
 
 const committer = {
 	name: siteConfig.title,
-	email: github.email,
+	email: github.botEmail,
 };
 
 type GithubUploadOptions = {

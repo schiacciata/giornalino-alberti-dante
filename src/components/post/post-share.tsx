@@ -32,7 +32,7 @@ const ShareButton: FC<ButtonProps> = ({
 	ref,
 	...props
 }: ButtonProps & {
-	ref: React.RefObject<HTMLButtonElement>;
+	ref?: React.RefObject<HTMLButtonElement>;
 }) => {
 	return (
 		<Button ref={ref} variant="link" size="icon" {...props}>

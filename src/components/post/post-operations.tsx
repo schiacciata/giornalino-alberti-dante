@@ -36,7 +36,7 @@ export function PostOperations({ post }: PostOperationsProps) {
 	const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
 	const pdfUrl = filesConfig.raw
-		? `${githubConfig.rawUrl}${githubConfig.repo}/${post.pdfPath}`
+		? `${githubConfig.rawUrl(githubConfig.repo)}${post.pdfPath}`
 		: post.pdfPath;
 
 	const handleDeletePost = async () => {

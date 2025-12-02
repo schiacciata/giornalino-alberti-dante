@@ -90,7 +90,7 @@ export default async function RootLayout(props: RootLayoutProps) {
 			</head>
 			<body className="min-h-screen bg-background font-sans antialiased relative flex flex-col">
 				<div className="min-h-screen h-full w-full dark:bg-dot-white/[0.2] bg-dot-black/[0.2]">
-					<div className="absolute inset-0 flex items-center justify-center dark:bg-black bg-white mask-[radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
+					<div className="absolute inset-0 z-[-1] flex items-center justify-center dark:bg-black bg-white mask-[radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
 
 					<Toaster richColors={true} />
 					<Suspense fallback={<Spinner />}>

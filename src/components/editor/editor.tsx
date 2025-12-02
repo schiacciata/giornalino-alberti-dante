@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "quill/dist/quill.snow.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -66,7 +60,7 @@ export function Editor({ page, post }: EditorProps) {
 	});
 	const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 	const router = useRouter();
-	const [isSaving, setIsSaving] = React.useState<boolean>(false);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 	const [collaborators, setCollaborators] = useState<
 		{ id: string; email: string; avatarUrl: string }[]
 	>([]);
