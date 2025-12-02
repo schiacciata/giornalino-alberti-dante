@@ -181,7 +181,7 @@ export async function deletePostPDF(postId: string) {
 		return Promise.reject(`Post ${post.title} does not have a pdf`);
 
 	const deletedOK = await deleteFromGithub({
-		path: `public${post.pdfPath}`,
+		path: post.pdfPath,
 	});
 
 	if (!deletedOK) return Promise.reject("Could not delete pdf file");

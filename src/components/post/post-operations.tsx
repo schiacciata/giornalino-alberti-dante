@@ -23,6 +23,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import filesConfig from "@/config/files";
+import githubConfig from "@/config/github";
 import type { Post } from "@/generated/prisma/client";
 
 interface PostOperationsProps {
@@ -32,6 +34,10 @@ interface PostOperationsProps {
 export function PostOperations({ post }: PostOperationsProps) {
 	const [showDeleteAlert, setShowDeleteAlert] = useState<boolean>(false);
 	const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+
+	const pdfUrl = filesConfig.raw
+		? `${githubConfig.rawUrl}${githubConfig.repo}/${post.pdfPath}`
+		: post.pdfPath;
 
 	const handleDeletePost = async () => {
 		setIsDeleteLoading(true);
@@ -58,9 +64,9 @@ export function PostOperations({ post }: PostOperationsProps) {
 					<span className="sr-only">Open</span>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
-					{post.pdfPath && (
+					{pdfUrl && (
 						<DropdownMenuItem asChild>
-							<a href={post.pdfPath} download>
+							<a href={pdfUrl} download>
 								<Icon icon="download" />
 								Download PDF
 							</a>

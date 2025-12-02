@@ -51,11 +51,11 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
 
 	const onSubmit = async (formData: FormData) => {
 		if (file && file.size > 0 && file.type === "application/pdf") {
-			const pdfPath = `/${filesConfig.pdfPath}/${file.name}`;
+			const pdfPath = `${filesConfig.pdfPath}${file.name}`;
 			const id = toast.loading(`Uploading "${file.name}"...`);
 
 			const uploadResult = await uploadToGithub({
-				path: `public${pdfPath}`,
+				path: `${pdfPath}`,
 				content: await file.arrayBuffer(),
 			});
 

@@ -1,73 +1,83 @@
 import github from "@/config/github";
 import siteConfig from "@/config/site";
+import { env } from "./env/client";
 
 const committer = {
-    name: siteConfig.title,
-    email: github.email,
-}
+	name: siteConfig.title,
+	email: github.email,
+};
 
 type GithubUploadOptions = {
-    path: string;
-    content: ArrayBuffer;
-}
+	path: string;
+	content: ArrayBuffer;
+};
 
 export async function uploadToGithub(options: GithubUploadOptions) {
-    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
-        method: 'PUT',
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-            "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${github.token}`,
-        },
-        body: JSON.stringify({
-            message: `💬 Upload ${options.path}`,
-            content: Buffer.from(options.content).toString('base64'),
-            committer,
-        }),
-    });
+	const response = await fetch(
+		`https://api.github.com/repos/${github.repo}/contents/${options.path}`,
+		{
+			method: "PUT",
+			headers: {
+				"X-GitHub-Api-Version": "2022-11-28",
+				Accept: "application/vnd.github+json",
+				Authorization: `Bearer ${env.NEXT_PUBLIC_GITHUB_REPO_TOKEN}`,
+			},
+			body: JSON.stringify({
+				message: `💬 Upload ${options.path}`,
+				content: Buffer.from(options.content).toString("base64"),
+				committer,
+			}),
+		},
+	);
 
-    return response;
+	return response;
 }
 
 type GithubGetOptions = {
-    path: string;
-}
+	path: string;
+};
 
 export async function getFromGithub(options: GithubGetOptions) {
-    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
-        method: 'GET',
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-            "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${github.token}`,
-        },
-    });
+	const response = await fetch(
+		`https://api.github.com/repos/${github.repo}/contents/${options.path}`,
+		{
+			method: "GET",
+			headers: {
+				"X-GitHub-Api-Version": "2022-11-28",
+				Accept: "application/vnd.github+json",
+				Authorization: `Bearer ${env.NEXT_PUBLIC_GITHUB_REPO_TOKEN}`,
+			},
+		},
+	);
 
-    if (!response.ok) throw new Error(`Github api - ${response.statusText}`);
+	if (!response.ok) throw new Error(`Github api - ${response.statusText}`);
 
-    return await response.json();
-} 
-
-type GithubDeleteOptions = {
-    path: string;
+	return await response.json();
 }
 
+type GithubDeleteOptions = {
+	path: string;
+};
+
 export async function deleteFromGithub(options: GithubDeleteOptions) {
-    const file = await getFromGithub(options);
+	const file = await getFromGithub(options);
 
-    const response = await fetch(`https://api.github.com/repos/${github.repo}/contents/${options.path}`, {
-        method: 'DELETE',
-        headers: {
-            'X-GitHub-Api-Version': '2022-11-28',
-            "Accept": "application/vnd.github+json",
-            "Authorization": `Bearer ${github.token}`,
-        },
-        body: JSON.stringify({
-            message: `🔥 Delete ${options.path}`,
-            sha: file.sha,
-            committer,
-        }),
-    });
+	const response = await fetch(
+		`https://api.github.com/repos/${github.repo}/contents/${options.path}`,
+		{
+			method: "DELETE",
+			headers: {
+				"X-GitHub-Api-Version": "2022-11-28",
+				Accept: "application/vnd.github+json",
+				Authorization: `Bearer ${env.NEXT_PUBLIC_GITHUB_REPO_TOKEN}`,
+			},
+			body: JSON.stringify({
+				message: `🔥 Delete ${options.path}`,
+				sha: file.sha,
+				committer,
+			}),
+		},
+	);
 
-    return response.ok;
+	return response.ok;
 }
