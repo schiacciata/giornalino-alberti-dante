@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { type FC, memo } from "react";
+import { featuresConfig } from "@/config/features";
 import type { User } from "@/generated/prisma/client";
 import { cn } from "@/lib/utils";
 import { backdrop } from "@/styles/backdrop";
@@ -21,7 +22,7 @@ const AuthorCard: FC<AuthorCardProps> = ({ author, publishDate }) => {
 			className={cn("flex flex-col gap-2", backdrop, "p-3 rounded-xl")}
 		>
 			<Link
-				href={`/author/${author.id}`}
+				href={featuresConfig.enableAuthorPage ? `/author/${author.id}` : "#"}
 				rel="prev"
 				prefetch={false}
 				className="flex items-center gap-2 group"

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { FC } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { featuresConfig } from "@/config/features";
 import type { Comment, Post, User } from "@/generated/prisma/client";
 import { isEditor } from "@/lib/auth/roles";
 import { cn } from "@/lib/utils";
@@ -23,11 +24,15 @@ const PostComment: FC<PostCommentProps> = async ({ post, comment, author }) => {
 		<Card className="pt-4 px-4" id={comment.id}>
 			<div className="flex items-center justify-between mb-2 mr-2 gap-2">
 				<Link
-					href={isAuthorEditor ? `/author/${author.id}` : `#${comment.id}`}
+					href={
+						isAuthorEditor && featuresConfig.enableAuthorPage
+							? `/author/${author.id}`
+							: `#${comment.id}`
+					}
 					className={cn("flex items-center gap-2")}
 				>
 					<UserAvatar
-						user={{ name: author.name || null, image: author.image || null }}
+						user={{ name: author.name, image: author.image }}
 						className="h-6 w-6 rounded-2xl"
 					/>
 					<CardTitle className="font-semibold">{author.name}</CardTitle>
