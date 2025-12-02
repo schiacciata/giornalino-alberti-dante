@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { featuresConfig } from "@/config/features";
 import type { Comment, Post, User } from "@/generated/prisma/client";
 import { getScopedI18n } from "@/lib/i18n/server";
 import PostComment from "./post-comment";
@@ -17,33 +18,39 @@ const PostCommentSection: FC<PostCommentSectionProps> = async ({
 	comments,
 }) => {
 	const t = await getScopedI18n("comments");
+	const hasComments = comments.length > 0;
+
+	if (!hasComments && !featuresConfig.enableComments) {
+		return null;
+	}
 
 	return (
 		<div>
 			<center className="font-bold px-4 text-lg">{t("heading")}</center>
-			<PostInsertComment post={{ id: post.id }} />
+			{featuresConfig.enableComments && (
+				<PostInsertComment post={{ id: post.id }} />
+			)}
 			<div className="my-3 grid grid-cols-1 gap-y-3 mx-auto w-full md:w-2/3">
-				{comments.length > 0 &&
-					comments.map((comment, index) => (
-						<PostComment
-							key={index}
-							post={{
-								authorId: post.authorId,
-								title: post.title,
-							}}
-							comment={{
-								id: comment.id,
-								content: comment.content,
-								updatedAt: comment.updatedAt,
-							}}
-							author={{
-								id: comment.author.id,
-								image: comment.author.image,
-								name: comment.author.name,
-								role: comment.author.role,
-							}}
-						/>
-					))}
+				{comments.map((comment, index) => (
+					<PostComment
+						key={index}
+						post={{
+							authorId: post.authorId,
+							title: post.title,
+						}}
+						comment={{
+							id: comment.id,
+							content: comment.content,
+							updatedAt: comment.updatedAt,
+						}}
+						author={{
+							id: comment.author.id,
+							image: comment.author.image,
+							name: comment.author.name,
+							role: comment.author.role,
+						}}
+					/>
+				))}
 			</div>
 		</div>
 	);

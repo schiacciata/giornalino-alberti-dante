@@ -1,9 +1,11 @@
+import { notFound } from "next/navigation";
 import { Link } from "next-view-transitions";
 import { RegisterForm } from "@/components/auth/register-form";
 import { Icon } from "@/components/icons";
 import { buttonVariants } from "@/components/ui/button";
+import { featuresConfig } from "@/config/features";
 import { authPages } from "@/lib/auth/config";
-import { getI18n, getScopedI18n } from "@/lib/i18n/server";
+import { getScopedI18n } from "@/lib/i18n/server";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
@@ -12,7 +14,10 @@ export const metadata = {
 };
 
 export default async function RegisterPage() {
-	const t = await getI18n();
+	if (!featuresConfig.enableRegister) {
+		return notFound();
+	}
+
 	const scopedT = await getScopedI18n("register");
 
 	return (

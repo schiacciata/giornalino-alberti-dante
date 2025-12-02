@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "motion/react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { toast } from "sonner";
 import { PageSwitcher } from "./page/page-switcher";
+import { Skeleton } from "./ui/skeleton";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	"pdfjs-dist/build/pdf.worker.min.mjs",
@@ -77,7 +78,7 @@ function PDFViewer({ path }: PDFViewerProps) {
 	}
 
 	const loadingDiv = (
-		<p className="text-muted-foreground italic">Loading file...</p>
+		<Skeleton className="h-[400px] md:h-[1100px] w-[300px] md:w-[800px] rounded-xl mx-auto" />
 	);
 
 	const measurePage = (node?: HTMLElement | null) => {
@@ -87,8 +88,6 @@ function PDFViewer({ path }: PDFViewerProps) {
 		if (rect.height) {
 			return;
 		}
-
-		console.log("measured page size:", rect);
 
 		setPageRect(rect);
 	};

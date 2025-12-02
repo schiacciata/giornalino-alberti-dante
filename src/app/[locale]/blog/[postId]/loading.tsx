@@ -5,6 +5,7 @@ import PostInsertComment from "@/components/post/post-insert-comment";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { featuresConfig } from "@/config/features";
 import { getI18n, getScopedI18n } from "@/lib/i18n/server";
 
 export default async function BlogLoading() {
@@ -37,12 +38,14 @@ export default async function BlogLoading() {
 					<PageSwitcher pageIndex={0} pageCount={0} />
 				</div>
 				<Separator />
-				<div>
-					<center className="font-bold px-4 text-lg">
-						{t("comments.heading")}
-					</center>
-					<PostInsertComment post={{ id: "0" }} disabled />
-				</div>
+				{featuresConfig.enableComments && (
+					<div>
+						<center className="font-bold px-4 text-lg">
+							{t("comments.heading")}
+						</center>
+						<PostInsertComment post={{ id: "0" }} disabled />
+					</div>
+				)}
 			</div>
 		</Shell>
 	);

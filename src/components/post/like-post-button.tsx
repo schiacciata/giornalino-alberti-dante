@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { likePost } from "@/actions/post";
 import { Button } from "@/components/ui/button";
+import { featuresConfig } from "@/config/features";
 import type { Post } from "@/generated/prisma/client";
 import { authClient } from "@/lib/auth/client";
 import { useI18n } from "@/lib/i18n/client";
@@ -53,6 +54,10 @@ export function LikePostButton({ post }: LikePostButtonProps) {
 
 		return "heart";
 	};
+
+	if (!featuresConfig.enableLikes) {
+		return null;
+	}
 
 	return (
 		<form action={handleAction}>

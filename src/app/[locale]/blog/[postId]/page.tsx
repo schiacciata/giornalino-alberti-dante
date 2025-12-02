@@ -1,13 +1,10 @@
 import { notFound } from "next/navigation";
-import { Link } from "next-view-transitions";
 import { Shell } from "@/components/dashboard/shell";
 import { Header } from "@/components/header";
 import AuthorCard from "@/components/post/author-card";
-import { LikePostButton } from "@/components/post/like-post-button";
 import { PostAuthorSection } from "@/components/post/post-author-section";
 import PostCommentSection from "@/components/post/post-comment-section";
 import { PostContent } from "@/components/post/post-content";
-import PostShare from "@/components/post/post-share";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/db";
 
@@ -24,6 +21,13 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 			id: postId,
 		},
 		include: {
+			author: {
+				select: {
+					id: true,
+					image: true,
+					name: true,
+				},
+			},
 			pages: {
 				select: {
 					content: true,
@@ -51,13 +55,12 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
 	if (!post) return notFound();
 
-	const { author } = {
-		author: {
-			id: post.authorId,
-			image: "",
-			name: "Unknown Author",
-		},
+	const author = {
+		id: post.authorId,
+		image: post.author.image || "",
+		name: post.author.name || "Unknown Author",
 	};
+
 	const pages = post.pages
 		.sort((a, b) => a.number - b.number)
 		.map((p) => {
