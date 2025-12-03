@@ -15,7 +15,7 @@ import {
 	type VisibilityState,
 } from "@tanstack/react-table";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useDebounce } from "@/hooks/use-debounce";
 import type {
@@ -84,7 +84,7 @@ export function useDataTable<TData, TValue>({
 	const [column, order] = sort?.split(".") ?? [];
 
 	// Create query string
-	const createQueryString = React.useCallback(
+	const createQueryString = useCallback(
 		(params: Record<string, string | number | null>) => {
 			const newSearchParams = new URLSearchParams(searchParams?.toString());
 
@@ -101,7 +101,7 @@ export function useDataTable<TData, TValue>({
 		[searchParams],
 	);
 	// Initial column filters
-	const initialColumnFilters: ColumnFiltersState = React.useMemo(() => {
+	const initialColumnFilters: ColumnFiltersState = useMemo(() => {
 		if (!searchParams) return [];
 
 		return Array.from(searchParams.entries()).reduce<ColumnFiltersState>(

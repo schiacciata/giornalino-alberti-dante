@@ -39,8 +39,12 @@ export function DashboardSidebar({ items }: DashboardSidebarProps) {
 						<SidebarGroupContent>
 							<SidebarMenu>
 								{item.items?.map((subItem, i) => {
-									const key = `sidebar_item_${typeof subItem.title === "string" ? subItem.title : i}`;
-									return <SidebarButton key={key} item={subItem} />;
+									return (
+										<SidebarButton
+											key={`sidebar_item_${typeof subItem.title === "string" ? subItem.title : i}`}
+											item={subItem}
+										/>
+									);
 								})}
 							</SidebarMenu>
 						</SidebarGroupContent>

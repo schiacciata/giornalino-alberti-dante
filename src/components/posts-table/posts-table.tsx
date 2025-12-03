@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import * as React from "react";
+import { use, useMemo, useTransition } from "react";
 import { DataTable } from "@/components/data-table/data-table";
 import type { Post } from "@/generated/prisma/client";
 import { useDataTable } from "@/hooks/use-data-table";
@@ -21,12 +21,12 @@ interface PostTableProps {
 
 export function PostTable({ postPromise }: PostTableProps) {
 	// Learn more about React.use here: https://react.dev/reference/react/use
-	const { data, pageCount } = React.use(postPromise);
+	const { data, pageCount } = use(postPromise);
 
-	const [isPending, startTransition] = React.useTransition();
+	const [isPending, startTransition] = useTransition();
 
 	// Memoize the columns so they don't re-render on every render
-	const columns = React.useMemo<ColumnDef<Post, unknown>[]>(
+	const columns = useMemo<ColumnDef<Post, unknown>[]>(
 		() => fetchPostTableColumnDefs(isPending, startTransition),
 		[isPending],
 	);

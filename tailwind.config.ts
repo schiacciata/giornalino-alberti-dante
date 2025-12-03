@@ -83,12 +83,7 @@ const config = {
 			},
 		},
 	},
-	plugins: [
-		require("tailwindcss-animate"),
-		require("@tailwindcss/aspect-ratio"),
-		addVariablesForColors,
-		backgroundsPlugin,
-	],
+	plugins: [addVariablesForColors, backgroundsPlugin],
 } satisfies Config;
 
 export default config;
