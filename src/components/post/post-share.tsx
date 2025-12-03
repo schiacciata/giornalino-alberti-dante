@@ -19,6 +19,8 @@ import type { Post, User } from "@/generated/prisma/client";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import useIsMobile from "@/hooks/use-is-mobile";
 import { useI18n } from "@/lib/i18n/client";
+import { cn } from "@/lib/utils";
+import { backdrop } from "@/styles/backdrop";
 import { Icon } from "../icons";
 
 interface PostShareProps {
@@ -30,12 +32,19 @@ type ButtonProps = React.HtmlHTMLAttributes<HTMLButtonElement>;
 
 const ShareButton: FC<ButtonProps> = ({
 	ref,
+	className,
 	...props
 }: ButtonProps & {
 	ref?: React.RefObject<HTMLButtonElement>;
 }) => {
 	return (
-		<Button ref={ref} variant="link" size="icon" {...props}>
+		<Button
+			ref={ref}
+			variant="ghost"
+			size="icon"
+			className={cn(backdrop, className)}
+			{...props}
+		>
 			<Icon icon="share" className="m-0" />
 		</Button>
 	);

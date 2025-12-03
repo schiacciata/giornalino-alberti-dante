@@ -11,6 +11,7 @@ import {
 } from "react";
 import { useLocalStorage } from "usehooks-ts";
 import { env } from "@/lib/env/client";
+import { logger } from "../logs";
 import { SerwistProvider } from "../serwist";
 
 type SubscriptionVariables = {
@@ -57,25 +58,40 @@ export const ServiceWorkerProvider = ({
 	const [, setInstalled] = useLocalStorage("installed", false);
 
 	useEffect(() => {
+		logger.info("service worker provider mounted");
+	}, []);
+
+	const installSW = useCallback(async () => {
+		if (!navigator) return;
+
+		try {
+			const active = await navigator.serviceWorker.getRegistration();
+			if (active) {
+				setRegistration(active);
+				logger.info("service worker already registered");
+				return;
+			}
+
+			const reg = await window.serwist.register();
+			setRegistration(reg);
+			logger.info("service worker registration successful");
+		} catch (error) {
+			logger.error("service worker registration failed", error);
+		}
+	}, []);
+
+	useEffect(() => {
 		if (!navigator) return;
 
 		const supportsSW = "serviceWorker" in navigator;
 		const supportsNotifications = "Notification" in window;
 
 		if (!supportsSW) {
-			console.error("device does not support service worker");
+			logger.error("device does not support service worker");
 			return;
 		}
 
-		if ("serviceWorker" in navigator && window.serwist !== undefined) {
-			window.serwist
-				.register()
-				.catch()
-				.then((registration) => {
-					console.info("service worker registration successful");
-					setRegistration(registration);
-				});
-		}
+		installSW();
 
 		setSupport({
 			serviceWorker: supportsSW,

@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logs";
 import { CLEAR_NOTIFICATIONS, clearAppBadge } from "../utils/badge";
 
 const handle = async (
@@ -26,7 +27,7 @@ const handle = async (
 					try {
 						notifications = await sw.registration.getNotifications();
 					} catch (_) {
-						console.error("failed to get notifications");
+						logger.error("failed to get notifications");
 					}
 					notifications.map((notification) => notification.close());
 					//activeCount = 0

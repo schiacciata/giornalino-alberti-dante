@@ -101,6 +101,7 @@ function PDFViewer({ path }: PDFViewerProps) {
 				onPageChange={handlePageChange}
 			/>
 			<Document
+				key={`${file}-${numPages}`}
 				loading={loadingDiv}
 				file={file}
 				onLoadSuccess={onDocumentLoadSuccess}

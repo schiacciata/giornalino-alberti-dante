@@ -25,7 +25,13 @@ const AuthorCard: FC<AuthorCardProps> = ({ author, publishDate }) => {
 				href={featuresConfig.enableAuthorPage ? `/author/${author.id}` : "#"}
 				rel="prev"
 				prefetch={false}
-				className="flex items-center gap-2 group"
+				aria-disabled={!featuresConfig.enableAuthorPage}
+				className={cn(
+					"flex items-center gap-2 group",
+					featuresConfig.enableAuthorPage
+						? "hover:underline"
+						: "pointer-events-none",
+				)}
 			>
 				<UserAvatar
 					user={{ name: author.name, image: author.image }}
