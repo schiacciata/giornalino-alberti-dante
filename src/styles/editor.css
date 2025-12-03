@@ -1,13 +1,16 @@
-
+/* Editor container rounded corners */
 .ql-container {
-  border-radius: 0px 0px 10px 10px;
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
+/* Toolbar rounded corners */
 .ql-toolbar.ql-snow {
-  border-radius: 10px 10px 0px 0px;
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
+/* Toolbar background color using muted foreground variable */
 .ql-snow.ql-toolbar,
 .ql-snow .ql-toolbar {
-  @apply bg-muted-foreground;
+  background-color: var(--color-muted-foreground);
+  color: var(--color-foreground);
 }
