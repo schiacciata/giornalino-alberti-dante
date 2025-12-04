@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
 	reactStrictMode: true,
 	poweredByHeader: false,
 	serverExternalPackages: ["esbuild-wasm"],
-	cacheComponents: true,
+	cacheComponents: false,
 	images: {
 		remotePatterns: [
 			{
