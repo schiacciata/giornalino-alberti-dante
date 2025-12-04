@@ -10,7 +10,6 @@ import siteConfig from "@/config/site";
 import { locales } from "@/lib/i18n";
 import { Providers } from "@/lib/providers";
 import { absoluteUrl } from "@/lib/utils";
-import type { RootLayoutProps } from "@/types/layout";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(absoluteUrl("")),
@@ -75,7 +74,7 @@ export function generateStaticParams() {
 	return locales.map((locale) => ({ locale }));
 }
 
-export default async function RootLayout(props: RootLayoutProps) {
+export default async function RootLayout(props: LayoutProps<"/[locale]">) {
 	const params = await props.params;
 
 	const { children } = props;
