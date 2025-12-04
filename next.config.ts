@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
 	reactCompiler: true,
 	reactStrictMode: true,
 	poweredByHeader: false,
-	serverExternalPackages: ["esbuild-wasm"],
+	serverExternalPackages: ["esbuild-wasm", "@prisma/client"],
 	cacheComponents: false,
 	images: {
 		remotePatterns: [
