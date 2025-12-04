@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { isAdmin } from "@/lib/auth/roles";
+import { prettifyError } from "zod";
+import { isAdmin, isEditor } from "@/lib/auth/roles";
 import { getCurrentUser } from "@/lib/auth/user";
 import { db } from "@/lib/db";
 import { deleteFromGithub } from "@/lib/files";
@@ -16,8 +17,10 @@ import {
 } from "@/lib/validations/post";
 
 export const newPost = async (formData: FormData) => {
+	const t = await getI18n();
 	const user = await getCurrentUser();
-	if (!user || !user.id) return Promise.reject("Not authenticated");
+	if (!user || !user.id) return Promise.reject(t("errors.unauthenticated"));
+	if (!isEditor(user)) return Promise.reject(t("errors.unauthenticated"));
 
 	const data = Object.fromEntries(formData);
 	const body = postCreateSchema.parse(data);
@@ -80,10 +83,14 @@ export const likePost = async (formData: postLikeFormData) => {
 export const editPost = async (formData: FormData) => {
 	const user = await getCurrentUser();
 	if (!user) return { error: "Not authenticated" };
+	if (!isEditor(user))
+		return { error: "You don't have permission to edit posts" };
 
 	const data = Object.fromEntries(formData);
-	const body = postPatchSchema.parse(data);
+	console.log(data);
+	const { data: body, error } = postPatchSchema.safeParse(data);
 
+	if (error) return { error: prettifyError(error) };
 	if (!body.id) return { error: "No post id" };
 
 	const protectedFields: (keyof typeof body | (string & {}))[] = ["authorId"];

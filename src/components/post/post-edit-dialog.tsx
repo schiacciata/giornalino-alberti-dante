@@ -31,6 +31,7 @@ import { isAdmin } from "@/lib/auth/roles";
 import { uploadToGithub } from "@/lib/files";
 import { useI18n } from "@/lib/i18n/client";
 import { cn } from "@/lib/utils";
+import { postPatchSchema } from "@/lib/validations/post";
 import { Icons } from "../icons";
 import PostDeletePDFButton from "./delete-pdf-button";
 
@@ -51,8 +52,23 @@ export function PostEditDialog({ post, users }: PostEditDialogProps) {
 
 	const onSubmit = async (formData: FormData) => {
 		if (file && file.size > 0 && file.type === "application/pdf") {
-			const pdfPath = `${filesConfig.pdfPath}${file.name}`;
+			const filename = file.name.endsWith(".pdf.pdf")
+				? file.name.slice(0, -4)
+				: file.name;
+			const pdfPath = `${filesConfig.pdfPath}${filename}`;
 			const id = toast.loading(`Uploading "${file.name}"...`);
+
+			const { success: validPath } = postPatchSchema
+				.pick({
+					pdfPath: true,
+				})
+				.safeParse({ pdfPath });
+
+			if (!validPath) {
+				return toast.error(`Invalid PDF name "${file.name}"`, {
+					id,
+				});
+			}
 
 			const uploadResult = await uploadToGithub({
 				path: `${pdfPath}`,

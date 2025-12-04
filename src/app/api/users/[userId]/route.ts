@@ -3,22 +3,14 @@ import { getCurrentUser } from "@/lib/auth/user";
 import { db } from "@/lib/db";
 import { userUpdateSchema } from "@/lib/validations/user";
 
-const routeContextSchema = z.object({
-	params: z.object({
-		userId: z.string(),
-	}),
+const routeParamsSchema = z.object({
+	userId: z.string(),
 });
+type RouteParams = z.infer<typeof routeParamsSchema>;
 
-export async function PATCH(
-	req: Request,
-	context: z.infer<typeof routeContextSchema>,
-) {
+export async function PATCH(req: Request, c: { params: Promise<RouteParams> }) {
 	try {
-		// Validate the route context.
-		const { params } = routeContextSchema.parse(
-			/* @next-codemod-error 'context' is passed as an argument. Any asynchronous properties of 'props' must be awaited when accessed. */
-			context,
-		);
+		const params = routeParamsSchema.parse(await c.params);
 
 		// Ensure user is authentication and has access to this user.
 		const user = await getCurrentUser();
