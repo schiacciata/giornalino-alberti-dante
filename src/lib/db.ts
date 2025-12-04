@@ -1,22 +1,31 @@
 import config from "@/config";
 import "dotenv/config";
 import { PrismaClient } from "@/generated/prisma/client";
+import type { PrismaClientOptions } from "@/generated/prisma/runtime/client";
+import { env } from "./env/server";
 
 declare global {
 	// eslint-disable-next-line no-var
 	var cachedPrisma: PrismaClient;
 }
 
-let prisma: PrismaClient;
-if (process.env.NODE_ENV === "production") {
-	prisma = new PrismaClient({
-		log: config.debug ? ["error", "query", "info"] : [],
-	});
-} else {
-	if (!global.cachedPrisma) {
-		global.cachedPrisma = new PrismaClient();
-	}
-	prisma = global.cachedPrisma;
+const options: PrismaClientOptions = {};
+if (config.debug) {
+	options.log = ["info", "warn", "error"];
 }
+
+const setup = (): PrismaClient => {
+	if (env.NODE_ENV === "production") {
+		return new PrismaClient(options);
+	}
+
+	if (!global.cachedPrisma) {
+		global.cachedPrisma = new PrismaClient(options);
+	}
+
+	return global.cachedPrisma;
+};
+
+const prisma = setup();
 
 export const db = prisma;
