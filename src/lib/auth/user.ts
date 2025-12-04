@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
 const getSession = async (h: Awaited<ReturnType<typeof headers>>) => {
-	"use cache";
+	//"use cache";
 
 	return await auth.api.getSession({
 		headers: h,
