@@ -31,7 +31,7 @@ export const login = async (
 
 	const existingUser = await getUserByEmail(email);
 
-	if (!existingUser || !existingUser.email || !existingUser.password) {
+	if (!existingUser || !existingUser.email) {
 		return { error: "Email does not exist!" };
 	}
 
@@ -104,11 +104,16 @@ export const login = async (
 				callbackURL: callbackUrl || "/",
 			},
 		});
+
+		return { success: "Logged in successfully!" };
 	} catch (error) {
-		return { error: error?.message || "Invalid credentials!" };
+		const message =
+			error instanceof Error ? error.message : "Invalid credentials!";
+		return { error: message };
 	}
 };
 
+//TODO: use better-auth
 export const register = async (values: z.infer<typeof registerSchema>) => {
 	const validatedFields = registerSchema.safeParse(values);
 
@@ -129,7 +134,6 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
 		data: {
 			name,
 			email,
-			password: hashedPassword,
 		},
 	});
 

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import type { Account } from "@/generated/prisma/client";
 import { toPascalCase } from "@/lib/utils";
-import { Icon } from "../icons";
+import { Icon, type TIcon } from "../icons";
 import UnlinkButton from "./unlink-button";
 
 interface AccountCardProps {
@@ -20,10 +20,10 @@ const AccountCard: FC<AccountCardProps> = ({ account }) => {
 			<CardHeader>
 				<div className="flex items-center justify-between mb-2 mr-2">
 					<CardTitle className="space-between">
-						<Icon className="inline-flex" icon={account.providerId} />
+						<Icon className="inline-flex" icon={account.providerId as TIcon} />
 						{toPascalCase(account.providerId)}
 					</CardTitle>
-					<UnlinkButton account={{ provider: account.providerId }} />
+					<UnlinkButton account={{ providerId: account.providerId }} />
 				</div>
 				<CardDescription>{account.accountId}</CardDescription>
 			</CardHeader>

@@ -48,6 +48,7 @@ export const updateUser = async (values: z.infer<typeof userUpdateSchema>) => {
 		return { success: "Updated email" };
 	}
 
+	/*
 	if (values.password && values.newPassword && dbUser.password) {
 		const passwordsMatch = await bcrypt.compare(
 			values.password,
@@ -62,6 +63,7 @@ export const updateUser = async (values: z.infer<typeof userUpdateSchema>) => {
 		values.password = hashedPassword;
 		values.newPassword = undefined;
 	}
+	*/
 
 	const { password, newPassword: _, ...data } = values;
 	const updatedUser = await db.user.update({
@@ -123,13 +125,15 @@ export const editUser = async (
 		return { success: "Updated email" };
 	}
 
+	/*
 	if (values.password && dbUser.password) {
 		const hashedPassword = await bcrypt.hash(values.password, 10);
 		values.password = hashedPassword;
 		values.newPassword = undefined;
 	}
+	*/
 
-	const updatedUser = await db.user.update({
+	const _updatedUser = await db.user.update({
 		where: { id: dbUser.id },
 		data: {
 			...values,
